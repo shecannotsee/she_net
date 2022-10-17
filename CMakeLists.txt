@@ -3,13 +3,14 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PROJECT_NAME "DeviceEnrollmentCloudService")
 ##############################################################
-
+set(src_head "${CMAKE_SOURCE_DIR}/src")
 ##############################################################
 set(CMAKE_CXX_FLAGS "-g")
 project(${PROJECT_NAME})
 ##############################################################
 # include
 include_directories(
+        ${src_head}
 )
 # lib
 link_directories(
