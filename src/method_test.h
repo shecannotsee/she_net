@@ -15,7 +15,7 @@
 #include <unistd.h>//close
 #include <fcntl.h>//fcntl
 
-
+// epoll test
 namespace method1 {
 
 std::atomic<int> client_num;
@@ -72,7 +72,8 @@ void main() {
 //        t2.join();
 //        t3.join();
 //        t4.join();
-      } else if ( type == EPOLLIN ) {
+      }
+      else if ( type == EPOLLIN ) {
         int fd = events[i].data.fd;
         char buffer[1025];
         std::string display;
@@ -95,7 +96,8 @@ void main() {
           printf("send message success.\n");
 
 
-      } else if ( type == EPOLLOUT ) {
+      }
+      else if ( type == EPOLLOUT ) {
         printf("EPOLLOUT happened:[%d].\n",events[i].data.fd);
       }
     }

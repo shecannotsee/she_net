@@ -19,9 +19,13 @@ class socket_base {
   int _socket_id;
   message _info;
  public:
-  socket_base();
+  /* Don't use this function*/
+  socket_base() = default;
   explicit socket_base(std::string ip,std::string port);
   ~socket_base();
+  socket_base(socket_base&&) = default;
+  socket_base& operator=(socket_base&&) = default;
+
  public:
   std::string getSocketType() const;
   int getSocketId() const;

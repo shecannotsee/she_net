@@ -7,10 +7,6 @@
 #include <arpa/inet.h>//htons,inet_addr,(struct)sockaddr_in
 #include <unistd.h>//close
 
-socket_base::socket_base()
-    : socket_base("127.0.0.1","26758") {
-};
-
 socket_base::socket_base(std::string ip,std::string port)
     : _type("server"),
       _socket_id(-1),
