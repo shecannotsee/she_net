@@ -10,7 +10,7 @@
 #include "DataStructure/Section.h"
 #include "Parse/Parse.h"
 
-// TODO:可以考虑用可变长参数优化该通用函数
+// TODO:可以考虑用可变长参数 or vector 优化该通用函数
 // 该函数最多可以读取一个section下有五个k-v键值对
 void getConfig(std::string& section, std::string& key1,
                                      std::string& key2,

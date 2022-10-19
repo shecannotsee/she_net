@@ -13,11 +13,6 @@ class S {
 
 int main() {
   std::cout<<"server start11211.\n";
-  std::cout<<"111"<<std::endl;
-  S a;
-  std::cout<<a._data.size();
-
-  std::cout<<"111"<<std::endl;
   server application;
   application.start();
 
