@@ -2,20 +2,19 @@
 // Created by shecannotsee on 2022/10/12.
 //
 #include <iostream>
-#include "method_test.h"
+#include "base/log.h"
 #include "server/server.h"
-
-class S {
- public:
-  std::vector<int> _data;
-  S():_data(1000){};
-};
+#include "method_test.h"
 
 int main() {
-  std::cout<<"server start11211.\n";
+  logModule::defaultSetting();
+  logModule::registerLogger("main");
+  auto logger = logModule::getLogger("main");
+  logger->info("An application named DECS has been started.");
+
   server application;
   application.start();
 
-  std::cout<<"server stop.\n";
+  logger->info("DECS has stopped.");
   return 0;
 };

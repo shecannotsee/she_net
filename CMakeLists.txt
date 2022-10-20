@@ -11,6 +11,7 @@ set(3rd "${CMAKE_SOURCE_DIR}/3rd")
 ##############################################################
 set(sheIni_src "${3rd}/sheIni/src")
 set(spdlog "${3rd}/spdlog")
+message(STATUS "spdlog: ${spdlog}")
 ##############################################################
 # include
 include_directories(
@@ -32,4 +33,4 @@ add_executable(${PROJECT_NAME}
         ${sheIni_part2}
         )
 ##############################################################
-target_link_libraries(${PROJECT_NAME} pthread)
+target_link_libraries(${PROJECT_NAME} "-pthread")

@@ -7,6 +7,7 @@
 
 #include "net/socket_base.h"
 #include "net/Epoll.h"
+#include "base/log.h"
 #include <string>
 #include <tuple>
 #include <memory>
@@ -17,8 +18,8 @@ template<typename T, typename... Ts>
 std::unique_ptr<T> make_unique(Ts &&... params) {
   return std::unique_ptr<T>(new T(std::forward<Ts>(params)...));
 }
-}
-}
+};// namespace NoCpp14Standard
+};// namespace DECS(means DeviceEnrollmentClouldService)
 
 class server {
   using message = std::tuple<bool,std::string>;
@@ -27,6 +28,7 @@ class server {
   std::unique_ptr<socket_base> _base_socket;// 依赖配置的config(需要ip和port)
   std::unique_ptr<Epoll> _epoll_container;// 依赖socket_base
   bool _start;
+  logModule::loggerPtr _logger;
  public:
   server();
   ~server();

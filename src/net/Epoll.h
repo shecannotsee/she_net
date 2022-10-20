@@ -27,10 +27,11 @@ class Epoll {
   // call epoll_wait
   int aliveEvents();
   // call epoll_ctl
-  void addEvent(int socket_id);
+  void addEvent(int socket_id,int operation);
   void removeEvent() = delete;
   void modifyEvent() = delete;
   std::tuple<int, uint32_t> getEventInfo(int index) const;
+  message getInfo() const;
 
 };
 

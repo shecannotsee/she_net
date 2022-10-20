@@ -4,6 +4,7 @@
 
 #include "server.h"
 #include "base/config.h"
+#include "base/log.h"
 #include <string.h>
 #include <string>
 #include <sys/socket.h>
@@ -16,7 +17,11 @@ server::server()
     : _info(std::make_tuple(true,"init")),
       _base_socket(nullptr),
       _epoll_container(nullptr),
-      _start(true) {
+      _start(true),
+      _logger(nullptr) {
+  logModule::registerLogger("server");
+  _logger = logModule::getLogger("server");
+
   std::string section_server = "server";
   std::string ip = "ip";
   std::string port = "port";
@@ -27,8 +32,26 @@ server::server()
   getConfig(section_epoll_set,max_event,ss,sss,ssss,sssss);
 
   _base_socket = DECS::NoCpp14Standard::make_unique<socket_base>(ip,port);
+  /* write log */ {
+    logModule::registerLogger("socket_base");
+    auto logger = logModule::getLogger("socket_base");
+    auto socket_base_info = _base_socket->getInfo();
+    if (std::get<0>(socket_base_info))
+      logger->info(std::get<1>(socket_base_info));
+    else
+      logger->error(std::get<1>(socket_base_info));
+  }
   _epoll_container = DECS::NoCpp14Standard::make_unique<Epoll>(
-      _base_socket->getSocketId(),(std::atoi(max_event.c_str())));
+      _base_socket->getSocketId(), (std::atoi(max_event.c_str())));
+  /* write log */ {
+    logModule::registerLogger("epoll");
+    auto logger = logModule::getLogger("epoll");
+    auto epoll_info = _base_socket->getInfo();
+    if (std::get<0>(epoll_info))
+      logger->info(std::get<1>(epoll_info));
+    else
+      logger->error(std::get<1>(epoll_info));
+  }
 };
 
 server::~server() {
@@ -36,6 +59,7 @@ server::~server() {
 };
 
 void server::start() {
+  _epoll_container->addEvent(_base_socket->getSocketId(),EPOLLIN);
   while (_start) {
     int aliveEvents = _epoll_container->aliveEvents();
     for (int i=0;i<aliveEvents; ++i) {
@@ -44,11 +68,11 @@ void server::start() {
       u_int32_t event_type = std::get<1>(fd_type);
       // accept event
       if( fd==_base_socket->getSocketId() && event_type==EPOLLIN ) {
-        int client_fd =accept(_base_socket->getSocketId(),NULL,NULL);
+        int client_fd =accept(_base_socket->getSocketId(),nullptr,nullptr);
         if (client_fd==-1)/* TODO accept error */;
-        _epoll_container->addEvent(client_fd);/* TODO:set ET */
-        /* debug */ {
-          std::cout<<"accept sum : "<<++client_num<<std::endl;
+        _epoll_container->addEvent(client_fd, EPOLLIN|EPOLLET);/* TODO:set ET */
+        /* write log */ {
+          _logger->info("accept sum : {}",++client_num);
         }
       }
       // can read event
@@ -62,22 +86,19 @@ void server::start() {
           int len = recv(fd,buffer,1025,NULL);
           if      (len==-1) /* TODO:deal error */break;
           else if (len== 0) /* TODO:deal client quit */break;
+          else if (len<1025) break;
           /* now data in buffer,and need to deal */ {
             for (int add_index = 0; add_index < len; ++add_index)
               display += buffer[add_index];
           }
         }
-        /* debuf */{
-          std::cout<<"get data ["<<display<<std::endl;
-        }
+        _logger->info("get data [{}]",display);
 
       }
       // can write
       else if (event_type==EPOLLOUT) {
         int a=0;
-        /* debug */ {
-          printf("accept sum : %d\n", --client_num);
-        }
+        _logger->info("accept sum : {}", --client_num);
       }
 
     }

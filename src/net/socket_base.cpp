@@ -10,7 +10,7 @@
 socket_base::socket_base(std::string ip,std::string port)
     : _type("server"),
       _socket_id(-1),
-      _info(std::make_tuple(true,"init.")) {
+      _info(std::make_tuple(true,"init success.")) {
   sockaddr_in serverAddr; /* init */ {
     serverAddr.sin_family = PF_INET;//ipv4
     serverAddr.sin_port = htons(std::atoi(port.c_str()));
@@ -20,11 +20,14 @@ socket_base::socket_base(std::string ip,std::string port)
   /* set no TIME_WAIT */ {
     int optval = 1;
     setsockopt(_socket_id, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
-  }
+  };
+
   int bind_result = bind(_socket_id, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
-  if (bind_result==-1)  _info = std::make_tuple(false,"bind error.");
+  if (bind_result==-1)
+    _info = std::make_tuple(false,"bind error.");
   int listen_result = listen(_socket_id, 5);
-  if (listen_result==-1) _info = std::make_tuple(false,"listen error");
+  if (listen_result==-1)
+    _info = std::make_tuple(false,"listen error");
   //fcntl(server_socket_id, F_SETFL, O_NONBLOCK); // set noblock
 };
 

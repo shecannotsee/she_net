@@ -41,7 +41,7 @@ void main() {
     epoll_event ev;
     ev.events = EPOLLIN;
     ev.data.fd = server_socket_id;
-    epoll_ctl(epoll_container_id, EPOLL_CTL_ADD, server_socket_id, &ev);// 包含listen
+    epoll_ctl(epoll_container_id, EPOLL_CTL_ADD, server_socket_id, &ev);
   }
 
   bool adasdad = true;
