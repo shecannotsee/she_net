@@ -16,11 +16,15 @@ namespace method1 {
 using std::cout;
 using std::endl;
 void main() {
-  packageInStream a(3);
+  packageInStream a(1024);
   std::string data = "hello world";
-  cout<<"["<<data<<"]"<<"is packing...(package)"<<endl;
-  std::string package = a.packing("hello world");
+  cout<<"["<<data<<"]"<<"is packing...(head with package)"<<endl;
+  std::string headWithPackage = a.packing("hello world");
 
+  a.unpacking(headWithPackage);
+  std::string recv_str;
+  a.getPackage(recv_str);
+  cout<<"["<<recv_str<<"]"<<"has received...(head with package)"<<endl;
 };
 };//namespace method1
 
