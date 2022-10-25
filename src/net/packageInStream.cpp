@@ -18,10 +18,8 @@ packageInStream::packageInStream(const uint64_t package_length)
 
 std::string packageInStream::packing(const std::string &data) {
   /* data analysis */
-  int package_s = 0;
-  uint64_t last_package_length = 0;
-  package_s = data.size()/_package_length + 1;
-  last_package_length = data.size()%_package_length;
+  int package_s = data.size()/_package_length + 1;// 分的包个数
+  uint64_t last_package_length = data.size()%_package_length;// 最后一个包的长度
   /* packing */
   std::unique_ptr<char> buffer(new char(package_s*_package_length));
   header _header;/* update header */{
