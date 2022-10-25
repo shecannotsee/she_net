@@ -21,13 +21,14 @@ class packageInStream {
     std::string content;// 实际数据存放位置
   };
  private:
-  uint64_t _max;// 分包长度
+  uint64_t _package_length;// 分包长度
   std::list<std::string> _data_list;// 从流中取的完整数据包
   half_data _half_of_data;// 流数据(半截)存储位置
   std::mutex _mutex_out;// 处理拆包时候所用到的锁
  public:
   packageInStream() = delete;
-  explicit packageInStream(uint64_t max);
+  // _分包长度
+  explicit packageInStream(uint64_t package_length);
   ~packageInStream() = default;
   // Copying is prohibited(because std::mutex)
   packageInStream(const packageInStream& other) = delete;

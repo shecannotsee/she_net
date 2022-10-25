@@ -8,8 +8,8 @@
 #include <iostream>
 #include <memory>
 
-packageInStream::packageInStream(const uint64_t max)
-    : _max(max),
+packageInStream::packageInStream(const uint64_t package_length)
+    : _package_length(package_length),
       _data_list(std::list<std::string>()) {
   _half_of_data.type = 0;
   _half_of_data.length = 0;
@@ -20,13 +20,13 @@ std::string packageInStream::packing(const std::string &data) {
   /* data analysis */
   int package_s = 0;
   uint64_t last_package_length = 0;
-  package_s = data.size()/_max + 1;
-  last_package_length = data.size()%_max;
+  package_s = data.size()/_package_length + 1;
+  last_package_length = data.size()%_package_length;
   /* packing */
-  std::unique_ptr<char> buffer(new char(package_s*_max));
+  std::unique_ptr<char> buffer(new char(package_s*_package_length));
   header _header;/* update header */{
     _header.flag = 1;
-    _header.length = _max;
+    _header.length = _package_length;
   }
   void* buffer_index = buffer.get();// 通过这种手段控制p的偏移
   for (int i=0; i<package_s; i++) {
@@ -38,12 +38,12 @@ std::string packageInStream::packing(const std::string &data) {
     memcpy(buffer_index,&_header, sizeof(header));
     buffer_index = (char*)buffer_index + sizeof(header);
     // add data
-    memcpy(buffer_index,data.c_str() + (i*_max) - (_max) + (_header.length),
+    memcpy(buffer_index,data.c_str() + (i*_package_length) - (_package_length) + (_header.length),
            _header.length);
     buffer_index = (char*)buffer_index +_header.length;
   }
   /* return */
-  std::string ret(buffer.get(),package_s*_max-_max+last_package_length);
+  std::string ret(buffer.get(),package_s*_package_length-_package_length+last_package_length);
   return ret;
 };
 
