@@ -12,28 +12,29 @@
 class packageInStream {
  public:
   struct header {
-    unsigned int flag   : 1;
-    unsigned int length : 31;
+    unsigned int flag   : 1;// 0-数据结尾的包
+    unsigned int length : 31;// 1-数据长度
+  };
+  struct half_data {
+    int type;// 0-干净的缓冲区,1-header,2-just data
+    int length;// type对应长度
+    std::string content;// 实际数据存放位置
   };
  private:
-  header _header;
-  header _unpacking_header;
-  uint64_t _max;
-  std::list<std::string> _data_list;
-  std::string _half_data;
-  int _half_data_type; // 存储的是header还是data,0为初始状态,-1为header,正数为需要从下一个stream中获取的Bytes
-  std::mutex _mutex_out;
-  std::mutex _mutex_to_package;
+  uint64_t _max;// 分包长度
+  std::list<std::string> _data_list;// 从流中取的完整数据包
+  half_data _half_of_data;// 流数据(半截)存储位置
+  std::mutex _mutex_out;// 处理拆包时候所用到的锁
  public:
   packageInStream() = delete;
   explicit packageInStream(uint64_t max);
   ~packageInStream() = default;
-  // copy
-  packageInStream(const packageInStream& other) = default;
+  // Copying is prohibited(because std::mutex)
+  packageInStream(const packageInStream& other) = delete;
   packageInStream& operator=(const packageInStream& other) = delete;
-  // move
-  packageInStream(packageInStream&& other) = default;
-  packageInStream& operator=(packageInStream&& other) = default;
+  // Movement is prohibited(because std::mutex)
+  packageInStream(packageInStream&& other) = delete;
+  packageInStream& operator=(packageInStream&& other) = delete;
  public:
   // return package(maybe like h-d1-h-d2-h-d3......),input data(=d1+d2+d3+...)
   std::string packing(const std::string& data);
