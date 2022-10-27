@@ -32,19 +32,19 @@ std::string packageInStream::packing(const std::string &data) {
     if ( i == (package_s-1) ) /* 最后一个包的处理 */ {
       _header.flag = 0;
       _header.length = last_package_length;
-    }
+    }// 10110000 000000000 00000000 0000
     memcpy(buffer.get()+pos_buffer,&_header, sizeof(header));
     pos_buffer += sizeof(header);
     memcpy(buffer.get()+pos_buffer,data.c_str()+pos_data, _header.length);
     pos_buffer += _header.length;
     pos_data += _header.length;
   }
-
   /* return */
   std::string ret(buffer.get(),pos_buffer);
   return ret;
 };
 
+// TODO:This function does not work properly, it always gives wrong results
 void packageInStream::unpacking(const std::string& headWithData) {
   std::string ret;
   int index = 0;// 在headWithData中的处理位置
