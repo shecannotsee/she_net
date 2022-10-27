@@ -18,7 +18,7 @@ Epoll::~Epoll() {
   close(_epoll_container_id);
 };
 
-int Epoll::aliveEvents(int timeout_ms = -1) {
+int Epoll::aliveEvents(int timeout_ms) {
   return epoll_wait(_epoll_container_id,
                     &*_events.begin(),
                     _events.size(),

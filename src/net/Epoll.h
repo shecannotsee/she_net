@@ -27,13 +27,16 @@ class Epoll {
  public:
   // call epoll_wait,timeout means epoll_wait(x,x,x,timeout_ms),default -1 means block
   int aliveEvents(int timeout_ms);
+
   // call epoll_ctl
   // operation : 添加事件 EPOLL_CTL_ADD,移除事件 EPOLL_CTL_DEL,修改事件 EPOLL_CTL_MOD
   // setEvent : EPOLLIN, EPOLLOUT, EPOLLET
   void modifyEvent(int socket_id,int operation, int setEvent);
+
   // get event[index],在使用epoll_wait(this->aliveEvents)后使用
   // 返回(活跃)事件的fd以及事件类型( EPOLLIN or EPOLLOUT )
   std::tuple<int, uint32_t> getEventInfo(int index) const;
+
   message getInfo() const;
 
 };

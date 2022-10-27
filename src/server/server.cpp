@@ -41,8 +41,7 @@ server::server()
     else
       logger->error(std::get<1>(socket_base_info));
   }
-  _epoll_container = DECS::NoCpp14Standard::make_unique<Epoll>(
-      _base_socket->getSocketId(), (std::atoi(max_event.c_str())));
+  _epoll_container = DECS::NoCpp14Standard::make_unique<Epoll>(_base_socket->getSocketId(), (std::atoi(max_event.c_str())));
   /* write log */ {
     logModule::registerLogger("epoll");
     auto logger = logModule::getLogger("epoll");
@@ -62,7 +61,7 @@ void server::start() {
   // 添加(实际上就是本地)server fd以便能够触发的accept事件
   _epoll_container->modifyEvent(_base_socket->getSocketId(), EPOLL_CTL_ADD, EPOLLIN);
   while (_start) {
-    int aliveEvents = _epoll_container->aliveEvents();
+    int aliveEvents = _epoll_container->aliveEvents(-1);
     for (int i=0;i<aliveEvents; ++i) {
       auto fd_type = _epoll_container->getEventInfo(i);
       int fd = std::get<0>(fd_type);
