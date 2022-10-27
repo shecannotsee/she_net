@@ -18,18 +18,18 @@ Epoll::~Epoll() {
   close(_epoll_container_id);
 };
 
-int Epoll::aliveEvents() {
+int Epoll::aliveEvents(int timeout = -1) {
   return epoll_wait(_epoll_container_id,
                     &*_events.begin(),
                     _events.size(),
-                    -1);
+                    timeout);
 }
 
-void Epoll::addEvent(int socket_id,int operation) {
+void Epoll::modifyEvent(int socket_id,int operation, int setEvent) {
   epoll_event ev;
   ev.data.fd = socket_id;
-  ev.events = operation;
-  epoll_ctl(_epoll_container_id, EPOLL_CTL_ADD, socket_id, &ev);
+  ev.events = setEvent;
+  epoll_ctl(_epoll_container_id, operation, socket_id, &ev);
 };
 
 std::tuple<int, uint32_t> Epoll::getEventInfo(int index) const {
