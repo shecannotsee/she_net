@@ -19,11 +19,15 @@ void main() {
   packageInStream a(1024);
   std::string data = "hello world";
   cout<<"["<<data<<"]"<<"is packing...(head with package)"<<endl;
-  std::string headWithPackage = a.packing("hello world");
+  std::string headWithPackage = a.packing(data);
+  std::unique_ptr<char> t(new char(headWithPackage.size()+1));
+  (t.get())[headWithPackage.size()] = '\0';
+  headWithPackage.copy(t.get(),headWithPackage.size(),0);
 
   a.unpacking(headWithPackage);
   std::string recv_str;
   a.getPackage(recv_str);
+  int len = recv_str.size();
   cout<<"["<<recv_str<<"]"<<"has received...(head with package)"<<endl;
 };
 };//namespace method1
@@ -36,7 +40,7 @@ void main() {
   packageInStreamBase64 a("?");
   std::string data = "hello world";
   cout<<"["<<data<<"]"<<"is packing...(base64)"<<endl;
-  std::string base64Package = a.packing("hello world");
+  std::string base64Package = a.packing(data);
 
   a.unpacking(base64Package);
   std::string recv_str;
