@@ -46,7 +46,7 @@ server::server()
   /* write log */ {
     logModule::registerLogger("epoll");
     auto logger = logModule::getLogger("epoll");
-    auto epoll_info = _base_socket->getInfo();
+    auto epoll_info = _epoll_container->getInfo();
     if (std::get<0>(epoll_info))
       logger->info(std::get<1>(epoll_info));
     else
@@ -59,23 +59,25 @@ server::~server() {
 };
 
 void server::start() {
-  _epoll_container->addEvent(_base_socket->getSocketId(),EPOLLIN);
+  // 添加(实际上就是本地)server fd以便能够触发的accept事件
+  _epoll_container->modifyEvent(_base_socket->getSocketId(), EPOLL_CTL_ADD, EPOLLIN);
   while (_start) {
     int aliveEvents = _epoll_container->aliveEvents();
     for (int i=0;i<aliveEvents; ++i) {
       auto fd_type = _epoll_container->getEventInfo(i);
       int fd = std::get<0>(fd_type);
       u_int32_t event_type = std::get<1>(fd_type);
-      // accept event
+
+      // event1 : accept event
       if( fd==_base_socket->getSocketId() && event_type==EPOLLIN ) {
-        int client_fd =accept(_base_socket->getSocketId(),nullptr,nullptr);
-        if (client_fd==-1)/* TODO accept error */;
-        _epoll_container->addEvent(client_fd, EPOLLIN|EPOLLET);/* TODO:set ET */
+        int client_fd =accept(_base_socket->getSocketId(),NULL,NULL);
+        if (client_fd==-1)/* TODO : deal accept error */;
+        _epoll_container->modifyEvent(client_fd, EPOLL_CTL_ADD,EPOLLIN|EPOLLET);/* ET */
         /* write log */ {
           _logger->info("accept sum : {}",++client_num);
         }
       }
-      // can read event
+      // event2 :can read event
       else if (event_type == EPOLLIN) {
         std::string display;
         char* buffer[1025];// Magic number
@@ -95,7 +97,7 @@ void server::start() {
         _logger->info("get data [{}]",display);
 
       }
-      // can write
+      // event3 : can write
       else if (event_type==EPOLLOUT) {
         int a=0;
         _logger->info("accept sum : {}", --client_num);
