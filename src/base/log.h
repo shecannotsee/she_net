@@ -1,6 +1,16 @@
 //
 // Created by shecannotsee on 2022/10/17.
 //
+// 该文件是对spdlog的一个简单的封装
+// 如何使用?
+// 1.设置日志的全局属性,若需要修改日志属性,在此处修改
+//   logModule::defaultSetting();
+// 2.往spdlog中注册日志模块,若需要修改日志类型,需要修改函数 TODO:注册时需要添加日志目录,现在是写死的
+//   logModule::registerLogger("模块名");
+// 3.获取已注册的日志模块,并通过返回来写日志
+//   auto log_ptr = logModule::getLogger;
+//   log_ptr->info("日志内容");
+//
 
 #ifndef DEVICEENROLLMENTCLOUDSERVICE_SRC_BASE_LOG_H_
 #define DEVICEENROLLMENTCLOUDSERVICE_SRC_BASE_LOG_H_
