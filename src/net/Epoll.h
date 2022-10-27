@@ -25,8 +25,8 @@ class Epoll {
   explicit Epoll(int socket_id, int max_events);
   ~Epoll();
  public:
-  // call epoll_wait
-  int aliveEvents(int timeout);
+  // call epoll_wait,timeout means epoll_wait(x,x,x,timeout_ms),default -1 means block
+  int aliveEvents(int timeout_ms);
   // call epoll_ctl
   // operation : 添加事件 EPOLL_CTL_ADD,移除事件 EPOLL_CTL_DEL,修改事件 EPOLL_CTL_MOD
   // setEvent : EPOLLIN, EPOLLOUT, EPOLLET
