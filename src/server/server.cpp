@@ -60,8 +60,11 @@ server::~server() {
 void server::start() {
   // 添加(实际上就是本地)server fd以便能够触发的accept事件
   _epoll_container->modifyEvent(_base_socket->getSocketId(), EPOLL_CTL_ADD, EPOLLIN);
+
   while (_start) {
+    // 循环将在该处阻塞
     int aliveEvents = _epoll_container->aliveEvents(-1);
+
     for (int i=0;i<aliveEvents; ++i) {
       auto fd_type = _epoll_container->getEventInfo(i);
       int fd = std::get<0>(fd_type);
@@ -71,7 +74,7 @@ void server::start() {
       if( fd==_base_socket->getSocketId() && event_type==EPOLLIN ) {
         int client_fd =accept(_base_socket->getSocketId(),NULL,NULL);
         if (client_fd==-1)/* TODO : deal accept error */;
-        _epoll_container->modifyEvent(client_fd, EPOLL_CTL_ADD,EPOLLIN|EPOLLET);/* ET */
+        _epoll_container->modifyEvent(client_fd, EPOLL_CTL_ADD,EPOLLIN|EPOLLET);/* set ET */
         /* write log */ {
           _logger->info("accept sum : {}",++client_num);
         }
@@ -85,9 +88,16 @@ void server::start() {
         while (true) {
           memset(buffer, 0x00, sizeof(buffer));
           int len = recv(fd,buffer,1025,NULL);
-          if      (len==-1) /* TODO:deal error */break;
+          if      (len==-1) /* TODO:deal error or no data*/ {
+            if (errno == EAGAIN) {
+              // 没有数据可读
+            } else {
+              // 其他错误
+            }
+            break;
+          }
           else if (len== 0) /* TODO:deal client quit */break;
-          else if (len<1025) break;
+//          else if (len<1025) break;
           /* now data in buffer,and need to deal */ {
             for (int add_index = 0; add_index < len; ++add_index)
               display += buffer[add_index];
