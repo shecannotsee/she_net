@@ -13,7 +13,7 @@ class packageInStream {
  public:
   enum {HEADER=1,DATA=2,DATAEND=3};
   struct header {
-    unsigned int flag   : 1;// 0-数据结尾的包
+    unsigned int flag   : 1;// 0-数据结尾的包;1-尚未接受完全
     unsigned int length : 31;// 1-数据长度
   };
   struct half_data {
