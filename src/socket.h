@@ -9,15 +9,15 @@ namespace sheNet {
 
 class socket {
  public:
-  socket();
+  socket()=default;
  private:
 
  public:
-  bind();
-  listen();
-  accept();
-  connect();
-  close();
+//  bind();
+//  listen();
+//  accept();
+//  connect();
+//  close();
 
 };// class socket
 
