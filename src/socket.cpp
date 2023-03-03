@@ -37,7 +37,10 @@ sheNet::socket::~socket() {
   ::shutdown(id_,SHUT_RDWR);
 };
 
-void sheNet::socket::bind(const std::string& ip,const std::string& port) noexcept {
+void sheNet::socket::bind(const std::string& port,std::string& ip) noexcept {
+  if (ip =="0.0.0.0") {
+    ip = "::";
+  }
   int ret = -1;
   if (net_transport_==NetTransport::TCP_IPV4) {
     struct sockaddr_in local_address{};
@@ -121,4 +124,8 @@ void sheNet::socket::connect(const std::string &ip, const std::string &port) noe
   if (ret == -1) {
     throw sheNetException(4,"connect port error."+std::string(strerror(errno)));
   }
+};
+
+void sheNet::socket::accept(const std::string &ip, const std::string &port) noexcept {
+
 };

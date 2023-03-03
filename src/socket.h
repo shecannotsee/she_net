@@ -24,10 +24,10 @@ class socket {
   NetTransport net_transport_;
 
  public:
-  void bind(const std::string& ip,const std::string& port) noexcept;
+  void bind(const std::string& ip, std::string& port) noexcept;
   void listen(int backlog = 5) noexcept;
-  void connect(const std::string& ip,const std::string& port) noexcept;
-  void accept() noexcept;
+  void connect(const std::string& port,const std::string& ip = "0.0.0.0") noexcept;
+  void accept(const std::string& ip = "",const std::string& port = "") noexcept;
 
 };// class socket
 
