@@ -2,8 +2,8 @@
 // Created by shecannotsee on 2023/3/3.
 //
 
-#ifndef SHE_NET_SRC_NET_BASE_H_
-#define SHE_NET_SRC_NET_BASE_H_
+#ifndef SHE_NET_SRC_NET_TRANSPORT_H_
+#define SHE_NET_SRC_NET_TRANSPORT_H_
 
 namespace sheNet {
 
@@ -14,7 +14,6 @@ enum class NetTransport : unsigned char {
   UDP_IPV6
 };
 
-
 };// namespace sheNet
 
-#endif //SHE_NET_SRC_NET_BASE_H_
+#endif //SHE_NET_SRC_NET_TRANSPORT_H_

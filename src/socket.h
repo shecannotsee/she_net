@@ -5,7 +5,7 @@
 #ifndef SHE_NET_SRC_SOCKET_H_
 #define SHE_NET_SRC_SOCKET_H_
 
-#include <net_base.h>
+#include <net_transport.h>
 #include <client_info.h>
 #include <string>
 
