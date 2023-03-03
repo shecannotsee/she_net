@@ -25,7 +25,7 @@ class socket {
 
  public:
   void bind(const std::string& ip,const std::string& port) noexcept;
-  void listen() noexcept;
+  void listen(int backlog = 5) noexcept;
   void accept() noexcept;
   void connect() noexcept;
 

@@ -4,6 +4,7 @@
 
 #include "socket.h"
 #include <sheNetException/sheNetException.h>
+#include <errno.h>
 
 #include <string.h>
 #include <netinet/in.h>
@@ -28,7 +29,7 @@ sheNet::socket::socket(sheNet::NetTransport type) noexcept
     id_ = ::socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
   }
   if (id_ == -1) {
-    throw sheNetException(1,"socket create error.");
+    throw sheNetException(1,"socket create error:"+std::string(strerror(errno)));
   }
 };
 
@@ -72,6 +73,12 @@ void sheNet::socket::bind(const std::string& ip,const std::string& port) noexcep
   }
 
   if (ret == -1) {
-    throw sheNetException(2,"bind socket error.");
+    throw sheNetException(2,"bind socket error:"+std::string(strerror(errno)));
+  }
+}
+void sheNet::socket::listen(int backlog) noexcept {
+  int ret = ::listen(id_,backlog);
+  if (ret== -1) {
+    throw sheNetException(3,"listen port error."+std::string(strerror(errno)));
   }
 };
