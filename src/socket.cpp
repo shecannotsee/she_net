@@ -83,7 +83,7 @@ void sheNet::socket::bind(const std::string& port,std::string& ip) noexcept {
 }
 void sheNet::socket::listen(int backlog) noexcept {
   int ret = ::listen(id_,backlog);
-  if (ret== -1) {
+  if (ret == -1) {
     throw sheNetException(3,"listen port error."+std::string(strerror(errno)));
   }
 };
