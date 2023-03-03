@@ -126,6 +126,29 @@ void sheNet::socket::connect(const std::string &ip, const std::string &port) noe
   }
 };
 
-void sheNet::socket::accept(const std::string &ip, const std::string &port) noexcept {
+sheNet::ClientInfo sheNet::socket::accept() noexcept {
+  ClientInfo client{};
+  int ret = -1;
+  if (net_transport_ == NetTransport::TCP_IPV4) {
+    struct sockaddr_in client_address{};
+    socklen_t client_address_len = sizeof(client_address);
+    ret = ::accept(id_, (struct sockaddr*)&client_address, &client_address_len);
+//    printf("Connection from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+    client.ip_ = std::move(std::string(inet_ntoa(client_address.sin_addr)));
+    client.port_ = std::move(std::to_string(ntohs(client_address.sin_port)));
+  }
+  else if (net_transport_==NetTransport::TCP_IPV6) {
+    struct sockaddr_in6 client_address{};
+    socklen_t client_address_len = sizeof(client_address);
+    ret = ::accept(id_, (struct sockaddr*)&client_address, &client_address_len);
+    char client_addr_str[INET6_ADDRSTRLEN];
+    inet_ntop(AF_INET6, &client_address.sin6_addr, client_addr_str, INET6_ADDRSTRLEN);
+//    printf("Connection from %s:%d\n", client_addr_str, ntohs(client_address.sin6_port));
+    client.ip_ = std::move(std::string(inet_ntop(AF_INET6, &client_address.sin6_addr, client_addr_str, INET6_ADDRSTRLEN)));
+    client.port_ = std::move(std::to_string(ntohs(client_address.sin6_port)));
+  }
+  if (ret == -1) {
+    throw sheNetException(5,"accept port error."+std::string(strerror(errno)));
+  }
 
 };

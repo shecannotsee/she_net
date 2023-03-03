@@ -6,6 +6,7 @@
 #define SHE_NET_SRC_SOCKET_H_
 
 #include <net_base.h>
+#include <client_info.h>
 #include <string>
 
 namespace sheNet {
@@ -26,8 +27,9 @@ class socket {
  public:
   void bind(const std::string& ip, std::string& port) noexcept;
   void listen(int backlog = 5) noexcept;
+  ClientInfo accept() noexcept;
+
   void connect(const std::string& port,const std::string& ip = "0.0.0.0") noexcept;
-  void accept(const std::string& ip = "",const std::string& port = "") noexcept;
 
 };// class socket
 
