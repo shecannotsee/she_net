@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 sheNet::socket::socket()
     : socket(NetTransport::TCP_IPV4) {
@@ -29,7 +30,11 @@ sheNet::socket::socket(sheNet::NetTransport type) noexcept
   if (id_ == -1) {
     throw sheNetException(1,"socket create error.");
   }
-}
+};
+
+sheNet::socket::~socket() {
+  ::close(id_);
+};
 
 void sheNet::socket::bind(const std::string& ip,const std::string& port) noexcept {
   int ret = -1;
@@ -69,4 +74,4 @@ void sheNet::socket::bind(const std::string& ip,const std::string& port) noexcep
   if (ret == -1) {
     throw sheNetException(2,"bind socket error.");
   }
-}
+};
