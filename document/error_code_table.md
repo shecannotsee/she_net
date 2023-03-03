@@ -1,1 +1,4 @@
 0001:调用socket时候创建socket错误
+0002:在绑定地址时调用bind出错
+0003:在监听地址的时候调用listen出错
+0004:在使用socket连接服务器时使用connect错误
