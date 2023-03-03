@@ -34,7 +34,7 @@ sheNet::socket::socket(sheNet::NetTransport type) noexcept
 };
 
 sheNet::socket::~socket() {
-  ::close(id_);
+  ::shutdown(id_,SHUT_RDWR);
 };
 
 void sheNet::socket::bind(const std::string& ip,const std::string& port) noexcept {
@@ -81,4 +81,8 @@ void sheNet::socket::listen(int backlog) noexcept {
   if (ret== -1) {
     throw sheNetException(3,"listen port error."+std::string(strerror(errno)));
   }
+};
+
+void sheNet::socket::connect(const std::string &ip, const std::string &port) noexcept {
+
 };
