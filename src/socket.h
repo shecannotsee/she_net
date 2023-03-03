@@ -5,12 +5,16 @@
 #ifndef SHE_NET_SRC_SOCKET_H_
 #define SHE_NET_SRC_SOCKET_H_
 
+#include <net_base.h>
+
 namespace sheNet {
 
 class socket {
  public:
-  socket()=default;
+  socket();
+  explicit socket(NetTransport) noexcept;
  private:
+  int id_;
 
  public:
 //  bind();
