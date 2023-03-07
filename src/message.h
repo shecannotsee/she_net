@@ -25,14 +25,14 @@ class message {
  private:
   std::unique_ptr<sheNet::socket> socket_;
  public:
-  std::string get();
-  void send(std::string&&);
+  std::string   get();
+  void          send(std::string&&);
 
  private:
-  void tcp_get();
-  void tcp_send();
-  void udp_get();
-  void udp_send();
+  std::string   tcp_get();
+  void          tcp_send();
+  std::string   udp_get();
+  void          udp_send();
 
 
 
