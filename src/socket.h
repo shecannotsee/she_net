@@ -19,7 +19,9 @@ class socket {
   // disable copy
   socket(const socket& x) = delete;
   socket& operator=(const socket& x) = delete;
-
+  // move
+  socket(socket&&) = default;
+  socket& operator=(socket&& x) = default;
  private:
   int id_;
   NetTransport net_transport_;
