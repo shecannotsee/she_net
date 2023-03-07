@@ -155,4 +155,10 @@ sheNet::ClientInfo sheNet::socket::accept() noexcept {
     client.fd_ = CPP11::make_unique<int>(ret);
   }
   return client;
+}
+int sheNet::socket::get_id() const {
+  return id_;
+}
+sheNet::NetTransport sheNet::socket::get_net_transport() const {
+  return net_transport_;
 };

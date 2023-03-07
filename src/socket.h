@@ -33,6 +33,10 @@ class socket {
 
   void connect(const std::string& port,const std::string& ip = "0.0.0.0") noexcept;
 
+ public:
+  int get_id() const;
+  NetTransport get_net_transport() const;
+
 };// class socket
 
 };// namespace sheNet {
