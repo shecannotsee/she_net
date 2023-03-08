@@ -16,6 +16,9 @@
 #include <make_unique.h>
 
 #include <unistd.h>
+#include <netdb.h>
+#include <cstring>
+#include <arpa/inet.h>
 
 namespace m4_udp_io_test {
 
@@ -33,7 +36,7 @@ int main() {
         client->udp_set(std::move(quadruple));
       };
       sheNet::message message_control(std::move(client));
-      std::cout << "udp client set done.\n";
+      std::cout << "udp client set done,start to send message.\n";
       while (1) {
         message_control.send("hello world");
         std::cout << "send done.\n";
@@ -65,8 +68,8 @@ int main() {
     }
   };
 
-  auto server_future = std::async(std::launch::async,server);
   auto client_future = std::async(std::launch::async,client);
+  auto server_future = std::async(std::launch::async,server);
 
   sleep(100);
   return 0;
