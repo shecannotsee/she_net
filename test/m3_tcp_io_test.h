@@ -60,7 +60,6 @@ int main() {
   auto server_future = std::async(std::launch::async,server);
   auto client_future = std::async(std::launch::async,client);
 
-  sleep(100);
   return 0;
 };
 
