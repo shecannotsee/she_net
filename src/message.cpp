@@ -47,8 +47,10 @@ std::string sheNet::message::tcp_get() {
         // 出现其他错误，需要处理
         throw sheNetException(6,"tcp recv data error."+std::string(strerror(errno)));
       }
-    } else {
+    }
+    else {
       // TODO:成功读取了n个字节的数据之后,可能数据仍然不完整,需要做缓冲并且将流数据进行切割处理
+      accepting = false;
     }
   };
   return buffer;
@@ -82,12 +84,15 @@ std::string sheNet::message::udp_get() {
       if (errno == EAGAIN || errno == EWOULDBLOCK) {
         // 暂时没有数据可读，稍后再试
         accepting = false;
-      } else {
+      }
+      else {
         // 出现其他错误，需要处理
         throw sheNetException(8,"upd recv data error."+std::string(strerror(errno)));
       }
-    } else {
+    }
+    else {
       // TODO:成功读取了n个字节的数据之后,可能数据仍然不完整,需要做缓冲并且将流数据进行切割处理
+      accepting = false;
     }
   };
   return buffer;
