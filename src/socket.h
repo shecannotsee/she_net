@@ -7,9 +7,7 @@
 
 #include <string>
 #include <net_transport.h>
-#include <client_info.h>
 #include <quadruple.h>
-
 
 namespace sheNet {
 
