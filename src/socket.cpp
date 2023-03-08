@@ -170,3 +170,7 @@ sheNet::ClientInfo sheNet::socket::accept() noexcept {
 sheNet::NetTransport sheNet::socket::get_net_transport() const {
   return net_transport_;
 };
+
+int sheNet::socket::get_id() const {
+  return this->quadruple_.source_fd;
+};
