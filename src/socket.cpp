@@ -135,7 +135,7 @@ void sheNet::socket::connect(const std::string &ip, const std::string &port) noe
   }
 };
 
-sheNet::ClientInfo sheNet::socket::accept() noexcept {
+void sheNet::socket::accept() noexcept {
   ClientInfo client{};
   int destination_fd = -1;
   if (net_transport_ == NetTransport::TCP_IPV4) {
@@ -156,6 +156,7 @@ sheNet::ClientInfo sheNet::socket::accept() noexcept {
     client.ip_ = std::move(std::string(inet_ntop(AF_INET6, &client_address.sin6_addr, client_addr_str, INET6_ADDRSTRLEN)));
     client.port_ = std::move(std::to_string(ntohs(client_address.sin6_port)));
   }
+
   if (destination_fd == -1) {
     throw sheNetException(5,"accept port error."+std::string(strerror(errno)));
   } else {
@@ -164,7 +165,7 @@ sheNet::ClientInfo sheNet::socket::accept() noexcept {
     quadruple_.destination_ip = client.ip_;
     quadruple_.destination_port = std::atoi(client.port_.c_str());
   }
-  return client;
+
 };
 
 sheNet::NetTransport sheNet::socket::get_net_transport() const {
@@ -175,6 +176,23 @@ int sheNet::socket::get_source_id() const {
   return this->quadruple_.source_fd;
 };
 
+std::string sheNet::socket::get_source_ip() const {
+  return this->quadruple_.source_ip;
+};
+
+unsigned short sheNet::socket::get_source_port() const {
+  return static_cast<unsigned short >(this->quadruple_.source_port);
+};
+
+
 int sheNet::socket::get_destination_id() const {
   return this->quadruple_.destination_fd;
+};
+
+std::string sheNet::socket::get_destination_ip() const {
+  return this->quadruple_.destination_ip;
+};
+
+unsigned short sheNet::socket::get_destination_port() const {
+  return static_cast<unsigned short >(this->quadruple_.destination_port);
 };

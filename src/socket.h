@@ -32,14 +32,18 @@ class socket {
   // server api
   void bind(const std::string& port,std::string ip = "0.0.0.0") noexcept;
   void listen(int backlog = 5) noexcept;
-  ClientInfo accept() noexcept;
+  void accept() noexcept;
   // client api
   void connect(const std::string &ip, const std::string &port) noexcept;
 
  public:
-  int get_source_id() const;
-  int get_destination_id() const;
-  NetTransport get_net_transport() const;
+  int             get_source_id() const;
+  std::string     get_source_ip() const;
+  unsigned short  get_source_port() const;
+  int             get_destination_id() const;
+  std::string     get_destination_ip() const;
+  unsigned short  get_destination_port() const;
+  NetTransport    get_net_transport() const;
 
 };// class socket
 
