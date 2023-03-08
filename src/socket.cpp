@@ -49,7 +49,7 @@ void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
     ::memset(&local_address, 0, sizeof(local_address));
     local_address.sin_family = AF_INET;
     local_address.sin_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
-    local_address.sin_addr.s_addr = inet_addr(ip.c_str());
+    local_address.sin_addr.s_addr = ::inet_addr(ip.c_str());
     ret = ::bind(quadruple_.source_fd, (struct sockaddr*)&local_address, sizeof(local_address));
   }
   else if (net_transport_==NetTransport::TCP_IPV6) {
@@ -65,7 +65,7 @@ void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
     ::memset(&local_address, 0, sizeof(local_address));
     local_address.sin_family = AF_INET;
     local_address.sin_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
-    local_address.sin_addr.s_addr = inet_addr(ip.c_str());
+    local_address.sin_addr.s_addr = ::inet_addr(ip.c_str());
     ret = ::bind(quadruple_.source_fd, (struct sockaddr*)&local_address, sizeof(local_address));
   }
   else if (net_transport_==NetTransport::UDP_IPV6) {
@@ -141,7 +141,6 @@ void sheNet::socket::accept() noexcept {
     struct sockaddr_in client_address{};
     socklen_t client_address_len = sizeof(client_address);
     destination_fd = ::accept(quadruple_.source_fd, (struct sockaddr*)&client_address, &client_address_len);
-    //printf("Connection from %s:%d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
     quadruple_.destination_ip = std::move(std::string(inet_ntoa(client_address.sin_addr)));
     quadruple_.destination_port = ntohs(client_address.sin_port);
   }
@@ -150,8 +149,7 @@ void sheNet::socket::accept() noexcept {
     socklen_t client_address_len = sizeof(client_address);
     destination_fd = ::accept(quadruple_.source_fd, (struct sockaddr*)&client_address, &client_address_len);
     char client_addr_str[INET6_ADDRSTRLEN];
-    inet_ntop(AF_INET6, &client_address.sin6_addr, client_addr_str, INET6_ADDRSTRLEN);
-    //printf("Connection from %s:%d\n", client_addr_str, ntohs(client_address.sin6_port));
+    ::inet_ntop(AF_INET6, &client_address.sin6_addr, client_addr_str, INET6_ADDRSTRLEN);
     quadruple_.destination_ip = std::move(std::string(inet_ntop(AF_INET6, &client_address.sin6_addr, client_addr_str, INET6_ADDRSTRLEN)));
     quadruple_.destination_port = ntohs(client_address.sin6_port);
   }
@@ -163,7 +161,6 @@ void sheNet::socket::accept() noexcept {
   }
 
 };
-
 
 void sheNet::socket::udp_set(sheNet::quadruple quadruple) {
   quadruple_.destination_ip = quadruple.destination_ip;
@@ -185,7 +182,6 @@ std::string sheNet::socket::get_source_ip() const {
 unsigned short sheNet::socket::get_source_port() const {
   return static_cast<unsigned short >(this->quadruple_.source_port);
 };
-
 
 int sheNet::socket::get_destination_id() const {
   return this->quadruple_.destination_fd;
