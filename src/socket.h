@@ -34,6 +34,7 @@ class socket {
   void connect(const std::string &ip, const std::string &port) noexcept;
 
  public:
+  inline void set_id(int a) {id_=a;};
   int get_id() const;
   NetTransport get_net_transport() const;
 
