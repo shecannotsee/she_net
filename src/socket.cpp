@@ -38,7 +38,7 @@ sheNet::socket::~socket() {
   ::shutdown(id_,SHUT_RDWR);
 };
 
-void sheNet::socket::bind(const std::string& port,std::string& ip) noexcept {
+void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
   if (ip == "0.0.0.0" && (net_transport_ == NetTransport::TCP_IPV6||
                           net_transport_ == NetTransport::UDP_IPV6  )) {
     ip = "::";
