@@ -171,6 +171,10 @@ sheNet::NetTransport sheNet::socket::get_net_transport() const {
   return net_transport_;
 };
 
-int sheNet::socket::get_id() const {
+int sheNet::socket::get_source_id() const {
   return this->quadruple_.source_fd;
+};
+
+int sheNet::socket::get_destination_id() const {
+  return this->quadruple_.destination_fd;
 };

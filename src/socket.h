@@ -37,7 +37,8 @@ class socket {
   void connect(const std::string &ip, const std::string &port) noexcept;
 
  public:
-  int get_id() const;
+  int get_source_id() const;
+  int get_destination_id() const;
   NetTransport get_net_transport() const;
 
 };// class socket
