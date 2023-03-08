@@ -20,16 +20,18 @@
 namespace m3_tcp_io_test {
 
 int main() {
-  auto server = []() {
+  std::string ip = "192.168.1.47";
+  std::string port = "9981";
+
+  auto server = [&]() {
     try {
       sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
-      sheNet::socket server_fd(tcp);
-      server_fd.bind("9999999");
-      server_fd.listen();
-      sheNet::ClientInfo client_info = server_fd.accept();
-      std::unique_ptr<sheNet::socket> client_fd = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
-      client_fd->set_id(*client_info.fd_);
-      sheNet::message message_control(std::move(client_fd));
+      std::unique_ptr<sheNet::socket> server = sheNet::CPP11::make_unique<sheNet::socket>(tcp);/* tcp init */{
+        server->bind(port);
+        server->listen();
+        server->accept();
+      };
+      sheNet::message message_control(std::move(server));
       std::cout << "server set done.\n";
       while (1) {
         std::string data = message_control.get();
@@ -41,12 +43,13 @@ int main() {
     }
   };
 
-  auto client = []() {
+  auto client = [&]() {
     try {
       sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
-      std::unique_ptr<sheNet::socket> client_fd = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
-      client_fd->connect("192.168.1.65", "9999999");
-      sheNet::message message_control(std::move(client_fd));
+      std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(tcp);/* tcp init */ {
+        client->connect(ip, port);
+      };
+      sheNet::message message_control(std::move(client));
       std::cout << "client set done.\n";
       while (1) {
         message_control.send("hello world");
@@ -59,7 +62,7 @@ int main() {
 
   auto server_future = std::async(std::launch::async,server);
   auto client_future = std::async(std::launch::async,client);
-
+  sleep(100);
   return 0;
 };
 
