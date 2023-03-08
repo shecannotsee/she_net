@@ -33,11 +33,10 @@ void sheNet::message::send(const std::string& message) {
 std::string sheNet::message::tcp_get() {
   std::string buffer;
   buffer.resize(1024); // 预留足够的空间
-  ssize_t n = recv(socket_->get_id(), &buffer[0], buffer.size(), MSG_DONTWAIT);
   bool accepting = true;
   while (accepting) {
     // TODO:若超过1024字节,需要重新调整buff的传入指针
-    ssize_t number_of_bytes_accepted = recv(socket_->get_id(), &buffer[0], buffer.size(), MSG_DONTWAIT);
+    ssize_t number_of_bytes_accepted = recv(socket_->get_destination_id(), &buffer[0], buffer.size(), MSG_DONTWAIT);
     if (number_of_bytes_accepted < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK) {
         // 暂时没有数据可读，稍后再试
@@ -55,7 +54,7 @@ std::string sheNet::message::tcp_get() {
 
 void sheNet::message::tcp_send(const std::string& message) {
   // 在发送前可能需要将流数据进行头尾包装
-  ssize_t n = ::send(socket_->get_id(), message.c_str(), message.size(), 0);
+  ssize_t n = ::send(socket_->get_source_id(), message.c_str(), message.size(), 0);
   if (n < 0) {
     throw sheNetException(7,"tcp send message error."+std::string(strerror(errno)));
   }
@@ -69,7 +68,7 @@ void sheNet::message::tcp_send(const std::string& message) {
 };
 
 std::string sheNet::message::udp_get() {
-
+//  ssize_t ret = recvfrom(socket_->get_id());
 };
 
 void sheNet::message::udp_send(const std::string& message) {
