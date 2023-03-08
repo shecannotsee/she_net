@@ -37,6 +37,7 @@ class socket {
   void connect(const std::string &ip, const std::string &port) noexcept;
 
  public:
+  void            udp_set(sheNet::quadruple&& quadruple);
   int             get_source_id() const;
   std::string     get_source_ip() const;
   unsigned short  get_source_port() const;
