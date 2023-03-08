@@ -169,8 +169,9 @@ void sheNet::socket::accept() noexcept {
 };
 
 
-void sheNet::socket::udp_set(sheNet::quadruple&& quadruple) {
-  quadruple_ = quadruple;
+void sheNet::socket::udp_set(sheNet::quadruple quadruple) {
+  quadruple_.destination_ip = quadruple.destination_ip;
+  quadruple_.destination_port = quadruple.destination_port;
 };
 
 sheNet::NetTransport sheNet::socket::get_net_transport() const {
