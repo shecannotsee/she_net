@@ -24,7 +24,7 @@ int main() {
     try {
       sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
       sheNet::socket server_fd(tcp);
-      server_fd.bind("9981");
+      server_fd.bind("9999999");
       server_fd.listen();
       sheNet::ClientInfo client_info = server_fd.accept();
       std::unique_ptr<sheNet::socket> client_fd = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
@@ -45,7 +45,7 @@ int main() {
     try {
       sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
       std::unique_ptr<sheNet::socket> client_fd = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
-      client_fd->connect("192.168.1.65", "9981");
+      client_fd->connect("192.168.1.65", "9999999");
       sheNet::message message_control(std::move(client_fd));
       std::cout << "client set done.\n";
       while (1) {
@@ -57,8 +57,8 @@ int main() {
     }
   };
 
-  auto result1 = std::async(std::launch::async,server);
-  auto result2 = std::async(std::launch::async,client);
+  auto server_future = std::async(std::launch::async,server);
+  auto client_future = std::async(std::launch::async,client);
 
   sleep(100);
   return 0;
