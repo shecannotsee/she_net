@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
 #include <socket.h>
 #include <sys/select.h>
 
@@ -21,9 +22,17 @@ int main() {
     server_socket.listen();
   };
 
-  std::vector<int> client_fds; // 存储客户端套接字的文件描述符
-  fd_set read_fds; // 读事件集合
-  FD_ZERO(&read_fds);
+  static std::vector<int> client_fds; // 存储客户端套接字的文件描述符
+  fd_set read_fds;    /* 读事件 */ {
+    /* 将所有bit置为0 */
+    FD_ZERO(&read_fds);
+  };
+  fd_set write_fds;   /* 写事件 */ {
+    FD_ZERO(&write_fds);
+  };
+  fd_set except_fds;  /* 异常事件 */ {
+    FD_ZERO(&except_fds);
+  };
   int max_fd = 1024; // 最大文件描述符
 
   auto client = [&](std::string data) {
@@ -34,8 +43,10 @@ int main() {
       };
       sheNet::message message_control(std::move(client));
       std::cout << "client set done.\n";
-      while (1) {
+      int i = 3;
+      while (i--) {
         message_control.send("hello world"+data);
+        std::cout << "send done." + data <<"\n";
         sleep(2);
       }
     } catch (const std::exception& exc) {
@@ -47,36 +58,48 @@ int main() {
   auto client_future3 = std::async(std::launch::async,client,"3");
   auto client_future4 = std::async(std::launch::async,client,"4");
 
+  std::mutex mtx;
+  auto accept_thread = [&]() {
+    int client_num = 0;
+    while (client_num != 4) {
+      std::unique_lock<std::mutex> lock(mtx);
+      server_socket.accept();
+      std::cout << "new connection from " << server_socket.get_destination_ip()
+                << ":" << server_socket.get_destination_port()
+                << ":" << server_socket.get_destination_id()
+                << std::endl;
+      client_fds.push_back(server_socket.get_destination_id());
+      // client fd加入事件集合
+      FD_SET(server_socket.get_destination_id(), &read_fds);
+      client_num++;
+    }
+  };
+  auto accept_result = std::async(std::launch::async,accept_thread);
+
   while (1) {
-    // 设置事件集合
+    std::unique_lock<std::mutex> lock(mtx);
+    std::cout << "start while\n";
+    FD_ZERO(&read_fds);
+    // 将server fd加入事件集合
     FD_SET(server_socket.get_source_id(), &read_fds);
-    for (auto fd : client_fds) {
-      FD_SET(fd, &read_fds);
-      if (fd > max_fd) {
-        max_fd = fd;
-      }
+    for (auto client_fd : client_fds) {
+      FD_SET(client_fd, &read_fds);
     }
 
+    struct timeval tTime;
+    tTime.tv_sec = 10;
+    tTime.tv_usec = 0;
     // 等待事件发生
-    int ret = ::select(max_fd + 1, &read_fds, nullptr, nullptr, nullptr);
+    int ret = ::select(max_fd + 1, &read_fds, nullptr, nullptr, &tTime);
     if (ret == -1) {
       perror("select");
       break;
     };
 
-    // 处理事件
-    if (FD_ISSET(server_socket.get_source_id(), &read_fds)) {
-      // 有新的客户端连接请求
-      server_socket.accept();
-      std::cout << "new connection from "<< server_socket.get_destination_ip()
-                << ":" << server_socket.get_destination_port()
-                << std::endl;
-      client_fds.push_back(server_socket.get_destination_id());
-    }
-
-    for (auto iter = client_fds.begin(); iter != client_fds.end();) {
-      int client_fd = *iter;
-      if (FD_ISSET(client_fd, &read_fds)) {
+    for (auto client_fd : client_fds) {
+      // fd is ready to io
+      bool result = FD_ISSET(client_fd, &read_fds);
+      if (result) {
         // 有客户端套接字的数据可读
         char buf[1024];
         int n = recv(client_fd, buf, sizeof(buf), 0);
@@ -84,16 +107,12 @@ int main() {
           // 客户端已经关闭连接
           std::cout << "client disconnected" << std::endl;
           close(client_fd);
-          iter = client_fds.erase(iter);
-          continue;
+          FD_CLR(client_fd,&read_fds);
+        } else {
+          std::cout << "recv " << n << " bytes from client" << std::endl;
         }
-        std::cout << "recv " << n << " bytes from client" << std::endl;
       }
-      ++iter;
     }
-
-    // 清空事件集合
-    FD_ZERO(&read_fds);
 
   };// while(1)
 
