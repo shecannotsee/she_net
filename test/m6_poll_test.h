@@ -13,7 +13,7 @@
 namespace m6_poll_test {
 
 int main() {
-  std::string ip = "192.168.199.129";
+  std::string ip = "192.168.1.47";
   std::string port = "9981";
 
   sheNet::socket server_socket; /* set */ {
@@ -25,8 +25,31 @@ int main() {
   // 添加server fd
   poll_fds.push_back({server_socket.get_source_id(),POLLIN, 0});
 
+  auto client = [&](std::string data) {
+    try {
+      sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
+      std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(tcp);/* tcp init */ {
+        client->connect(ip, port);
+      };
+      sheNet::message message_control(std::move(client));
+      std::cout << "client set done.\n";
+      int i = 3;
+      while (i--) {
+        message_control.send("hello world"+data);
+        std::cout << "send done." + data <<"\n";
+        sleep(2);
+      }
+    } catch (const std::exception& exc) {
+      std::cout<<exc.what()<<std::endl;
+    }
+  };
+  auto client_future1 = std::async(std::launch::async,client,"1");
+  auto client_future2 = std::async(std::launch::async,client,"2");
+  auto client_future3 = std::async(std::launch::async,client,"3");
+  auto client_future4 = std::async(std::launch::async,client,"4");
+
   while (1) {
-    int ret = poll(poll_fds.data(), poll_fds.size(), -1);
+    int ret = poll(poll_fds.data(), poll_fds.size(), 5);
     if (ret < 0) {
       std::cerr << "poll error: " << std::strerror(errno) << std::endl;
       break;
@@ -35,19 +58,12 @@ int main() {
     // 连接上的client添加
     if (poll_fds[0].revents & POLLIN) {
       // 有新连接请求
-      int client_fd = accept(server_socket.get_source_id(), nullptr, nullptr);
-      if (client_fd < 0) {
-        if (errno == EAGAIN || errno == EWOULDBLOCK) {
-          // 已经处理完所有连接请求
-        } else {
-          std::cerr << "accept error: " << std::strerror(errno) << std::endl;
-          break;
-        }
-      } else {
-        std::cout << "new connection accepted: " << client_fd << std::endl;
-        // 将新连接的socket加入pollfd数组
-        poll_fds.push_back({client_fd, POLLIN, 0});
-      }
+      server_socket.accept();
+      std::cout << "new connection from " << server_socket.get_destination_ip()
+                << ":" << server_socket.get_destination_port()
+                << ":" << server_socket.get_destination_id()
+                << std::endl;
+      poll_fds.push_back({server_socket.get_destination_id(), POLLIN, 0});
     }
 
     // 遍历除server fd之外的所有fd
