@@ -60,6 +60,7 @@ int main() {
       int fd = events[i].data.fd;
       auto type = events[i].events;
 
+      // 对于server fd触发的client的连接请求事件处理
       if ( fd == server_socket.get_source_id() && (type == EPOLLIN)) {
         server_socket.accept();
         epoll_event temp;
@@ -68,6 +69,7 @@ int main() {
         epoll_ctl(epoll_container_id, EPOLL_CTL_ADD, server_socket.get_destination_id(), &temp);
         printf("accept : %d\n", ++client_num);
       }
+      // client 可读事件
       else if ( type == EPOLLIN ) {
         int fd = events[i].data.fd;
         char buffer[1025];
@@ -96,7 +98,7 @@ int main() {
         printf("EPOLLOUT happened:[%d].\n",events[i].data.fd);
       }
 
-    }
+    };// for
 
   };// while (1)
 
