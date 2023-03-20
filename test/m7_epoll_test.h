@@ -55,6 +55,7 @@ int main() {
   std::atomic<int> client_num;
   while (1) {
     int how_many_event_to_del = epoll_wait(epoll_container_id, events,100000,-1);
+    // 遍历所有触发事件
     for( int i=0;i<how_many_event_to_del; ++i) {
       int fd = events[i].data.fd;
       auto type = events[i].events;
