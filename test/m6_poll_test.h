@@ -55,7 +55,7 @@ int main() {
       break;
     }
 
-    // 连接上的client添加
+    // 连接上的client添加,也就是在检查server fd是否被poll接口改为POLLIN,如果被修改表示触发了io操作(其实这里的io操作就是有客户端在连接)
     if (poll_fds[0].revents & POLLIN) {
       // 有新连接请求
       server_socket.accept();
@@ -68,6 +68,7 @@ int main() {
 
     // 遍历除server fd之外的所有fd
     for (int i = 0; i < poll_fds.size() ; i++) {
+      // 仍然要遍历所有已经添加的fd,触发io操作的fd(revents被置为POLLIN的表示触发了io操作,该变量的修改会在poll接口里由内核去做)
       if ((poll_fds[i].revents & POLLIN) && poll_fds[i].fd != server_socket.get_source_id()) { // 该fd可读
         char buf[1024];
         int n = recv(poll_fds[i].fd, buf, sizeof(buf), 0);

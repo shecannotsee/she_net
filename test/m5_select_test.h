@@ -89,15 +89,16 @@ int main() {
     struct timeval tTime;
     tTime.tv_sec = 10;
     tTime.tv_usec = 0;
-    // 等待事件发生
+    // 等待事件发生,实际上是将触发io操作的fd的bit位置1
     int ret = ::select(max_fd + 1, &read_fds, nullptr, nullptr, &tTime);
     if (ret == -1) {
       perror("select");
       break;
     };
 
+    // 会遍历所有添加的fd
     for (auto client_fd : client_fds) {
-      // fd is ready to io
+      // fd is ready to io,若该fd被置为1表示触发了io操作,才会去进行io操作
       bool result = FD_ISSET(client_fd, &read_fds);
       if (result) {
         // 有客户端套接字的数据可读
