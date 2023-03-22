@@ -167,6 +167,11 @@ void sheNet::socket::udp_set(sheNet::quadruple quadruple) {
   quadruple_.destination_port = quadruple.destination_port;
 };
 
+void sheNet::socket::client_set(sheNet::quadruple quadruple) {
+  quadruple_.source_fd =quadruple.source_fd;
+  quadruple_.destination_fd = quadruple.destination_fd;
+};
+
 sheNet::NetTransport sheNet::socket::get_net_transport() const {
   return net_transport_;
 };
