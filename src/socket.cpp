@@ -162,14 +162,14 @@ void sheNet::socket::accept() noexcept {
 
 };
 
-void sheNet::socket::udp_set(sheNet::four_tuple quadruple) {
-  four_tuple_.destination_ip = quadruple.destination_ip;
-  four_tuple_.destination_port = quadruple.destination_port;
+void sheNet::socket::udp_set(sheNet::four_tuple four_tuple) {
+  four_tuple_.destination_ip = four_tuple.destination_ip;
+  four_tuple_.destination_port = four_tuple.destination_port;
 };
 
-void sheNet::socket::client_set(sheNet::four_tuple quadruple) {
-  four_tuple_.source_fd =quadruple.source_fd;
-  four_tuple_.destination_fd = quadruple.destination_fd;
+void sheNet::socket::client_set(sheNet::four_tuple four_tuple) {
+  four_tuple_.source_fd =four_tuple.source_fd;
+  four_tuple_.destination_fd = four_tuple.destination_fd;
 };
 
 sheNet::NetTransport sheNet::socket::get_net_transport() const {

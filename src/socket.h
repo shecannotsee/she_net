@@ -35,9 +35,9 @@ class socket {
   void connect(const std::string &ip, const std::string &port) noexcept;
 
   // udp need to set destination ip and port
-  void            udp_set(sheNet::four_tuple quadruple);
+  void            udp_set(sheNet::four_tuple four_tuple);
   // The client socket needs to be independent of the server socket and then process data
-  void            client_set(sheNet::four_tuple quadruple);
+  void            client_set(sheNet::four_tuple four_tuple);
 
  public:
   int             get_source_id() const;
