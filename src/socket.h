@@ -7,7 +7,7 @@
 
 #include <string>
 #include <net_transport.h>
-#include <quadruple.h>
+#include <four_tuple.h>
 
 namespace sheNet {
 
@@ -24,7 +24,7 @@ class socket {
   socket& operator=(socket&& x) = default;
  private:
   NetTransport net_transport_;
-  sheNet::quadruple quadruple_;
+  sheNet::four_tuple four_tuple_;
 
  public:
   // server api
@@ -35,9 +35,9 @@ class socket {
   void connect(const std::string &ip, const std::string &port) noexcept;
 
   // udp need to set destination ip and port
-  void            udp_set(sheNet::quadruple quadruple);
+  void            udp_set(sheNet::four_tuple quadruple);
   // The client socket needs to be independent of the server socket and then process data
-  void            client_set(sheNet::quadruple quadruple);
+  void            client_set(sheNet::four_tuple quadruple);
 
  public:
   int             get_source_id() const;

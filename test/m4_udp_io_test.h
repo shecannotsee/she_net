@@ -30,7 +30,7 @@ int main() {
     try {
       sheNet::NetTransport udp = sheNet::NetTransport::UDP_IPV4;
       std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(udp);/* upd client init */ {
-        sheNet::quadruple quadruple;
+        sheNet::four_tuple quadruple;
         quadruple.destination_ip = ip;
         quadruple.destination_port = std::atoi(port.c_str());
         client->udp_set(std::move(quadruple));
