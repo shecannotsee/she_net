@@ -16,12 +16,18 @@ class four_tuple {
         destination_fd(-1),destination_ip(),destination_port(0) {};
   ~four_tuple()=default;
  public:
+  // local fd
   int source_fd;
+  // local ip
   std::string source_ip;
+  // Port used locally
   unsigned int source_port;
 
+  // local fd to connect to remote
   int destination_fd;
+  // remote ip
   std::string destination_ip;
+  // remote port
   unsigned int destination_port;
 
 };// class four_tuple
