@@ -10,6 +10,7 @@
 #include "m5_select_test.h"
 #include "m6_poll_test.h"
 #include "m7_epoll_test.h"
+#include "m8_tcp_bidirectional_io_test.h"
 
 int main() {
   std::cout<<"test start.\n";
@@ -19,7 +20,8 @@ int main() {
 //  m4_udp_io_test::main();
 //  m5_select_test::main();
 //  m6_poll_test::main();
-  m7_epoll_test::main();
+//  m7_epoll_test::main();
+  m8_tcp_bidirectional_io_test::main();
   std::cout<<"Done.\n";
   return 0;
 };
