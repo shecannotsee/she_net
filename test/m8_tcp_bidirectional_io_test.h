@@ -25,6 +25,8 @@ int main() {
       sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
       std::unique_ptr<sheNet::socket> server = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
       std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
+      // 由于accept和connect均为阻塞，所以在两个server出现的时候需要有一个先启服务，然后等待另一个进行连接，这样才能顺利的进行下去
+      // 这里也是不太想使用异步来处理,因为异步嵌套已经比较深了所以做了一个顺序先后，保证先监听再连接或者先连接再监听
       if (flag==0) {
         server->bind(local_port);
         server->listen();
