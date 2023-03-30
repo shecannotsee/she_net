@@ -38,6 +38,7 @@ class connection_pool {
  public:
   // just allow to accept() to add
   void add(int socket);
+  // TODO:need to close socket_fd
   void remove(int socket);
 
 };// class connection_pool
