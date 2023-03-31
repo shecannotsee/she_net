@@ -11,6 +11,15 @@
 
 namespace sheNet {
 
+// TODO:需要添加端口复用:
+//   int reuse = on ? 1 : 0;
+//   int ret = ::setsockopt(sockFd_, SOL_SOCKET, SO_REUSEPORT,
+//                           (const void *)&reuse, sizeof(reuse));
+//
+// TODO:需要添加非阻塞模式:
+//  int flags = ::fcntl(sockFd_, F_GETFL, 0);
+//  flags |= O_NONBLOCK;
+//  int ret = ::fcntl(sockFd_, F_SETFL, flags);
 class socket {
  public:
   socket();
