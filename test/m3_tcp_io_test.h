@@ -33,14 +33,16 @@ int main() {
       };
       sheNet::message message_control(std::move(server));
       std::cout << "server set done.\n";
-      while (1) {
+      int on = 1;
+      while (on--) {
         std::string data = message_control.get();
         std::cout << "data is:[" << data << "]\n";
-        sleep(1);
+        sleep(3);
       }
     } catch (const std::exception& exc) {
       std::cout<<exc.what()<<std::endl;
     }
+    std::cout << "server close.\n";
   };
 
   auto client = [&]() {
@@ -53,6 +55,7 @@ int main() {
       std::cout << "client set done.\n";
       while (1) {
         message_control.send("hello world");
+        std::cout<< "send done.\n";
         sleep(2);
       }
     } catch (const std::exception& exc) {
