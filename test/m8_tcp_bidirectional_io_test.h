@@ -22,7 +22,7 @@ namespace m8_tcp_bidirectional_io_test {
 int main() {
   auto server_recv_and_send = [](const std::string& local_port,const std::string& connect_port,int flag) {
     try {
-      sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
+      sheNet::TRANSPORT_ADDRESS_TYPE tcp = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
       std::unique_ptr<sheNet::socket> server = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
       std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
       // 由于accept和connect均为阻塞，所以在两个server出现的时候需要有一个先启服务，然后等待另一个进行连接，这样才能顺利的进行下去

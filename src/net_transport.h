@@ -7,7 +7,7 @@
 
 namespace sheNet {
 
-enum class NetTransport : unsigned char {
+enum class TRANSPORT_ADDRESS_TYPE : unsigned char {
   TCP_IPV4,
   TCP_IPV6,
   UDP_IPV4,

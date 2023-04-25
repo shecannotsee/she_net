@@ -15,19 +15,19 @@ sheNet::message::message(std::unique_ptr<sheNet::socket> socket)
 };
 
 std::string sheNet::message::get() {
-  if (socket_->get_net_transport()==NetTransport::TCP_IPV4 || socket_->get_net_transport()==NetTransport::TCP_IPV6) {
+  if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::TCP_IPV4 || socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     return this->tcp_get();
   }
-  else if (socket_->get_net_transport()==NetTransport::UDP_IPV4 || socket_->get_net_transport()==NetTransport::UDP_IPV6) {
+  else if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::UDP_IPV4 || socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::UDP_IPV6) {
     return this->udp_get();
   }
 };
 
 void sheNet::message::send(const std::string& message) {
-  if (socket_->get_net_transport()==NetTransport::TCP_IPV4 || socket_->get_net_transport()==NetTransport::TCP_IPV6) {
+  if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::TCP_IPV4 || socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     this->tcp_send(message);
   }
-  else if (socket_->get_net_transport()==NetTransport::UDP_IPV4 || socket_->get_net_transport()==NetTransport::UDP_IPV6) {
+  else if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::UDP_IPV4 || socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::UDP_IPV6) {
     this->udp_send(message);
   }
 };
@@ -100,7 +100,7 @@ std::string sheNet::message::udp_get() {
 
 void sheNet::message::udp_send(const std::string& message) {
   int result = -1;
-  if (socket_->get_net_transport()==NetTransport::UDP_IPV4) {
+  if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::UDP_IPV4) {
     struct sockaddr_in server_address{};
     ::memset(&server_address, 0x00, sizeof(server_address));
     server_address.sin_family = AF_INET;
@@ -109,7 +109,7 @@ void sheNet::message::udp_send(const std::string& message) {
 
     result = ::sendto(socket_->get_source_id(), message.c_str(), message.size(), NULL, (struct sockaddr*)&server_address, sizeof(server_address));
   }
-  else if (socket_->get_net_transport()==NetTransport::UDP_IPV6) {
+  else if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::UDP_IPV6) {
     struct sockaddr_in6 server_address{};
     ::memset(&server_address, 0x00, sizeof(server_address));
     server_address.sin6_family = AF_INET6;

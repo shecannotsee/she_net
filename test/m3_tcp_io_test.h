@@ -25,7 +25,7 @@ int main() {
 
   auto server = [&]() {
     try {
-      sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
+      sheNet::TRANSPORT_ADDRESS_TYPE tcp = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
       std::unique_ptr<sheNet::socket> server = sheNet::CPP11::make_unique<sheNet::socket>(tcp);/* tcp init */{
         server->bind(port);
         server->listen();
@@ -47,7 +47,7 @@ int main() {
 
   auto client = [&]() {
     try {
-      sheNet::NetTransport tcp = sheNet::NetTransport::TCP_IPV4;
+      sheNet::TRANSPORT_ADDRESS_TYPE tcp = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
       std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(tcp);/* tcp init */ {
         client->connect(ip, port);
       };

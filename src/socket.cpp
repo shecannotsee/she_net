@@ -14,19 +14,19 @@
 #include <unistd.h>
 
 sheNet::socket::socket()
-    : socket(NetTransport::TCP_IPV4) {
+    : socket(TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
 };
 
-sheNet::socket::socket(sheNet::NetTransport type) noexcept
+sheNet::socket::socket(sheNet::TRANSPORT_ADDRESS_TYPE type) noexcept
     : four_tuple_(),
       net_transport_(type){
-  if (net_transport_==NetTransport::TCP_IPV4) {
+  if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     four_tuple_.source_fd= ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-  } else if (net_transport_==NetTransport::TCP_IPV6) {
+  } else if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     four_tuple_.source_fd = ::socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
-  } else if (net_transport_==NetTransport::UDP_IPV4) {
+  } else if (net_transport_==TRANSPORT_ADDRESS_TYPE::UDP_IPV4) {
     four_tuple_.source_fd = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  } else if (net_transport_==NetTransport::UDP_IPV6) {
+  } else if (net_transport_==TRANSPORT_ADDRESS_TYPE::UDP_IPV6) {
     four_tuple_.source_fd = ::socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
   }
   if (four_tuple_.source_fd == -1) {
@@ -39,12 +39,12 @@ sheNet::socket::~socket() {
 };
 
 void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
-  if (ip == "0.0.0.0" && (net_transport_ == NetTransport::TCP_IPV6||
-                          net_transport_ == NetTransport::UDP_IPV6  )) {
+  if (ip == "0.0.0.0" && (net_transport_ == TRANSPORT_ADDRESS_TYPE::TCP_IPV6||
+                          net_transport_ == TRANSPORT_ADDRESS_TYPE::UDP_IPV6  )) {
     ip = "::";
   }
   int ret = -1;
-  if (net_transport_==NetTransport::TCP_IPV4) {
+  if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     struct sockaddr_in local_address{};
     ::memset(&local_address, 0, sizeof(local_address));
     local_address.sin_family = AF_INET;
@@ -52,7 +52,7 @@ void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
     local_address.sin_addr.s_addr = ::inet_addr(ip.c_str());
     ret = ::bind(four_tuple_.source_fd, (struct sockaddr*)&local_address, sizeof(local_address));
   }
-  else if (net_transport_==NetTransport::TCP_IPV6) {
+  else if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     struct sockaddr_in6 local_address{};
     ::memset(&local_address, 0, sizeof(local_address));
     local_address.sin6_family = AF_INET6;
@@ -60,7 +60,7 @@ void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
     ::inet_pton(AF_INET6, ip.c_str(), &local_address.sin6_addr);
     ret = ::bind(four_tuple_.source_fd, (struct sockaddr*)&local_address, sizeof(local_address));
   }
-  else if (net_transport_==NetTransport::UDP_IPV4) {
+  else if (net_transport_==TRANSPORT_ADDRESS_TYPE::UDP_IPV4) {
     struct sockaddr_in local_address{};
     ::memset(&local_address, 0, sizeof(local_address));
     local_address.sin_family = AF_INET;
@@ -68,7 +68,7 @@ void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
     local_address.sin_addr.s_addr = ::inet_addr(ip.c_str());
     ret = ::bind(four_tuple_.source_fd, (struct sockaddr*)&local_address, sizeof(local_address));
   }
-  else if (net_transport_==NetTransport::UDP_IPV6) {
+  else if (net_transport_==TRANSPORT_ADDRESS_TYPE::UDP_IPV6) {
     struct sockaddr_in6 local_address{};
     ::memset(&local_address, 0, sizeof(local_address));
     local_address.sin6_family = AF_INET6;
@@ -94,7 +94,7 @@ void sheNet::socket::listen(int backlog) noexcept {
 
 void sheNet::socket::connect(const std::string &ip, const std::string &port) noexcept {
   int connect_results = -1;
-  if (net_transport_==NetTransport::TCP_IPV4) {
+  if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     struct sockaddr_in server_address{};
     ::memset(&server_address, 0, sizeof(server_address));
     server_address.sin_family = AF_INET;
@@ -102,7 +102,7 @@ void sheNet::socket::connect(const std::string &ip, const std::string &port) noe
     ::inet_pton(AF_INET, ip.c_str(), &server_address.sin_addr);
     connect_results = ::connect(four_tuple_.source_fd, (struct sockaddr *)&server_address, sizeof(server_address));
   }
-  else if (net_transport_==NetTransport::TCP_IPV6) {
+  else if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     struct sockaddr_in6 server_address{};
     ::memset(&server_address, 0, sizeof(server_address));
     server_address.sin6_family = AF_INET6;
@@ -110,7 +110,7 @@ void sheNet::socket::connect(const std::string &ip, const std::string &port) noe
     ::inet_pton(AF_INET6, ip.c_str(), &server_address.sin6_addr);
     connect_results = ::connect(four_tuple_.source_fd, (struct sockaddr *)&server_address, sizeof(server_address));
   }
-  else if (net_transport_==NetTransport::UDP_IPV4) {
+  else if (net_transport_==TRANSPORT_ADDRESS_TYPE::UDP_IPV4) {
     struct sockaddr_in server_address{};
     ::memset(&server_address, 0, sizeof(server_address));
     server_address.sin_family = AF_INET;
@@ -118,7 +118,7 @@ void sheNet::socket::connect(const std::string &ip, const std::string &port) noe
     ::inet_pton(AF_INET, ip.c_str(), &server_address.sin_addr);
     connect_results = ::connect(four_tuple_.source_fd, (struct sockaddr *)&server_address, sizeof(server_address));
   }
-  else if (net_transport_==NetTransport::UDP_IPV6) {
+  else if (net_transport_==TRANSPORT_ADDRESS_TYPE::UDP_IPV6) {
     struct sockaddr_in6 server_address{};
     ::memset(&server_address, 0, sizeof(server_address));
     server_address.sin6_family = AF_INET6;
@@ -137,14 +137,14 @@ void sheNet::socket::connect(const std::string &ip, const std::string &port) noe
 
 void sheNet::socket::accept() noexcept {
   int destination_fd = -1;
-  if (net_transport_ == NetTransport::TCP_IPV4) {
+  if (net_transport_ == TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     struct sockaddr_in client_address{};
     socklen_t client_address_len = sizeof(client_address);
     destination_fd = ::accept(four_tuple_.source_fd, (struct sockaddr*)&client_address, &client_address_len);
     four_tuple_.destination_ip = std::move(std::string(inet_ntoa(client_address.sin_addr)));
     four_tuple_.destination_port = ntohs(client_address.sin_port);
   }
-  else if (net_transport_==NetTransport::TCP_IPV6) {
+  else if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     struct sockaddr_in6 client_address{};
     socklen_t client_address_len = sizeof(client_address);
     destination_fd = ::accept(four_tuple_.source_fd, (struct sockaddr*)&client_address, &client_address_len);
@@ -172,7 +172,7 @@ void sheNet::socket::client_set(sheNet::four_tuple four_tuple) {
   four_tuple_.destination_fd = four_tuple.destination_fd;
 };
 
-sheNet::NetTransport sheNet::socket::get_net_transport() const {
+sheNet::TRANSPORT_ADDRESS_TYPE sheNet::socket::get_net_transport() const {
   return net_transport_;
 };
 

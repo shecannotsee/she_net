@@ -28,7 +28,7 @@ int main() {
 
   auto client = [&]() {
     try {
-      sheNet::NetTransport udp = sheNet::NetTransport::UDP_IPV4;
+      sheNet::TRANSPORT_ADDRESS_TYPE udp = sheNet::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
       std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(udp);/* upd client init */ {
         sheNet::four_tuple quadruple;
         quadruple.destination_ip = ip;
@@ -50,7 +50,7 @@ int main() {
 
   auto server = [&]() {
     try {
-      sheNet::NetTransport udp = sheNet::NetTransport::UDP_IPV4;
+      sheNet::TRANSPORT_ADDRESS_TYPE udp = sheNet::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
       std::unique_ptr<sheNet::socket> server = sheNet::CPP11::make_unique<sheNet::socket>(udp);/* upd server init */ {
         server->bind(port);
       };

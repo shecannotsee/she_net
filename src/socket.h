@@ -23,7 +23,7 @@ namespace sheNet {
 class socket {
  public:
   socket();
-  explicit socket(NetTransport) noexcept;
+  explicit socket(TRANSPORT_ADDRESS_TYPE) noexcept;
   ~socket();
   // disable copy
   socket(const socket& x) = delete;
@@ -32,7 +32,7 @@ class socket {
   socket(socket&&) = default;
   socket& operator=(socket&& x) = default;
  private:
-  NetTransport net_transport_;
+  TRANSPORT_ADDRESS_TYPE net_transport_;
   sheNet::four_tuple four_tuple_;
 
  public:// Interface
@@ -55,7 +55,7 @@ class socket {
   int             get_destination_id() const;
   std::string     get_destination_ip() const;
   unsigned short  get_destination_port() const;
-  NetTransport    get_net_transport() const;
+  TRANSPORT_ADDRESS_TYPE    get_net_transport() const;
 
 };// class socket
 
