@@ -28,7 +28,7 @@ class connection_pool {
   std::unordered_multimap<int,bool> connection_pool_;
   int open_socket_fd_;
 
- public:
+ public:// Interface
   int get_open();
 
  public:

@@ -35,7 +35,7 @@ class socket {
   NetTransport net_transport_;
   sheNet::four_tuple four_tuple_;
 
- public:
+ public:// Interface
   // server api
   void bind(const std::string& port,std::string ip = "0.0.0.0") noexcept;
   void listen(int backlog = 5) noexcept;
@@ -48,7 +48,7 @@ class socket {
   // The client socket needs to be independent of the server socket and then process data
   void            client_set(sheNet::four_tuple four_tuple);
 
- public:
+ public:// Interface to update state
   int             get_source_id() const;
   std::string     get_source_ip() const;
   unsigned short  get_source_port() const;

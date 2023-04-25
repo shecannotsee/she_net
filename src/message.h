@@ -24,7 +24,8 @@ class message {
   message& operator=(message&& x) = default;
  private:
   std::unique_ptr<sheNet::socket> socket_;
- public:
+
+ public:// Interface
   std::string   get();
   void          send(const std::string& message);
 
