@@ -12,7 +12,7 @@
 
 #include <socket.h>
 #include <message.h>
-#include <net_transport.h>
+#include <transport_address_type.h>
 #include <make_unique.h>
 
 #include <unistd.h>

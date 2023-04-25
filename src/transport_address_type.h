@@ -2,8 +2,8 @@
 // Created by shecannotsee on 2023/3/3.
 //
 
-#ifndef SHE_NET_SRC_NET_TRANSPORT_H_
-#define SHE_NET_SRC_NET_TRANSPORT_H_
+#ifndef SHE_NET_SRC_TRANSPORT_ADDRESS_TYPE_H_
+#define SHE_NET_SRC_TRANSPORT_ADDRESS_TYPE_H_
 
 namespace sheNet {
 
@@ -16,4 +16,4 @@ enum class TRANSPORT_ADDRESS_TYPE : unsigned char {
 
 };// namespace sheNet
 
-#endif //SHE_NET_SRC_NET_TRANSPORT_H_
+#endif //SHE_NET_SRC_TRANSPORT_ADDRESS_TYPE_H_

@@ -6,7 +6,7 @@
 #define SHE_NET_SRC_SOCKET_H_
 
 #include <string>
-#include <net_transport.h>
+#include <transport_address_type.h>
 #include <four_tuple.h>
 
 namespace sheNet {
