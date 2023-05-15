@@ -9,6 +9,8 @@
 #include <cassert>
 #include <string.h>
 #include <errno.h>
+#include <bits/fcntl.h>
+#include <fcntl.h>
 
 #include <sheNetException/sheNetException.h>
 
@@ -179,6 +181,20 @@ void sheNet::basic_socket_operations::port_reuse(int fd, int operations) {
     throw sheNetException(10,"set socket opt error."+std::string(strerror(errno)));
   }
 };
+
+void sheNet::basic_socket_operations::set_socket_block(int fd, bool noblock) {
+  int flags = fcntl(fd, F_GETFL, 0);
+  if (noblock) {
+    flags |= O_NONBLOCK;
+  } else {
+    flags &= ~O_NONBLOCK;
+  }
+  int ret = fcntl(fd, F_SETFL, flags);
+  if (ret == -1) {
+    throw sheNetException(11,"set socket block error."+std::string(strerror(errno)));
+  }
+};
+
 
 
 
