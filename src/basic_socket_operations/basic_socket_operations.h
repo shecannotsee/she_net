@@ -70,8 +70,6 @@ class basic_socket_operations {
    */
   static void shutdown(int fd);
 
-
-
 };
 
 
