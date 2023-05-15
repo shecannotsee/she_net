@@ -23,7 +23,9 @@ void main() {
   st::bind(fd,address.source_ip,std::to_string(address.source_port),type);/* print */ {
     std::cout << "bind "+ address.source_ip+":" + std::to_string(address.source_port) +" success.\n";
   };
-
+  st::listen(fd);/* print */ {
+    std::cout << "listen success.\n";
+  };
 
 
 

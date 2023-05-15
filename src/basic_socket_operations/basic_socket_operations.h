@@ -29,21 +29,21 @@ class basic_socket_operations {
    * @param type 网络传输类型: TCP/UDP + IPV4/IPV6
    * @return socket fd,若创建失败则会抛出异常
    */
-  static int socket(TRANSPORT_ADDRESS_TYPE type);
+  static int socket(TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
-   * @param fd
-   * @param ip
-   * @param port
-   * @param type
+   * @param fd 需要进行端口绑定的文件描述符
+   * @param ip 绑定ip,一般为"0.0.0.0"或者"::"
+   * @param port 需要绑定的端口
+   * @param type 网络传输类型
    */
-  static void bind(int fd,std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type);
+  static void bind(int fd,std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type  = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
    * @param fd
    * @return
    */
-  void listen(int fd);
+  static void listen(int fd, int backlog = 5);
 
   /**
    * @param fd

@@ -12,7 +12,7 @@
 
 #include <sheNetException/sheNetException.h>
 
-int sheNet::basic_socket_operations::socket(const sheNet::TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
+int sheNet::basic_socket_operations::socket(const sheNet::TRANSPORT_ADDRESS_TYPE type) {
   int ret_fd = -1;
   /*zzz*/if (type==TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     ret_fd= ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -31,7 +31,8 @@ int sheNet::basic_socket_operations::socket(const sheNet::TRANSPORT_ADDRESS_TYPE
   }
 
   return ret_fd;
-}
+};
+
 void sheNet::basic_socket_operations::bind(int fd,
                                            std::string ip,
                                            std::string port,
@@ -81,6 +82,13 @@ void sheNet::basic_socket_operations::bind(int fd,
 
   if (operation_results == -1) {
     throw sheNetException(2,"bind socket error:"+std::string(strerror(errno)));
+  }
+};
+
+void sheNet::basic_socket_operations::listen(int fd, int backlog) {
+  int ret = ::listen(fd, backlog);
+  if (ret == -1) {
+    throw sheNetException(3,"listen port error."+std::string(strerror(errno)));
   }
 };
 
