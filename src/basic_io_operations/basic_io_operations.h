@@ -1,0 +1,12 @@
+//
+// Created by shecannotsee on 23-5-15.
+//
+
+#ifndef SHE_NET_SRC_BASIC_IO_OPERATIONS_BASIC_IO_OPERATIONS_H_
+#define SHE_NET_SRC_BASIC_IO_OPERATIONS_BASIC_IO_OPERATIONS_H_
+
+class basic_io_operations {
+
+};
+
+#endif //SHE_NET_SRC_BASIC_IO_OPERATIONS_BASIC_IO_OPERATIONS_H_
