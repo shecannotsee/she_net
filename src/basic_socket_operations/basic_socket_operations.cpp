@@ -172,6 +172,10 @@ int sheNet::basic_socket_operations::connect(int local_fd,
   return local_port;
 };
 
+void sheNet::basic_socket_operations::shutdown(int fd) {
+  ::shutdown(fd, SHUT_RDWR);
+};
+
 
 
 

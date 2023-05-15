@@ -35,6 +35,8 @@ void main() {
     int client_fd = st::accept(fd);/* print */ {
       std::cout << "server:client fd is " << client_fd << "\n";
     }
+    sleep(1);
+    st::shutdown(fd);
   });
 
   std::thread client([](){
@@ -50,6 +52,8 @@ void main() {
     int used_port = st::connect(fd,"192.168.1.47","9981");/* print */ {
       std::cout << "client:connect success,local port is["+std::to_string(used_port)+"]\n";
     };
+    st::shutdown(fd);
+
   });
 
 

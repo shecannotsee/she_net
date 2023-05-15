@@ -65,10 +65,10 @@ class basic_socket_operations {
   static int connect(int local_fd, std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
-   * @param fd
-   * @return
+   * @brief 关闭文件描述符
+   * @param fd 需要关闭的文件描述符
    */
-  void shutdown(int fd);
+  static void shutdown(int fd);
 
 
 
