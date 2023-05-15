@@ -29,15 +29,15 @@ class basic_socket_operations {
    * @param type 网络传输类型: TCP/UDP + IPV4/IPV6
    * @return socket fd,若创建失败则会抛出异常
    */
-  static int socket(const TRANSPORT_ADDRESS_TYPE type);
+  static int socket(TRANSPORT_ADDRESS_TYPE type);
 
   /**
    * @param fd
    * @param ip
    * @param port
-   * @return
+   * @param type
    */
-  void bind(int fd,std::string ip, std::string port);
+  static void bind(int fd,std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type);
 
   /**
    * @param fd
@@ -59,7 +59,11 @@ class basic_socket_operations {
    */
   int accept(int fd);
 
-
+  /**
+   * @param fd
+   * @return
+   */
+  void shutdown(int fd);
 
 
 
