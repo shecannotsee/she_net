@@ -10,6 +10,13 @@
 #include <mutex>
 #include <socket.h>
 #include <sys/select.h>
+#include <memory>
+#include <iostream>
+#include <unistd.h>
+#include <future>
+#include <sys/socket.h>
+#include "message.h"
+#include "make_unique.h"
 
 namespace m5_select_test {
 
