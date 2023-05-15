@@ -8,6 +8,7 @@
 #include <thread>
 #include <basic_socket_operations/basic_socket_operations.h>
 #include <four_tuple.h>
+#include "sheNetException/sheNetException.h"
 
 namespace m9_basic_socket_operations {
 
@@ -32,28 +33,40 @@ void main() {
     /* print */ {
       std::cout << "server:wait to accept...\n";
     }
-    int client_fd = st::accept(fd);/* print */ {
-      std::cout << "server:client fd is " << client_fd << "\n";
+    while(true) {
+      try {
+        int client_fd = st::accept(fd);/* print */ {
+          std::cout << "server:accept to client fd is " << client_fd << "\n";
+        }
+      } catch (sheNet::sheNetException exc) {
+        std::cout << exc.what();
+        break;
+      }
     }
-    sleep(1);
     st::shutdown(fd);
+    std::cout << "server close.\n";
   });
 
   std::thread client([](){
     sleep(1);
     auto type = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
-    sheNet::four_tuple address;/* init */ {
-    address.source_ip = "0.0.0.0";
-    address.source_port = 9981;
-  }
     int fd = st::socket(type);/* print */{
-    std::cout << "client:socket create fd:" << fd << "\n";
-  };
-    int used_port = st::connect(fd,"192.168.1.47","9981");/* print */ {
-      std::cout << "client:connect success,local port is["+std::to_string(used_port)+"]\n";
+      std::cout << "client:socket create fd:" << fd << "\n";
     };
-    st::shutdown(fd);
 
+    int used_port = -1;
+    while (used_port == -1) {
+      try {
+        used_port = st::connect(fd, "192.168.1.47", "9981");/* print */ {
+          std::cout << "client:connect success,local port is[" + std::to_string(used_port) + "]\n";
+        };
+      } catch (sheNet::sheNetException exc) {
+        std::cout << exc.what();
+        break;
+      };
+    }
+    st::shutdown(fd);
+    std::cout << "client close.\n";
   });
 
 
