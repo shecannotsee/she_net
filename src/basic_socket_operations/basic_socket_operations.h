@@ -47,18 +47,22 @@ class basic_socket_operations {
   static void listen(int fd, int backlog = 5);
 
   /**
+   * @brief 阻塞或者非阻塞需要设置socket
+   * @param local_fd 本地的服务的文件描述符
+   * @param type 网络传输类型
+   * @return 返回连接上的fd.若接受失败或者在非阻塞模式下会频繁的抛出异常,请酌情处理
+   */
+  static int accept(int local_fd, TRANSPORT_ADDRESS_TYPE type  = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
+
+  /**
+   * @brief 阻塞或者非阻塞需要设置socket
    * @param fd
    * @param ip
    * @param port
-   * @return
+   * @param type
+   * @return 在非阻塞模式下会
    */
-  void connect(int fd, std::string ip, std::string port);
-
-  /**
-   * @param fd
-   * @return
-   */
-  int accept(int fd);
+  static void connect(int fd, std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
    * @param fd

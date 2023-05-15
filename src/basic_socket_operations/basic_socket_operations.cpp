@@ -92,6 +92,71 @@ void sheNet::basic_socket_operations::listen(int fd, int backlog) {
   }
 };
 
+int sheNet::basic_socket_operations::accept(int local_fd, sheNet::TRANSPORT_ADDRESS_TYPE type) {
+  int client_fd = -1;
+  /*z*/if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
+    struct sockaddr_in client_address{};
+    socklen_t client_address_len = sizeof(client_address);
+    client_fd = ::accept(local_fd, (struct sockaddr*)&client_address, &client_address_len);
+    std::string ip = std::move(std::string(inet_ntoa(client_address.sin_addr)));
+    int port       = ntohs(client_address.sin_port);
+    printf("server:client info [%s:%d]\n",ip.c_str(),port);
+  }
+  else if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
+    struct sockaddr_in6 client_address{};
+    socklen_t client_address_len = sizeof(client_address);
+    client_fd = ::accept(local_fd, (struct sockaddr*)&client_address, &client_address_len);
+    char client_addr_str[INET6_ADDRSTRLEN];
+    ::inet_ntop(AF_INET6, &client_address.sin6_addr, client_addr_str, INET6_ADDRSTRLEN);
+    std::string ip = std::move(std::string(inet_ntop(AF_INET6, &client_address.sin6_addr, client_addr_str, INET6_ADDRSTRLEN)));
+    int port       = ntohs(client_address.sin6_port);
+    printf("server:client info [%s:%d]\n",ip.c_str(),port);
+  }
+  else {
+    assert(false);
+  }
+
+  if (client_fd == -1) {
+    throw sheNetException(5,"accept port error."+std::string(strerror(errno)));
+  }
+
+  return client_fd;
+};
+
+void sheNet::basic_socket_operations::connect(int local_fd,
+                                              std::string ip,
+                                              std::string port,
+                                              sheNet::TRANSPORT_ADDRESS_TYPE type) {
+  int connect_results = -1;
+  /*z*/if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
+    struct sockaddr_in server_address{};
+    ::memset(&server_address, 0, sizeof(server_address));
+    server_address.sin_family = AF_INET;
+    server_address.sin_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
+    ::inet_pton(AF_INET, ip.c_str(), &server_address.sin_addr);
+    connect_results = ::connect(local_fd, (struct sockaddr *)&server_address, sizeof(server_address));
+    int local_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
+    printf("client:connect to [%s],local port is [%d]\n",ip.c_str(),local_port);
+  }
+  else if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
+    struct sockaddr_in6 server_address{};
+    ::memset(&server_address, 0, sizeof(server_address));
+    server_address.sin6_family = AF_INET6;
+    server_address.sin6_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
+    ::inet_pton(AF_INET6, ip.c_str(), &server_address.sin6_addr);
+    connect_results = ::connect(local_fd, (struct sockaddr *)&server_address, sizeof(server_address));
+    int local_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
+    printf("client:connect to [%s],local port is [%d]",ip.c_str(),local_port);
+  }
+  else {
+    assert(false);
+  }
+
+  if (connect_results == -1) {
+    throw sheNetException(4,"connect port error."+std::string(strerror(errno)));
+  }
+};
+
 
 
 
