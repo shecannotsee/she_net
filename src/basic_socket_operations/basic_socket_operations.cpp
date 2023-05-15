@@ -98,9 +98,11 @@ int sheNet::basic_socket_operations::accept(int local_fd, sheNet::TRANSPORT_ADDR
     struct sockaddr_in client_address{};
     socklen_t client_address_len = sizeof(client_address);
     client_fd = ::accept(local_fd, (struct sockaddr*)&client_address, &client_address_len);
-    std::string ip = std::move(std::string(inet_ntoa(client_address.sin_addr)));
-    int port       = ntohs(client_address.sin_port);
-    printf("server:client info [%s:%d]\n",ip.c_str(),port);
+    /* 在接受连接时获取客户端的ip和端口号 */ {
+      std::string ip = std::move(std::string(inet_ntoa(client_address.sin_addr)));
+      int port       = ntohs(client_address.sin_port);
+      printf("server:client info [%s:%d]\n",ip.c_str(),port);
+    };
   }
   else if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     struct sockaddr_in6 client_address{};
@@ -123,11 +125,12 @@ int sheNet::basic_socket_operations::accept(int local_fd, sheNet::TRANSPORT_ADDR
   return client_fd;
 };
 
-void sheNet::basic_socket_operations::connect(int local_fd,
+int sheNet::basic_socket_operations::connect(int local_fd,
                                               std::string ip,
                                               std::string port,
                                               sheNet::TRANSPORT_ADDRESS_TYPE type) {
   int connect_results = -1;
+  int local_port = -1;
   /*z*/if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     struct sockaddr_in server_address{};
     ::memset(&server_address, 0, sizeof(server_address));
@@ -135,8 +138,13 @@ void sheNet::basic_socket_operations::connect(int local_fd,
     server_address.sin_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
     ::inet_pton(AF_INET, ip.c_str(), &server_address.sin_addr);
     connect_results = ::connect(local_fd, (struct sockaddr *)&server_address, sizeof(server_address));
-    int local_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
-    printf("client:connect to [%s],local port is [%d]\n",ip.c_str(),local_port);
+    /* 在连接时获取本地使用的端口号 */ {
+      struct sockaddr_in local_address;
+      socklen_t address_length = sizeof(local_address);
+      getsockname(local_fd, (struct sockaddr*)&local_address, &address_length);
+      // 获取本地连接的端口号
+      local_port = ntohs(local_address.sin_port);
+    };
   }
   else if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     struct sockaddr_in6 server_address{};
@@ -145,16 +153,23 @@ void sheNet::basic_socket_operations::connect(int local_fd,
     server_address.sin6_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
     ::inet_pton(AF_INET6, ip.c_str(), &server_address.sin6_addr);
     connect_results = ::connect(local_fd, (struct sockaddr *)&server_address, sizeof(server_address));
-    int local_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
-    printf("client:connect to [%s],local port is [%d]",ip.c_str(),local_port);
+    /* 在连接时获取本地使用的端口号 */ {
+      struct sockaddr_in local_address;
+      socklen_t address_length = sizeof(local_address);
+      getsockname(local_fd, (struct sockaddr*)&local_address, &address_length);
+      // 获取本地连接的端口号
+      local_port = ntohs(local_address.sin_port);
+    };
   }
   else {
     assert(false);
   }
 
-  if (connect_results == -1) {
+  if (connect_results == -1|| local_port == -1) {
     throw sheNetException(4,"connect port error."+std::string(strerror(errno)));
   }
+
+  return local_port;
 };
 
 

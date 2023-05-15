@@ -47,8 +47,8 @@ void main() {
     int fd = st::socket(type);/* print */{
     std::cout << "client:socket create fd:" << fd << "\n";
   };
-    st::connect(fd,"192.168.1.47","9981");/* print */ {
-      std::cout << "client:connect success.\n";
+    int used_port = st::connect(fd,"192.168.1.47","9981");/* print */ {
+      std::cout << "client:connect success,local port is["+std::to_string(used_port)+"]\n";
     };
   });
 

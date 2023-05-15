@@ -56,13 +56,13 @@ class basic_socket_operations {
 
   /**
    * @brief 阻塞或者非阻塞需要设置socket
-   * @param fd
-   * @param ip
-   * @param port
-   * @param type
-   * @return 在非阻塞模式下会
+   * @param local_fd 本地创建的fd
+   * @param ip 需要连接的ip地址
+   * @param port 需要连接的端口号
+   * @param type 网络传输类型
+   * @return 返回客户端使用的端口号.阻塞情况下连接失败会抛出异常,在非阻塞模式下会频繁的抛出异常
    */
-  static void connect(int fd, std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
+  static int connect(int local_fd, std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
    * @param fd
