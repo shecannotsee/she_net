@@ -36,12 +36,13 @@ class basic_socket_operations {
    * @param ip 绑定ip,一般为"0.0.0.0"或者"::"
    * @param port 需要绑定的端口
    * @param type 网络传输类型
+   * @return 若端口绑定失败则会抛出异常
    */
   static void bind(int fd,std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type  = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
-   * @param fd
-   * @return
+   * @param fd 需要监听的文教描述符
+   * @return 若监听失败则会抛出异常
    */
   static void listen(int fd, int backlog = 5);
 
