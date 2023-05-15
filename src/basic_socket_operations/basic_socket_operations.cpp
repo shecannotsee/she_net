@@ -171,6 +171,16 @@ void sheNet::basic_socket_operations::shutdown(int fd) {
 };
 
 
+void sheNet::basic_socket_operations::port_reuse(int fd, int operations) {
+  int reuse = operations ? 1 : 0;
+  int ret = ::setsockopt(fd, SOL_SOCKET, SO_REUSEPORT,
+                           (const void *)&reuse, sizeof(reuse));
+  if (ret == -1) {
+    throw sheNetException(10,"set socket opt error."+std::string(strerror(errno)));
+  }
+};
+
+
 
 
 

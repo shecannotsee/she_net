@@ -70,6 +70,20 @@ class basic_socket_operations {
    */
   static void shutdown(int fd);
 
+ public:
+  /**
+   * @brief 端口复用
+   * @param fd 需要处理的文件描述符
+   * @param operations 1意味着开启端口复用,0意味着关闭
+   */
+  static void port_reuse(int fd, int operations = 1);
+
+  //
+  static void set_no_block(int fd);
+
+  //
+  static void set_block(int fd);
+
 };
 
 
