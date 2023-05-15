@@ -83,6 +83,7 @@ class basic_socket_operations {
    * @brief 设置文件描述符为阻塞还是非阻塞
    * @param fd 文件描述符
    * @param block true意味着非阻塞,false意味着阻塞.调用时默认将socket调整成非阻塞,因为socket创建后默认为阻塞
+   * @return 若设置失败则会抛出异常
    */
   static void set_socket_block(int fd, bool noblock = true);
 
