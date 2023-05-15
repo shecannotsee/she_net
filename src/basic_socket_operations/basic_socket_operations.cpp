@@ -152,11 +152,7 @@ int sheNet::basic_socket_operations::connect(int local_fd,
     ::inet_pton(AF_INET6, ip.c_str(), &server_address.sin6_addr);
     connect_results = ::connect(local_fd, (struct sockaddr *)&server_address, sizeof(server_address));
     /* 在连接时获取本地使用的端口号 */ {
-      struct sockaddr_in6 local_address;
-      socklen_t address_length = sizeof(local_address);
-      getsockname(local_fd, (struct sockaddr*)&local_address, &address_length);
-      // 获取本地连接的端口号
-      local_port = ntohs(local_address.sin6_port);
+      // TODO:需要实现
     };
   }
   else {
