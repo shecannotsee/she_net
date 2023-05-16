@@ -59,7 +59,7 @@ class basic_io_operations {
      * @param port 发送的地址ip对应的端口
      * @param binary_package 发送的数据包
      */
-    static void sendto(std::string ip, std::string port, std::string binary_package);
+    static void sendto(int fd,std::string ip, std::string port, std::string binary_package, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::UDP_IPV4);
   };
 
 };

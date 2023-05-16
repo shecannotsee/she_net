@@ -4,10 +4,12 @@
 
 #include "basic_io_operations.h"
 
+#include <assert.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <errno.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include <sheNetException/sheNetException.h>
 
@@ -82,4 +84,62 @@ std::string sheNet::basic_io_operations::UDP::recvfrom(int fd) {
     }
   };
   return buffer;
+};
+
+void sheNet::basic_io_operations::UDP::sendto(int fd, std::string ip, std::string port, std::string binary_package, TRANSPORT_ADDRESS_TYPE type) {
+  int result = 0;//已经添加到缓冲区的字节长度
+  // 当所有数据添加到发送缓冲区时可是为发送成功
+  while (result == binary_package.size()) {
+    int number_of_bytes_send = -1;
+    /*z*/if (type == TRANSPORT_ADDRESS_TYPE::UDP_IPV4) {
+      struct sockaddr_in server_address{};
+      ::memset(&server_address, 0x00, sizeof(server_address));
+      server_address.sin_family = AF_INET;
+      server_address.sin_addr.s_addr = ::inet_addr(ip.c_str());
+      server_address.sin_port = htons(std::atoi(port.c_str()));
+
+      number_of_bytes_send = ::sendto(fd,
+                        binary_package.c_str() + result, // 发送指针向后移动
+                        binary_package.size() - result,    // 发送数据减小
+                        NULL,
+                        (struct sockaddr *) &server_address,
+                        sizeof(server_address));
+    }
+    else if (type == TRANSPORT_ADDRESS_TYPE::UDP_IPV6) {
+      struct sockaddr_in6 server_address{};
+      ::memset(&server_address, 0x00, sizeof(server_address));
+      server_address.sin6_family = AF_INET6;
+      ::inet_pton(AF_INET6, ip.c_str(), &server_address.sin6_addr);
+      server_address.sin6_port = htons(std::atoi(port.c_str()));
+
+      number_of_bytes_send = ::sendto(fd,
+                        binary_package.c_str() + result,
+                        binary_package.size() - result,
+                        NULL,
+                        (struct sockaddr *) &server_address,
+                        sizeof(server_address));
+    }
+    else {
+      assert(false);
+    }
+
+    if (number_of_bytes_send == -1) {
+      // 对非阻塞进行的额外操作
+      if (errno == EINTR) {
+        // 发送操作被信号中断，重新尝试发送
+        continue;
+      } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
+        // 发送缓冲区已满，稍后再次尝试发送
+        continue;
+      } else {
+        throw sheNetException(9, "upd send message error." + std::string(strerror(errno)));
+      }
+    } else if (number_of_bytes_send < binary_package.size()) {
+      // 添加发送的字节数
+      result += number_of_bytes_send;
+    } else if (number_of_bytes_send == binary_package.size()) {
+      // 成功全部发送
+      // Do nothing.
+    }
+  }
 }
