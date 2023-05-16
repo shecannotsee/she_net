@@ -10,8 +10,24 @@
 namespace sheNet {
 
 class select {
+ public:
+  // copy:off
+  select(const select&) = delete;
+  select& operator=(const select&) = delete;
+  // move:off
+  select(select&&) = delete;
+  select& operator=(select&&) = delete;
+  //destructors
+  ~select() = default;
+  //constructors
+  select() = default;
+ private:
+  // data
+ public:
+  // interface
 
-};// class select
+};
+
 
 };// namespace sheNet
 
