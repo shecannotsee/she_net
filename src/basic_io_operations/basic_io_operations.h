@@ -26,9 +26,10 @@ class basic_io_operations {
   // NULL
  public:// interface
   /**
-   * @brief 实际上和tcp绑定,用来获取缓冲区中的数据
+   * @brief 实际上和tcp绑定,用来获取缓冲区中的数据.该接口每次只获取最多1024字节的数据.
+   * ps:若缓冲区还有数据的时候客户端已经关闭了,recv先获取缓冲区的数据,在抛出客户端关闭异常
    * @param fd 文件描述符
-   * @return 获取到的二进制流,需要进行流数据的切分和处理
+   * @return 获取到的二进制流,需要进行流数据的切分和处理.若出现系统接口错误则会抛出异常
    */
   static std::string recv(int fd);
 
