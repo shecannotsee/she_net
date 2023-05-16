@@ -10,7 +10,7 @@
 
 #include <sheNetException/sheNetException.h>
 
-std::string sheNet::basic_io_operations::recv(int fd) {
+std::string sheNet::basic_io_operations::TCP::recv(int fd) {
   constexpr int bufferSize = 1024;
   char buffer[bufferSize];
 
@@ -32,7 +32,7 @@ std::string sheNet::basic_io_operations::recv(int fd) {
   }
 };
 
-void sheNet::basic_io_operations::send(int fd, const std::string &binary_stream) {
+void sheNet::basic_io_operations::TCP::send(int fd, const std::string &binary_stream) {
   size_t total_sent = 0; // 已发送字节数
   while (total_sent < binary_stream.size()) {
     ssize_t send_bytes = ::send(fd, binary_stream.data() + total_sent, binary_stream.size() - total_sent, NULL);
