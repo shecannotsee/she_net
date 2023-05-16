@@ -7,7 +7,7 @@
 
 #include <basic_io_operations/basic_io_operations.h>
 
-namespace m10_basic_io_operations_test {
+namespace m10_basic_io_operations_tcp_test {
 
 void main() {
   /* tcp io */ {
@@ -16,13 +16,6 @@ void main() {
     std::string get_message = tcp_io::recv(fd_tcp);
     tcp_io::send(fd_tcp, "123");
   };
-
-  /* udp io */ {
-    using udp_io = sheNet::basic_io_operations::UDP;
-    int fd_udp = 0;
-    std::string udp_message = udp_io::recvfrom(fd_udp);
-    udp_io::sendto("","","");
-  }
 
 };
 
