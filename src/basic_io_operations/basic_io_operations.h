@@ -34,7 +34,8 @@ class basic_io_operations {
   static std::string recv(int fd);
 
   /**
-   * @brief 和tcp绑定,用来将数据添加到发送缓冲区
+   * @brief 和tcp绑定,用来将数据添加到发送缓冲区.该函数会发送所有的数据.
+   * 若缓冲区满在非阻塞下则会持续进行系统接口添加数据到缓冲区;在阻塞情况下则会阻塞在添加上直到数据成功添加才会正常返回
    * @param fd 文件描述符
    * @param binary_stream 需要发送的二进制流(流中应该做了切分处理)
    */
