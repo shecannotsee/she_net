@@ -12,6 +12,7 @@
 #include "m7_epoll_test.h"
 #include "m8_tcp_bidirectional_io_test.h"
 #include "m9_basic_socket_operations.h"
+#include "m10_basic_io_operations_test.h"
 
 int main() {
   std::cout<<"test start.\n";
@@ -23,7 +24,8 @@ int main() {
 //  m6_poll_test::main();
 //  m7_epoll_test::main();
 //  m8_tcp_bidirectional_io_test::main();
-  m9_basic_socket_operations::main();
+//  m9_basic_socket_operations::main();
+  m10_basic_io_operations_test::main();
   std::cout<<"Done.\n";
   return 0;
 };
