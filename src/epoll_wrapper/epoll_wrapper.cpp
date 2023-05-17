@@ -56,7 +56,7 @@ int sheNet::epoll_wrapper::accept_alive() {
   int num_events = ::epoll_wait(epoll_container_id_,user_events_.data(),user_events_.size(),timeout_set_);
   if (num_events == -1) {
     // 不要特殊去处理errno为EINTR的情况,因为在信号中断的情况下可能会出现内核清除已注册的事件的事情发生
-    throw sheNetException(15,"epoll_wait system interface error:"+std::string(strerror(errno)));
+    throw sheNetException(19,"epoll_wait(accept) system interface error:"+std::string(strerror(errno)));
   } else if (num_events == 0) {
     return -1;
   } else {
@@ -74,7 +74,7 @@ std::vector<int> sheNet::epoll_wrapper::get_alive_fd() {
   int num_events = ::epoll_wait(epoll_container_id_,user_events_.data(),user_events_.size(),timeout_set_);
   if (num_events == -1) {
     // 不要特殊去处理errno为EINTR的情况,因为在信号中断的情况下可能会出现内核清除已注册的事件的事情发生
-    throw sheNetException(15,"epoll_wait system interface error:"+std::string(strerror(errno)));
+    throw sheNetException(20,"epoll_wait(get alive fd) system interface error:"+std::string(strerror(errno)));
   } else if (num_events == 0) {
     return {};
   } else {
