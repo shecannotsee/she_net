@@ -25,12 +25,31 @@ class epoll_wrapper {
   explicit epoll_wrapper(int events_num);
 
  private:
-  int epoll_container_id_;
-  std::vector<epoll_event> user_events_;
-  int timeout_set_;///< 用于设置epoll的超时时间,单位是毫秒
+  int epoll_container_id_;///< epoll容器
+  std::vector<epoll_event> user_events_;///< epoll event的集合
+  int timeout_set_;///< 用于设置epoll的超时时间,单位是毫秒,默认为-1表示永久阻塞
+  int server_socket_fd_;///< local fd
 
  public:
-  // interface
+  /**
+   * @brief 将监听端口的fd进行存储
+   * @param local_fd 进行监听的文件描述符
+   */
+  void add_server_fd(int local_fd);
+
+  /**
+   * @brief 添加那些已经通过accept建立连接的client fd
+   * @param fd 需要添加的文件描述符
+   * @param trigger_mode 触发方式,默认为水平触发,可以通过传入EPOLLET进行边缘触发,但是不建议
+   */
+  void add_alive_fd(int fd, EPOLL_EVENTS trigger_mode = EPOLLIN) const;
+
+  /**
+   * @brief
+   * @param fd
+   */
+  void remove_adlive_fd(int fd);
+
 
 };
 
