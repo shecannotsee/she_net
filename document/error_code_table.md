@@ -24,3 +24,5 @@
 
 0013:在使用recvfrom时关闭了udp使用的fd出现的错误
 
+0014:在获取select监听的最大描述符值的时候获取(getrlimit)出错
+
