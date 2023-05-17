@@ -14,6 +14,7 @@
 #include "m9_basic_socket_operations.h"
 #include "m10_basic_io_operations_tcp_test.h"
 #include "m11_basic_io_operations_udp_test.h"
+#include "m12_select_wrapper_test.h"
 
 int main() {
   std::cout<<"test start.\n";
@@ -27,6 +28,8 @@ int main() {
 //  m8_tcp_bidirectional_io_test::main();
 //  m9_basic_socket_operations::main();
   m10_basic_io_operations_tcp_test::main();
+  m11_basic_io_operations_udp_test::main();
+  m12_select_wrapper_test::main();
   std::cout<<"Done.\n";
   return 0;
 };
