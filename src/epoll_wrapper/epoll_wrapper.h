@@ -50,6 +50,26 @@ class epoll_wrapper {
    */
   void remove_alive_fd(int fd);
 
+  /**
+   * @brief 设置超时时间
+   * @param milliseconds 超时毫秒数.默认为-1表示永久阻塞
+   */
+  void set_timeout(int milliseconds = -1);
+
+  /**
+   * @brief 该接口通过epoll_wait判断是否有新的连接请求发生
+   * ps:虽然该接口会和下面的 get_alive_fd() 接口可能存在数据竞争,但是并不设计数据的修改,所以可以放心使用
+   * @return -1表示没有新的连接抵达,否则就是有新的连接请求发生
+   */
+  int accept_alive();
+
+  /**
+   * @brief 通过调用epoll_wait来获取所有可读的文件描述符
+   * @return 返回所有活跃的文件描述符,但是不包括local_fd
+   */
+  std::vector<int> get_alive_fd();
+
+
 
 };
 
