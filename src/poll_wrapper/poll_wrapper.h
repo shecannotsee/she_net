@@ -8,6 +8,22 @@
 namespace sheNet {
 
 class poll_wrapper {
+ public:
+  // copy:off
+  poll_wrapper(const poll_wrapper&) = delete;
+  poll_wrapper& operator=(const poll_wrapper&) = delete;
+  // move:off
+  poll_wrapper(poll_wrapper&&) = delete;
+  poll_wrapper& operator=(poll_wrapper&&) = delete;
+  //destructors
+  ~poll_wrapper() = default;
+  //constructors
+  poll_wrapper() = default;
+
+ private:
+  // data
+ public:
+  // interface
 
 };
 
