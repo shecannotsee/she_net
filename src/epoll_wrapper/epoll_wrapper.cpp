@@ -46,4 +46,10 @@ void sheNet::epoll_wrapper::remove_alive_fd(int fd) {
   if (control_result == -1) {
     throw sheNetException(18,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
   }
+}
+
+void sheNet::epoll_wrapper::set_timeout(int milliseconds) {
+  timeout_set_ = milliseconds;
 };
+
+
