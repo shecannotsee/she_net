@@ -55,13 +55,11 @@ std::vector<int> sheNet::select_wrapper::get_alive_fd() {
                                &write_fds_,
                                &except_fds_,
                                &timeout_set_);
-  /*z*/if (num_events == -1) {
+  /*zz*/if (num_events == -1) {
     throw sheNetException(15,"select system interface error:"+std::string(strerror(errno)));
-  }
-  else if (num_events == 0) {
+  } else if (num_events == 0) {
     return {};
-  }
-  else {
+  } else {
     std::vector<int> alive_fds;
     for (const auto &fd: fd_list_) {
       bool is_read = FD_ISSET(fd, &read_fds_);
