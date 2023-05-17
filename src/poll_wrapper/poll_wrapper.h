@@ -6,7 +6,6 @@
 #define SHE_NET_SRC_POLL_WRAPPER_POLL_WRAPPER_H_
 
 #include <vector>
-
 #include <sys/poll.h>
 
 namespace sheNet {
@@ -26,6 +25,7 @@ class poll_wrapper {
 
  private:
   std::vector<pollfd> poll_fds_;///< poll_wrapper维护的文件描述符列表
+  int timeout_set_;///< 用于设置select的超时
 
  public:
   /**
@@ -48,8 +48,15 @@ class poll_wrapper {
   void remove_alive_fd(int fd);
 
   /**
-   * @brief
-   * @return
+   * @brief 设置超时时间
+   * @param milliseconds 超时毫秒数
+   */
+  void set_timeout(int milliseconds = 0);
+
+  /**
+   * @brief 通过调用poll来获取所有可读的文件描述符.
+   * 该接口在获取可读fd后会自动将他的 轮询者关心的事件类型 改为可读可写,以便于下次能够继续触发
+   * @return 返回所有可用的文件描述符
    */
   std::vector<int> get_alive_fd();
 
