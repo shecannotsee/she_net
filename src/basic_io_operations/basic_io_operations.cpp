@@ -56,6 +56,7 @@ void sheNet::basic_io_operations::TCP::send(int fd, const std::string &binary_st
 
 std::string sheNet::basic_io_operations::UDP::recvfrom(int fd) {
   std::string buffer;
+  // 注意,该初始化不仅会扩大其容量,并且会对开辟的内存进行相应的类初始化
   buffer.resize(1024);
   bool accepting = true;
   struct sockaddr_in senderAddr;
