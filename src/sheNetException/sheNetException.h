@@ -22,7 +22,7 @@ class sheNetException : public std::exception {
  public:
   virtual const char *what() const noexcept override;
 
-  int getErrorCode() const;
+  int get_error_code() const;
 
 };// class sheNetException
 

@@ -13,6 +13,6 @@ const char *sheNet::sheNetException::what() const noexcept {
   return error_message_.c_str();
 };
 
-int sheNet::sheNetException::getErrorCode() const {
+int sheNet::sheNetException::get_error_code() const {
   return error_code_;
 }
