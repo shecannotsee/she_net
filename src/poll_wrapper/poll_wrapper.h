@@ -11,6 +11,6 @@ class poll_wrapper {
 
 };
 
-} // sheNet
+};// namespace sheNet
 
 #endif //SHE_NET_SRC_POLL_WRAPPER_POLL_WRAPPER_H_
