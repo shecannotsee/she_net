@@ -28,7 +28,8 @@ class select_wrapper {
   fd_set write_fds_;
   fd_set except_fds_;
 
-  std::vector<int> fd_list_;
+  std::vector<int> fd_list_;///< 用于管理连接上的文件描述符
+  timeval timeout_;///< 用于设置select的超时
 
  private:
   /**
@@ -50,6 +51,13 @@ class select_wrapper {
    * @param fd 需要删除的文件描述符
    */
   void remove_alive_fd(int fd);
+
+  /**
+   * @brief 用于设置select接口的超时时间,可大可小
+   * @param seconds 秒数,默认为0
+   * @param microseconds 微秒,默认为0
+   */
+  void set_timeout(int seconds, int microseconds);
 
 };
 

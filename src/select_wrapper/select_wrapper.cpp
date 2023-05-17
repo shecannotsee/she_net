@@ -13,12 +13,16 @@
 
 #include <sheNetException/sheNetException.h>
 
-sheNet::select_wrapper::select_wrapper() {
+sheNet::select_wrapper::select_wrapper()
+    : timeout_({}) {
   FD_ZERO(&read_fds_);
   FD_ZERO(&write_fds_);
   FD_ZERO(&except_fds_);
   // 只增大其容量到最大监听描述符+1
   fd_list_.reserve(sheNet::select_wrapper::get_system_max_listen_fd() +1 );
+  // 超时设置为0,也就是非阻塞
+  timeout_.tv_sec  = 0;
+  timeout_.tv_usec = 0;
 };
 
 int sheNet::select_wrapper::get_system_max_listen_fd() {
@@ -39,6 +43,13 @@ void sheNet::select_wrapper::remove_alive_fd(int fd) {
   auto it = std::remove(fd_list_.begin(), fd_list_.end(), fd);
   fd_list_.erase(it);
 };
+
+void sheNet::select_wrapper::set_timeout(int seconds, int microseconds) {
+  timeout_.tv_sec  = seconds;
+  timeout_.tv_usec = microseconds;
+};
+
+
 
 
 
