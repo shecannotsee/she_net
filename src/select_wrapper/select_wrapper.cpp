@@ -49,7 +49,16 @@ void sheNet::select_wrapper::set_timeout(int seconds, int microseconds) {
   timeout_set_.tv_usec = microseconds;
 };
 
-std::vector<int> sheNet::select_wrapper::get_alive_fd() {
+std::vector<int> sheNet::select_wrapper::get_alive_fd(int local_fd) {
+  // 在每次调用select之前都要重置其监听列表
+  FD_ZERO(&read_fds_);
+  FD_SET(local_fd, &read_fds_);// 添加服务端fd
+  // 添加已经通过accept连接上服务端的客户端fd
+  for (auto fd : fd_list_) {
+    FD_SET(fd, &read_fds_);
+  }
+
+  // start to call ::select()
   int num_events = ::select(this->get_system_max_listen_fd()+1,
                                &read_fds_,
                                &write_fds_,

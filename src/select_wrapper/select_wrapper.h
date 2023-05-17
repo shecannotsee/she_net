@@ -61,9 +61,10 @@ class select_wrapper {
 
   /**
    * @brief 获取有读事件的文件描述符
+   * @param local_fd 本地fd,其实是服务端开启的fd
    * @return 可用的文件描述符
    */
-  std::vector<int> get_alive_fd();
+  std::vector<int> get_alive_fd(int local_fd);
 
 };
 
