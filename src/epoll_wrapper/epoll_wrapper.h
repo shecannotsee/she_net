@@ -38,15 +38,15 @@ class epoll_wrapper {
   void add_server_fd(int local_fd);
 
   /**
-   * @brief 添加那些已经通过accept建立连接的client fd
+   * @brief 添加那些已经通过 accept 建立连接的 client fd
    * @param fd 需要添加的文件描述符
-   * @param trigger_mode 触发方式,默认为水平触发,可以通过传入EPOLLET进行边缘触发,但是不建议
+   * @param trigger_mode 触发方式,默认为水平触发,可以通过传入 EPOLLET 进行边缘触发,但是不建议
    */
   void add_alive_fd(int fd, EPOLL_EVENTS trigger_mode = EPOLLIN) const;
 
   /**
-   * @brief
-   * @param fd
+   * @brief 调用 epoll_ctl,使用 EPOLL_CTL_DEL 操作将客户端的文件描述符从 epoll 实例中剔除
+   * @param fd 需要剔除的文件描述符
    */
   void remove_alive_fd(int fd);
 
