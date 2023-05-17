@@ -8,6 +8,22 @@
 namespace sheNet {
 
 class epoll_wrapper {
+ public:
+  // copy:off
+  epoll_wrapper(const epoll_wrapper&) = delete;
+  epoll_wrapper& operator=(const epoll_wrapper&) = delete;
+  // move:off
+  epoll_wrapper(epoll_wrapper&&) = delete;
+  epoll_wrapper& operator=(epoll_wrapper&&) = delete;
+  //destructors
+  ~epoll_wrapper() = default;
+  //constructors
+  epoll_wrapper() = default;
+
+ private:
+  // data
+ public:
+  // interface
 
 };
 
