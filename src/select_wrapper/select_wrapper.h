@@ -29,7 +29,7 @@ class select_wrapper {
   fd_set except_fds_;
 
   std::vector<int> fd_list_;///< 用于管理连接上的文件描述符
-  timeval timeout_;///< 用于设置select的超时
+  timeval timeout_set_;///< 用于设置select的超时
 
  private:
   /**
@@ -58,6 +58,12 @@ class select_wrapper {
    * @param microseconds 微秒,默认为0
    */
   void set_timeout(int seconds, int microseconds);
+
+  /**
+   * @brief 获取有读时间的文件描述符
+   * @return 可用的文件描述符
+   */
+  std::vector<int> get_alive_fd();
 
 };
 
