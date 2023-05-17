@@ -48,7 +48,7 @@ class epoll_wrapper {
    * @brief
    * @param fd
    */
-  void remove_adlive_fd(int fd);
+  void remove_alive_fd(int fd);
 
 
 };

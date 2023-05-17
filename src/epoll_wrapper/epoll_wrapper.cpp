@@ -36,7 +36,7 @@ void sheNet::epoll_wrapper::add_alive_fd(int fd ,EPOLL_EVENTS trigger_mode) cons
   }
 };
 
-void sheNet::epoll_wrapper::remove_adlive_fd(int fd) {
+void sheNet::epoll_wrapper::remove_alive_fd(int fd) {
   epoll_event event_options{};
   event_options.data.fd = fd;
 
