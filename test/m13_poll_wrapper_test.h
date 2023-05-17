@@ -10,7 +10,7 @@
 namespace m13_poll_wrapper_test {
 
 void main() {
-
+  sheNet::poll_wrapper a;
 
 };
 
