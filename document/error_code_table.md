@@ -34,5 +34,7 @@
 
 0018:在调用epoll_ctl移除fd的时候出现错误
 
-0019:在调用epoll_wait的时候出错
+0019:在调用epoll_wait处理accept的时候出错
+
+0020:在调用epoll_wait处理客户端fd的时候出错
 
