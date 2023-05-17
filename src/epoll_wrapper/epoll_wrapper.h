@@ -27,6 +27,7 @@ class epoll_wrapper {
  private:
   int epoll_container_id_;
   std::vector<epoll_event> user_events_;
+  int timeout_set_;///< 用于设置epoll的超时时间,单位是毫秒
 
  public:
   // interface
