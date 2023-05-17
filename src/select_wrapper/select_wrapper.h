@@ -60,7 +60,7 @@ class select_wrapper {
   void set_timeout(int seconds, int microseconds);
 
   /**
-   * @brief 获取有读时间的文件描述符
+   * @brief 获取有读事件的文件描述符
    * @return 可用的文件描述符
    */
   std::vector<int> get_alive_fd();
