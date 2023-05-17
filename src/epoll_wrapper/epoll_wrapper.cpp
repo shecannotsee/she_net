@@ -3,6 +3,3 @@
 //
 
 #include "epoll_wrapper.h"
-
-namespace sheNet {
-} // sheNet
