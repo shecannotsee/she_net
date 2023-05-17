@@ -25,7 +25,7 @@ class poll_wrapper {
 
  private:
   std::vector<pollfd> poll_fds_;///< poll_wrapper维护的文件描述符列表
-  int timeout_set_;///< 用于设置select的超时
+  int timeout_set_;///< 用于设置poll的的超时时间，单位是毫秒
 
  public:
   /**
