@@ -11,7 +11,8 @@
 
 #include <sheNetException/sheNetException.h>
 
-sheNet::poll_wrapper::poll_wrapper() = default;
+sheNet::poll_wrapper::poll_wrapper()
+    : timeout_set_(0) {};
 
 void sheNet::poll_wrapper::add_server_fd(int local_fd) {
   poll_fds_.push_back({
