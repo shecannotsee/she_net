@@ -5,6 +5,9 @@
 #ifndef SHE_NET_SRC_EPOLL_WRAPPER_EPOLL_WRAPPER_H_
 #define SHE_NET_SRC_EPOLL_WRAPPER_EPOLL_WRAPPER_H_
 
+#include <vector>
+#include <sys/epoll.h>
+
 namespace sheNet {
 
 class epoll_wrapper {
@@ -13,15 +16,18 @@ class epoll_wrapper {
   epoll_wrapper(const epoll_wrapper&) = delete;
   epoll_wrapper& operator=(const epoll_wrapper&) = delete;
   // move:off
-  epoll_wrapper(epoll_wrapper&&) = delete;
-  epoll_wrapper& operator=(epoll_wrapper&&) = delete;
+  epoll_wrapper(epoll_wrapper&&) = default;
+  epoll_wrapper& operator=(epoll_wrapper&&) = default;
   //destructors
   ~epoll_wrapper() = default;
   //constructors
-  epoll_wrapper() = default;
+  epoll_wrapper();
+  explicit epoll_wrapper(int events_num);
 
  private:
-  // data
+  int epoll_container_id_;
+  std::vector<epoll_event> user_events_;
+
  public:
   // interface
 
