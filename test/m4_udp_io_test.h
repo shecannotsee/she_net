@@ -10,8 +10,8 @@
 #include <future>
 #include <memory>
 
-#include <socket.h>
-#include <message.h>
+#include "high_coupling_model/socket.h"
+#include "high_coupling_model/message.h"
 #include <transport_address_type.h>
 #include <make_unique.h>
 

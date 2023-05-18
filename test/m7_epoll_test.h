@@ -7,7 +7,7 @@
 
 #include <string>
 #include <atomic>
-#include <socket.h>
+#include "high_coupling_model/socket.h"
 #include <sys/epoll.h>
 
 namespace m7_epoll_test {

@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <errno.h>
 #include <arpa/inet.h>
-#include <sheNetException/sheNetException.h>
+#include "sheNetException/sheNetException.h"
 
 sheNet::message::message(std::unique_ptr<sheNet::socket> socket)
     : socket_(socket.release()) {

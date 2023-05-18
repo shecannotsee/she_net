@@ -7,7 +7,7 @@
 
 #include <string>
 #include <vector>
-#include <socket.h>
+#include "high_coupling_model/socket.h"
 #include <sys/poll.h>
 
 namespace m6_poll_test {
