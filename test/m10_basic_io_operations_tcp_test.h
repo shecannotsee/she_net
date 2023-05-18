@@ -48,7 +48,7 @@ void main() {
 
     /* io */
     using io = sheNet::basic_io_operations::TCP;
-    while (1) {
+    while (true) {
       try {
         static int message_num = 0;
         io::send(client_fd, "No." + std::to_string(++message_num) + " message has been sent.\n");
