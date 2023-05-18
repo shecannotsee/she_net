@@ -55,7 +55,8 @@ void main() {
         io::send(client_fd, "No." + std::to_string(++message_num) + " message has been sent.");
         std::cout << YELLOW_COLOR << "No." + std::to_string(message_num) + " message has been sent.\n" << RESET_COLOR;
         sleep(1);
-      } catch (const sheNet::sheNetException& exc) {
+      }
+      catch (const sheNet::sheNetException& exc) {
         if (exc.get_error_code() != 7) {// 非接口内部问题的异常
           continue;
         } else {// 接口异常
