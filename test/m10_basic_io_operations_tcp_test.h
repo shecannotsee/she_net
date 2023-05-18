@@ -18,7 +18,7 @@ const std::string GREEN_COLOR   = "\033[32m";
 const std::string YELLOW_COLOR  = "\033[33m";
 
 void main() {
-  std::cout << RED_COLOR << "test start." << RESET_COLOR << std::endl;
+  std::cout << RED_COLOR << "basic_io_operations tcp test start." << RESET_COLOR << std::endl;
   sleep(1);
 
   auto client = std::thread([](){
