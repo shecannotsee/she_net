@@ -162,7 +162,11 @@ int sheNet::basic_socket_operations::connect(int local_fd,
   }
 
   if (connect_results == -1|| local_port == -1) {
-    throw sheNetException(4,"connect port error."+std::string(strerror(errno)));
+    if (errno == EINPROGRESS || errno == EAGAIN || errno == EWOULDBLOCK) {
+      throw sheNetException(21, "connecting..." + std::string(strerror(errno)));
+    } else {
+      throw sheNetException(4, "connect port error." + std::string(strerror(errno)));
+    }
   }
 
   return local_port;
