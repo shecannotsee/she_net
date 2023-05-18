@@ -23,7 +23,8 @@ void main() {
 
   auto client = std::thread([](){
     /* connect */
-    using BSO = sheNet::basic_socket_operations;
+    using BSO/* basic socket operations */
+      = sheNet::basic_socket_operations;
     int client_fd = BSO::socket();/* set */ {
       BSO::set_socket_noblock(client_fd);
       BSO::port_reuse(client_fd);
