@@ -52,8 +52,8 @@ void main() {
     while (true) {
       try {
         static int message_num = 0;
-        io::send(client_fd, "No." + std::to_string(++message_num) + " message has been sent.\n");
-        std::cout << YELLOW_COLOR << "No." + std::to_string(++message_num) + " message has been sent.\n" << RESET_COLOR;
+        io::send(client_fd, "No." + std::to_string(++message_num) + " message has been sent.");
+        std::cout << YELLOW_COLOR << "No." + std::to_string(message_num) + " message has been sent.\n" << RESET_COLOR;
         sleep(1);
       } catch (const sheNet::sheNetException& exc) {
         if (exc.get_error_code() != 7) {// 非接口内部问题的异常
@@ -67,7 +67,7 @@ void main() {
     }
 
     BSO::shutdown(client_fd);
-    std::cout << YELLOW_COLOR << "client closed.\n" << RESET_COLOR;
+    std::cout << YELLOW_COLOR << "client closed.\n";
   });
 
   auto server = std::thread([](){
@@ -95,8 +95,8 @@ void main() {
             sleep(1);
             continue;
           } else {
-            std::cout << GREEN_COLOR << exc.what() << RESET_COLOR;// 自带\n
-            std::cout << GREEN_COLOR << "accept failed." << RESET_COLOR << std::endl;
+            std::cout << GREEN_COLOR << exc.what();// 自带\n
+            std::cout << GREEN_COLOR << "accept failed.\n" << RESET_COLOR;
             BSO::shutdown(server_fd);
             std::cout << GREEN_COLOR << "server closed.\n" << RESET_COLOR;
             throw exc;
@@ -113,7 +113,7 @@ void main() {
         for (auto client_fd : client_accept_fds) {
           std::string get_message = io::recv(client_fd);
           if (get_message.size() > 0) {
-            std::cout << GREEN_COLOR << get_message << RESET_COLOR << std::endl;
+            std::cout << GREEN_COLOR << "[" << get_message << "]\n" << RESET_COLOR;
           }
         }
       } catch (const sheNet::sheNetException& exc) {
