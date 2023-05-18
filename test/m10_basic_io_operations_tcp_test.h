@@ -48,7 +48,6 @@ void main() {
 
     /* io */
     using io = sheNet::basic_io_operations::TCP;
-
     while (1) {
       try {
         static int message_num = 0;
