@@ -118,7 +118,11 @@ int sheNet::basic_socket_operations::accept(int local_fd, sheNet::TRANSPORT_ADDR
   }
 
   if (client_fd == -1) {
-    throw sheNetException(5,"accept port error."+std::string(strerror(errno)));
+    if (errno == EAGAIN || errno == EWOULDBLOCK) {
+      throw sheNetException(22, "accepting..." + std::string(strerror(errno)));
+    } else {
+      throw sheNetException(5, "accept port error." + std::string(strerror(errno)));
+    }
   }
 
   return client_fd;
