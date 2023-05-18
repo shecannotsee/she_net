@@ -18,9 +18,9 @@ class select_wrapper {
   // move:on
   select_wrapper(select_wrapper&&) = default;
   select_wrapper& operator=(select_wrapper&&) = default;
-  //destructors
+  // destructors
   ~select_wrapper() = default;
-  //constructors
+  // constructors
   select_wrapper();
 
  private:// data

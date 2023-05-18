@@ -18,9 +18,9 @@ class poll_wrapper {
   // move:on
   poll_wrapper(poll_wrapper&&) = default;
   poll_wrapper& operator=(poll_wrapper&&) = default;
-  //destructors
+  // destructors
   ~poll_wrapper() = default;
-  //constructors
+  // constructors
   poll_wrapper();
 
  private:

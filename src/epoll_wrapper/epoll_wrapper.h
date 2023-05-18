@@ -15,12 +15,12 @@ class epoll_wrapper {
   // copy:off
   epoll_wrapper(const epoll_wrapper&) = delete;
   epoll_wrapper& operator=(const epoll_wrapper&) = delete;
-  // move:off
+  // move:on
   epoll_wrapper(epoll_wrapper&&) = default;
   epoll_wrapper& operator=(epoll_wrapper&&) = default;
-  //destructors
+  // destructors
   ~epoll_wrapper() = default;
-  //constructors
+  // constructors
   epoll_wrapper();
   explicit epoll_wrapper(int events_num);
 
