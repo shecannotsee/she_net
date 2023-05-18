@@ -34,10 +34,11 @@ void main() {
         break;
       }
       catch (const sheNet::sheNetException& exc) {
-        if (exc.get_error_code() == 21) {
+        if (exc.get_error_code() == 21) {// 非接口内部问题的异常
           sleep(1);
           continue;
-        } else {
+        } else {// 接口内部的异常
+          std::cout << YELLOW_COLOR << exc.what() << RESET_COLOR;// 自带\n
           std::cout << YELLOW_COLOR << "connect failed." << RESET_COLOR << std::endl;
           sleep(1);
           continue;
@@ -49,12 +50,24 @@ void main() {
     using io = sheNet::basic_io_operations::TCP;
 
     while (1) {
-      io::send(client_fd, "");
-      sleep(1);
+      try {
+        static int message_num = 0;
+        io::send(client_fd, "No." + std::to_string(++message_num) + " message has been sent.\n");
+        std::cout << YELLOW_COLOR << "No." + std::to_string(++message_num) + " message has been sent.\n" << RESET_COLOR;
+        sleep(1);
+      } catch (const sheNet::sheNetException& exc) {
+        if (exc.get_error_code() != 7) {// 非接口内部问题的异常
+          continue;
+        } else {// 接口异常
+          std::cout << YELLOW_COLOR << "The server is down or unavailable.\n" << RESET_COLOR;
+          std::cout << YELLOW_COLOR << "The client will be shut down.\n" << RESET_COLOR;
+          break;
+        }
+      }
     }
 
-
     BSO::shutdown(client_fd);
+    std::cout << YELLOW_COLOR << "client closed.\n" << RESET_COLOR;
   });
 
   auto server = std::thread([](){
