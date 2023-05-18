@@ -102,7 +102,7 @@ int sheNet::basic_socket_operations::accept(int local_fd, sheNet::TRANSPORT_ADDR
     /* 在接受连接时获取客户端的ip和端口号 */ {
       std::string ip = std::move(std::string(inet_ntoa(client_address.sin_addr)));
       int port       = ntohs(client_address.sin_port);
-      printf("server:client info [%s:%d]\n",ip.c_str(),port);
+      // printf("server:client info [%s:%d]\n",ip.c_str(),port);
     };
   }
   else if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
