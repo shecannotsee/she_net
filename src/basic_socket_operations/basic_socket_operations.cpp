@@ -182,7 +182,7 @@ void sheNet::basic_socket_operations::port_reuse(int fd, int operations) {
   }
 };
 
-void sheNet::basic_socket_operations::set_socket_block(int fd, bool noblock) {
+void sheNet::basic_socket_operations::set_socket_noblock(int fd, bool noblock) {
   int flags = fcntl(fd, F_GETFL, 0);
   if (noblock) {
     flags |= O_NONBLOCK;
