@@ -29,8 +29,8 @@ int main() {
 //  m7_epoll_test::main();
 //  m8_tcp_bidirectional_io_test::main();
 //  m9_basic_socket_operations::main();
-  m10_basic_io_operations_tcp_test::main();
-//  m11_basic_io_operations_udp_test::main();
+//  m10_basic_io_operations_tcp_test::main();
+  m11_basic_io_operations_udp_test::main();
 //  m12_select_wrapper_test::main();
 //  m13_poll_wrapper_test::main();
 //  m14_epoll_wrapper_test::main();

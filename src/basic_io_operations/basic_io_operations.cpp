@@ -14,23 +14,23 @@
 #include <sheNetException/sheNetException.h>
 
 std::string sheNet::basic_io_operations::TCP::recv(int fd) {
-  constexpr int bufferSize = 1024;
-  char buffer[bufferSize];
+  constexpr int buffer_size = 1024;
+  char buffer[buffer_size];
 
-  ssize_t bytesRead = ::recv(fd, buffer, bufferSize - 1, 0);
-  if (bytesRead == -1) {
+  ssize_t bytes_read = ::recv(fd, buffer, buffer_size - 1, 0);
+  if (bytes_read == -1) {
     if (errno == EAGAIN || errno == EWOULDBLOCK) {
       // 没有更多可用数据
       return {};
     } else {
       throw sheNetException(6, "tcp recv data error." + std::string(strerror(errno)));
     }
-  } else if (bytesRead == 0) {
+  } else if (bytes_read == 0) {
     // 客户端关闭
     throw sheNetException(12, "tcp recv error: The client has been shut down.");
   } else {
     // 数据成功抵达
-    buffer[bytesRead] = '\0'; // Null-terminate the received data
+    buffer[bytes_read] = '\0'; // Null-terminate the received data
     return std::string(buffer);
   }
 };
@@ -81,6 +81,8 @@ std::string sheNet::basic_io_operations::UDP::recvfrom(int fd) {
       throw sheNetException(13, "udp recvfrom error: The local fd has been shut down.");
     } else {
       // TODO:成功读取了n个字节的数据之后,可能数据仍然不完整,需要做缓冲并且将流数据进行切割处理
+      // 数据成功抵达
+      buffer[number_of_bytes_accepted] = '\0'; // Null-terminate the received data
       accepting = false;
     }
   };
