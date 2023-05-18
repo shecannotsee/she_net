@@ -71,9 +71,61 @@ void main() {
   });
 
   auto server = std::thread([](){
-    using socket = sheNet::basic_socket_operations;
-    using io = sheNet::basic_io_operations::TCP;
+    /* listen */
+    using BSO/* basic socket operations */
+        = sheNet::basic_socket_operations;
+    int server_fd = BSO::socket();/* set */ {
+      BSO::port_reuse(server_fd);
+      // 非阻塞的accept会抛出大量异常,请谨慎使用
+      BSO::set_socket_noblock(server_fd);
+      BSO::bind(server_fd,"0.0.0.0","9981");
+      BSO::listen(server_fd);
+    }
 
+    std::vector<int> client_accept_fds;
+    std::mutex mtx;
+    auto accept_thread = std::thread([&server_fd,&mtx,&client_accept_fds]() noexcept {
+      while (true) {
+        try {
+          std::unique_lock<std::mutex> lock(mtx);
+          int client_fd = BSO::accept(server_fd);
+          client_accept_fds.push_back(client_fd);
+        } catch (const sheNet::sheNetException &exc) {
+          if (exc.get_error_code() == 22) {
+            sleep(1);
+            continue;
+          } else {
+            std::cout << GREEN_COLOR << exc.what() << RESET_COLOR;// 自带\n
+            std::cout << GREEN_COLOR << "accept failed." << RESET_COLOR << std::endl;
+            BSO::shutdown(server_fd);
+            std::cout << GREEN_COLOR << "server closed.\n" << RESET_COLOR;
+            throw exc;
+          }
+        }
+      }
+    });
+
+    /* io */
+    using io = sheNet::basic_io_operations::TCP;
+    while (true) {
+      try {
+        std::unique_lock<std::mutex> lock(mtx);
+        for (auto client_fd : client_accept_fds) {
+          std::string get_message = io::recv(client_fd);
+          if (get_message.size() > 0) {
+            std::cout << GREEN_COLOR << get_message << RESET_COLOR << std::endl;
+          }
+        }
+      } catch (const sheNet::sheNetException& exc) {
+        std::cout << GREEN_COLOR << "recv error" << RESET_COLOR << std::endl;
+        sleep(1);
+        continue;
+      }
+    }
+
+    accept_thread.join();
+    BSO::shutdown(server_fd);
+    std::cout << GREEN_COLOR << "server closed.\n" << RESET_COLOR;
   });
 
   client.join();
