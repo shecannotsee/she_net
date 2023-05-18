@@ -9,7 +9,6 @@
 #include <cassert>
 #include <string.h>
 #include <errno.h>
-#include <bits/fcntl.h>
 #include <fcntl.h>
 
 #include <sheNetException/sheNetException.h>
