@@ -26,7 +26,7 @@ void main() {
     /* connect */
     while (true) {
       try {
-        BSO::connect(client_fd, "192.168.1.47", "9981");
+        BSO::connect(client_fd, "192.168.1.47", "9982");
         break;
       }
       catch (const sheNet::sheNetException& exc) {
@@ -75,9 +75,11 @@ void main() {
   std::thread server([](){
     using BSO = sheNet::basic_socket_operations;
     sheNet::select_wrapper wrapper;
+    wrapper.set_timeout(2,0);
     int server_fd = BSO::socket();/* set */{
-      // BSO::set_socket_noblock(server_fd);
-      BSO::bind(server_fd,"0.0.0.0","9981");
+      BSO::port_reuse(server_fd);
+      BSO::set_socket_noblock(server_fd);
+      BSO::bind(server_fd,"0.0.0.0","9982");
       BSO::listen(server_fd);
     };
 
@@ -108,7 +110,9 @@ void main() {
     while (true) {
       try {
         std::unique_lock<std::mutex> lock(mtx);
-        for (auto client_fd : wrapper.get_alive_fd(server_fd)) {
+        auto alive_list = wrapper.get_alive_fd(server_fd);
+//        std::cout << GREEN_COLOR << "[" << alive_list.size() << "]\n" << RESET_COLOR;
+        for (auto client_fd : alive_list) {
           std::string get_message = io::recv(client_fd);
           if (get_message.size() > 0) {
             std::cout << GREEN_COLOR << "[" << get_message << "]\n" << RESET_COLOR;
