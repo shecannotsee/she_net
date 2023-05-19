@@ -32,6 +32,7 @@ void main() {
         static int message_num = 0;
         io::sendto(client_fd, "192.168.1.47", "9981", "No." + std::to_string(++message_num) + " message");
         std::cout << YELLOW_COLOR << "[" << "No." + std::to_string(message_num) + " message] has been sent.\n" << RESET_COLOR;
+        sleep(999);
       }
       catch (const sheNet::sheNetException& exc) {
         std::cout << YELLOW_COLOR << exc.what() << RESET_COLOR;
