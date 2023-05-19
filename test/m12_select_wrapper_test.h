@@ -90,7 +90,8 @@ void main() {
           std::unique_lock<std::mutex> lock(mtx);
           int client_fd = BSO::accept(server_fd);
           wrapper.add_alive_fd(client_fd);
-        } catch (const sheNet::sheNetException &exc) {
+        }
+        catch (const sheNet::sheNetException &exc) {
           if (exc.get_error_code() == 22) {
             sleep(1);
             continue;
@@ -111,14 +112,14 @@ void main() {
       try {
         std::unique_lock<std::mutex> lock(mtx);
         auto alive_list = wrapper.get_alive_fd(server_fd);
-//        std::cout << GREEN_COLOR << "[" << alive_list.size() << "]\n" << RESET_COLOR;
         for (auto client_fd : alive_list) {
           std::string get_message = io::recv(client_fd);
           if (get_message.size() > 0) {
             std::cout << GREEN_COLOR << "[" << get_message << "]\n" << RESET_COLOR;
           }
         }
-      } catch (const sheNet::sheNetException& exc) {
+      }
+      catch (const sheNet::sheNetException& exc) {
         std::cout << GREEN_COLOR << "recv error" << RESET_COLOR << std::endl;
         sleep(1);
         continue;
