@@ -28,10 +28,10 @@ void main() {
     using io = sheNet::basic_io_operations::UDP;
     while (true) {
       try {
+        sleep(1);
         static int message_num = 0;
         io::sendto(client_fd, "192.168.1.47", "9981", "No." + std::to_string(++message_num) + " message");
         std::cout << YELLOW_COLOR << "[" << "No." + std::to_string(message_num) + " message] has been sent.\n" << RESET_COLOR;
-        sleep(1);
       }
       catch (const sheNet::sheNetException& exc) {
         std::cout << YELLOW_COLOR << exc.what() << RESET_COLOR;
@@ -44,13 +44,12 @@ void main() {
   });
 
   auto server = std::thread([](){
-    sleep(2);
     /* create socket */
     using BSO = sheNet::basic_socket_operations;
     auto UDP_IPV4 = sheNet::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
     int server_fd = BSO::socket(UDP_IPV4);/* set */ {
       BSO::port_reuse(server_fd);
-//      BSO::set_socket_noblock(server_fd);
+      // BSO::set_socket_noblock(server_fd);// Using no-blocking can lead to an increase in CPU usage (single core)
       BSO::bind(server_fd,"0.0.0.0","9981",UDP_IPV4);
     };
 
@@ -61,8 +60,9 @@ void main() {
         std::string message_get = io::recvfrom(server_fd);
         if (message_get.size() > 0) {
           std::cout << GREEN_COLOR << "[" << message_get << "]\n" << RESET_COLOR;
+        } else {
+          // std::cout << GREEN_COLOR << message_get.size();
         }
-        sleep(1);
       }
       catch (const sheNet::sheNetException& exc) {
         std::cout << GREEN_COLOR << exc.what() << "\n" << RESET_COLOR;
