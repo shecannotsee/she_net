@@ -29,8 +29,8 @@ void main() {
     while (true) {
       try {
         static int message_num = 0;
-        io::sendto(client_fd, "192.168.1.47", "9981", "No." + std::to_string(++message_num) + " message has been sent.");
-        std::cout << YELLOW_COLOR << "No." + std::to_string(message_num) + " message has been sent.\n" << RESET_COLOR;
+        io::sendto(client_fd, "192.168.1.47", "9981", "No." + std::to_string(++message_num) + " message");
+        std::cout << YELLOW_COLOR << "[" << "No." + std::to_string(message_num) + " message] has been sent.\n" << RESET_COLOR;
         sleep(1);
       }
       catch (const sheNet::sheNetException& exc) {
@@ -50,7 +50,7 @@ void main() {
     auto UDP_IPV4 = sheNet::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
     int server_fd = BSO::socket(UDP_IPV4);/* set */ {
       BSO::port_reuse(server_fd);
-      BSO::set_socket_noblock(server_fd);
+//      BSO::set_socket_noblock(server_fd);
       BSO::bind(server_fd,"0.0.0.0","9981",UDP_IPV4);
     };
 
