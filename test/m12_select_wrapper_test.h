@@ -43,14 +43,14 @@ void main() {
     };
 
     using io = sheNet::basic_io_operations::TCP;
+    int message_num = 0;
     while (true) {
       try {
-        static int message_num = 0;
+        sleep(1);
         io::send(client_fd, "client " + id + ":No." + std::to_string(++message_num) + " message");
         std::cout << YELLOW_COLOR << "["
-                                  <<"client " + id + ":No." + std::to_string(++message_num) + " message"
+                                  <<"client " + id + ":No." + std::to_string(message_num) + " message"
                                   <<"]has been sent.\n" << RESET_COLOR;
-        sleep(1);
       }
       catch (const sheNet::sheNetException& exc) {
         if (exc.get_error_code() != 7) {// 非接口内部问题的异常
@@ -72,9 +72,66 @@ void main() {
   std::future<void> c4 = std::async(std::launch::async,client,"4");
   std::future<void> c5 = std::async(std::launch::async,client,"5");
 
-  sheNet::select_wrapper wrapper;
+  std::thread server([](){
+    using BSO = sheNet::basic_socket_operations;
+    sheNet::select_wrapper wrapper;
+    int server_fd = BSO::socket();/* set */{
+      // BSO::set_socket_noblock(server_fd);
+      BSO::bind(server_fd,"0.0.0.0","9981");
+      BSO::listen(server_fd);
+    };
 
+    std::mutex mtx;
+    auto accept_thread = std::thread([&server_fd,&wrapper,&mtx](){
+      while (true) {
+        try {
+          std::unique_lock<std::mutex> lock(mtx);
+          int client_fd = BSO::accept(server_fd);
+          wrapper.add_alive_fd(client_fd);
+        } catch (const sheNet::sheNetException &exc) {
+          if (exc.get_error_code() == 22) {
+            sleep(1);
+            continue;
+          } else {
+            std::cout << GREEN_COLOR << exc.what();// 自带\n
+            std::cout << GREEN_COLOR << "accept failed.\n" << RESET_COLOR;
+            BSO::shutdown(server_fd);
+            std::cout << GREEN_COLOR << "server closed.\n" << RESET_COLOR;
+            throw exc;
+          }
+        }
+      }
+    });
 
+    /* io */
+    using io = sheNet::basic_io_operations::TCP;
+    while (true) {
+      try {
+        std::unique_lock<std::mutex> lock(mtx);
+        for (auto client_fd : wrapper.get_alive_fd(server_fd)) {
+          std::string get_message = io::recv(client_fd);
+          if (get_message.size() > 0) {
+            std::cout << GREEN_COLOR << "[" << get_message << "]\n" << RESET_COLOR;
+          }
+        }
+      } catch (const sheNet::sheNetException& exc) {
+        std::cout << GREEN_COLOR << "recv error" << RESET_COLOR << std::endl;
+        sleep(1);
+        continue;
+      }
+    }
+
+    accept_thread.join();
+    BSO::shutdown(server_fd);
+    std::cout << GREEN_COLOR << "server closed.\n" << RESET_COLOR;
+  });
+
+  server.join();
+  c1.wait();
+  c2.wait();
+  c3.wait();
+  c4.wait();
+  c5.wait();
 };
 
 };// namespace m12_select_wrapper_test
