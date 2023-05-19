@@ -54,7 +54,8 @@ class basic_io_operations {
     static std::string recvfrom(int fd);
 
     /**
-     * @brief udp发送,用来将数据添加到发送缓冲区
+     * @brief udp发送,用来将数据添加到发送缓冲区.
+     * ps:若消息长度大于内核缓冲则会报错
      * @param ip 发送的地址ip
      * @param port 发送的地址ip对应的端口
      * @param binary_package 发送的数据包
