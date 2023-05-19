@@ -84,7 +84,7 @@ std::string sheNet::basic_io_operations::UDP::recvfrom(int fd) {
 
 void sheNet::basic_io_operations::UDP::sendto(int fd, std::string ip, std::string port, std::string binary_package, TRANSPORT_ADDRESS_TYPE type) {
   int bytes_sent = -1;
-  for (bool loop = true; loop ; ) {
+  for (bool loop = true; loop == true ; ) {
     /*z*/if (type == TRANSPORT_ADDRESS_TYPE::UDP_IPV4) {
       struct sockaddr_in server_address{};
       ::memset(&server_address, 0x00, sizeof(server_address));
@@ -129,9 +129,11 @@ void sheNet::basic_io_operations::UDP::sendto(int fd, std::string ip, std::strin
         throw sheNetException(9, "upd send message error." + std::string(strerror(errno)));
       }
     }
-
-    if ( bytes_sent == binary_package.size() ) {
-      loop == false;
+    else if (bytes_sent == binary_package.size()) {
+      loop = false;
+    }
+    else {
+      assert(false);
     }
   }
 }
