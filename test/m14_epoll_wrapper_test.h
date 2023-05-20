@@ -78,7 +78,7 @@ void main() {
     wrapper.set_timeout();
     int server_fd = BSO::socket();/* set */{
     wrapper.add_server_fd(server_fd);
-    wrapper.set_timeout(50000);
+    wrapper.set_timeout(1000);
     BSO::port_reuse(server_fd);
     BSO::set_socket_noblock(server_fd);
     BSO::bind(server_fd,"0.0.0.0","9981");
@@ -98,7 +98,7 @@ void main() {
             sleep(1);
             continue;
           } else {
-            std::cout << GREEN_COLOR << exc.what();// 自带\n
+            std::cout << GREEN_COLOR << "error:" <<exc.what();// 自带\n
             std::cout << GREEN_COLOR << "accept failed.\n" << RESET_COLOR;
             BSO::shutdown(server_fd);
             std::cout << GREEN_COLOR << "server closed.\n" << RESET_COLOR;
