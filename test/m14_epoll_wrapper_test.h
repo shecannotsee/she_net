@@ -26,7 +26,7 @@ void main() {
     /* connect */
     while (true) {
       try {
-        BSO::connect(client_fd, "192.168.1.47", "9981");
+        BSO::connect(client_fd, "192.168.101.138", "9981");
         break;
       }
       catch (const sheNet::sheNetException& exc) {
@@ -72,7 +72,74 @@ void main() {
   std::future<void> c4 = std::async(std::launch::async,client,"4");
   std::future<void> c5 = std::async(std::launch::async,client,"5");
 
-  sheNet::epoll_wrapper a;
+  std::thread server([](){
+    using BSO = sheNet::basic_socket_operations;
+    sheNet::epoll_wrapper wrapper;
+    wrapper.set_timeout();
+    int server_fd = BSO::socket();/* set */{
+    wrapper.add_server_fd(server_fd);
+    wrapper.set_timeout(50000);
+    BSO::port_reuse(server_fd);
+    BSO::set_socket_noblock(server_fd);
+    BSO::bind(server_fd,"0.0.0.0","9981");
+    BSO::listen(server_fd);
+  };
+
+    std::mutex mtx;
+    auto accept_thread = std::thread([&server_fd,&wrapper,&mtx](){
+      while (true) {
+        try {
+          std::unique_lock<std::mutex> lock(mtx);
+          int client_fd = BSO::accept(server_fd);
+          wrapper.add_alive_fd(client_fd);
+        }
+        catch (const sheNet::sheNetException &exc) {
+          if (exc.get_error_code() == 22) {
+            sleep(1);
+            continue;
+          } else {
+            std::cout << GREEN_COLOR << exc.what();// 自带\n
+            std::cout << GREEN_COLOR << "accept failed.\n" << RESET_COLOR;
+            BSO::shutdown(server_fd);
+            std::cout << GREEN_COLOR << "server closed.\n" << RESET_COLOR;
+            throw exc;
+          }
+        }
+      }
+    });
+
+    /* io */
+    using io = sheNet::basic_io_operations::TCP;
+    while (true) {
+      try {
+        std::unique_lock<std::mutex> lock(mtx);
+        auto alive_list = wrapper.get_alive_fd();
+        for (auto client_fd : alive_list) {
+          std::string get_message = io::recv(client_fd);
+          if (get_message.size() > 0) {
+            std::cout << GREEN_COLOR << "[" << get_message << "]\n" << RESET_COLOR;
+          }
+        }
+      }
+      catch (const sheNet::sheNetException& exc) {
+        std::cout << GREEN_COLOR << "recv error" << RESET_COLOR << std::endl;
+        sleep(1);
+        continue;
+      }
+    }
+
+    accept_thread.join();
+    BSO::shutdown(server_fd);
+    std::cout << GREEN_COLOR << "server closed.\n" << RESET_COLOR;
+  });
+
+  server.join();
+  c1.wait();
+  c2.wait();
+  c3.wait();
+  c4.wait();
+  c5.wait();
+
 
 };
 
