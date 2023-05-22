@@ -1,1 +1,0 @@
-sudo vim /etc/DeviceEnrollmentCloudService/DeviceEnrollmentCloudService.config

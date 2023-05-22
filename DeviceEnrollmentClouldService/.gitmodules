@@ -1,6 +1,0 @@
-[submodule "3rd/sheIni"]
-	path = 3rd/sheIni
-	url = https://github.com/shecannotsee/sheIni
-[submodule "3rd/spdlog"]
-	path = 3rd/spdlog
-	url = https://github.com/gabime/spdlog
