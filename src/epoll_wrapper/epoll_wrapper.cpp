@@ -24,13 +24,20 @@ sheNet::epoll_wrapper::epoll_wrapper(int events_num)
 
 void sheNet::epoll_wrapper::add_server_fd(int local_fd) {
   server_socket_fd_ = local_fd;
+  epoll_event event_options{};
+  event_options.events  = EPOLLIN ;
+  event_options.data.fd = server_socket_fd_;
+  int control_result = ::epoll_ctl(epoll_container_id_,EPOLL_CTL_ADD,server_socket_fd_,&event_options);
+  if (control_result == -1) {
+    throw sheNetException(99,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
+  }
 };
 
 void sheNet::epoll_wrapper::add_alive_fd(int fd ,EPOLL_EVENTS trigger_mode) const {
   epoll_event event_options{};
   event_options.events  = EPOLLIN | trigger_mode;
   event_options.data.fd = fd;
-  int control_result = ::epoll_ctl(epoll_container_id_,EPOLL_CTL_ADD,server_socket_fd_,&event_options);
+  int control_result = ::epoll_ctl(epoll_container_id_,EPOLL_CTL_ADD,fd,&event_options);
   if (control_result == -1) {
     throw sheNetException(17,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
   }
