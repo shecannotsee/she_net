@@ -59,6 +59,7 @@ class epoll_wrapper {
   /**
    * @brief 该接口通过epoll_wait判断是否有新的连接请求发生
    * ps:虽然该接口会和下面的 get_alive_fd() 接口可能存在数据竞争,但是并不设计数据的修改,所以可以放心使用
+   * TODO:该函数会获取所有就绪事件,但是只会返回一个accept事件,会导致其他可读事件被忽略
    * @return -1表示没有新的连接抵达,否则就是有新的连接请求发生
    */
   int accept_alive();
