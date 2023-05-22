@@ -17,7 +17,7 @@ packageInStreamBase64::packageInStreamBase64(const std::string& rule)
 packageInStreamBase64::~packageInStreamBase64() {};
 
 std::string packageInStreamBase64::packing(const std::string &data) {
-  std::string ret = sheBase64::encode(data);
+  std::string ret = data;// TODO:需要添加base64库: std::string ret = sheBase64::encode(data);
   ret = ret + _rule;
   return ret;
 };
@@ -55,7 +55,7 @@ bool packageInStreamBase64::getPackage(std::string &str) {
     std::unique_lock<std::mutex> lock(_mutex_out);
     str = std::move(_data_list.front());
     _data_list.pop_front();
-    str = sheBase64::decode(str);
+    str = "";// TODO:需要添加base64库: str = sheBase64::decode(str);
     return true;
   } else {
     return false;
