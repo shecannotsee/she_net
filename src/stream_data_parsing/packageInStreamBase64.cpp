@@ -7,7 +7,7 @@
 #include <list>
 #include <memory>
 #include <mutex>
-#include "base/base64.h"
+#include "base64.h"
 
 packageInStreamBase64::packageInStreamBase64(const std::string& rule)
     : _data_list(std::list<std::string>()),
