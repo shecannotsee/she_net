@@ -77,13 +77,13 @@ void main() {
     she_net::epoll_wrapper wrapper;
     wrapper.set_timeout();
     int server_fd = BSO::socket();/* set */{
-    wrapper.add_server_fd(server_fd);
-    wrapper.set_timeout(1000);
-    BSO::port_reuse(server_fd);
-    BSO::set_socket_noblock(server_fd);
-    BSO::bind(server_fd,"0.0.0.0","9981");
-    BSO::listen(server_fd);
-  };
+      wrapper.add_server_fd(server_fd);
+      wrapper.set_timeout(1000);
+      BSO::port_reuse(server_fd);
+      BSO::set_socket_noblock(server_fd);
+      BSO::bind(server_fd,"0.0.0.0","9981");
+      BSO::listen(server_fd);
+    };
 
     std::mutex mtx;
     auto accept_thread = std::thread([&server_fd,&wrapper,&mtx](){
