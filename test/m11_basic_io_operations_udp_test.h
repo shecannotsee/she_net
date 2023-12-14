@@ -21,11 +21,11 @@ void main() {
 
   auto client = std::thread([](){
     /* create socket */
-    using BSO = sheNet::basic_socket_operations;
-    int client_fd = BSO::socket(sheNet::TRANSPORT_ADDRESS_TYPE::UDP_IPV4);
+    using BSO = she_net::basic_socket_operations;
+    int client_fd = BSO::socket(she_net::TRANSPORT_ADDRESS_TYPE::UDP_IPV4);
 
     /* io */
-    using io = sheNet::basic_io_operations::UDP;
+    using io = she_net::basic_io_operations::UDP;
     while (true) {
       try {
         sleep(1);
@@ -33,7 +33,7 @@ void main() {
         io::sendto(client_fd, "192.168.1.47", "9981", "No." + std::to_string(++message_num) + " message");
         std::cout << YELLOW_COLOR << "[" << "No." + std::to_string(message_num) + " message] has been sent.\n" << RESET_COLOR;
       }
-      catch (const sheNet::sheNetException& exc) {
+      catch (const she_net::she_net_exception& exc) {
         std::cout << YELLOW_COLOR << exc.what() << RESET_COLOR;
         break;
       }
@@ -45,8 +45,8 @@ void main() {
 
   auto server = std::thread([](){
     /* create socket */
-    using BSO = sheNet::basic_socket_operations;
-    auto UDP_IPV4 = sheNet::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
+    using BSO = she_net::basic_socket_operations;
+    auto UDP_IPV4 = she_net::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
     int server_fd = BSO::socket(UDP_IPV4);/* set */ {
       BSO::port_reuse(server_fd);
       // BSO::set_socket_noblock(server_fd);// Using no-blocking can lead to an increase in CPU usage (single core)
@@ -54,7 +54,7 @@ void main() {
     };
 
     /* io */
-    using io = sheNet::basic_io_operations::UDP;
+    using io = she_net::basic_io_operations::UDP;
     while (true) {
       try {
         std::string message_get = io::recvfrom(server_fd);
@@ -64,7 +64,7 @@ void main() {
           // std::cout << GREEN_COLOR << message_get.size();
         }
       }
-      catch (const sheNet::sheNetException& exc) {
+      catch (const she_net::she_net_exception& exc) {
         std::cout << GREEN_COLOR << exc.what() << "\n" << RESET_COLOR;
         break;
       }

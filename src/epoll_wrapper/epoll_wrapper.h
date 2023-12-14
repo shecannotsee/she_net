@@ -8,7 +8,7 @@
 #include <vector>
 #include <sys/epoll.h>
 
-namespace sheNet {
+namespace she_net {
 
 class epoll_wrapper {
  public:

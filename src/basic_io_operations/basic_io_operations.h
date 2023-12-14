@@ -8,7 +8,7 @@
 #include <string>
 #include <transport_address_type.h>
 
-namespace sheNet {
+namespace she_net {
 
 class basic_io_operations {
  public:

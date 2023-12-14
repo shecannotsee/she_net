@@ -7,7 +7,7 @@
 
 #include <string>
 
-namespace sheNet {
+namespace she_net {
 
 class four_tuple {
  public:

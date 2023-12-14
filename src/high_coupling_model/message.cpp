@@ -8,13 +8,13 @@
 #include <netinet/in.h>
 #include <errno.h>
 #include <arpa/inet.h>
-#include "sheNetException/sheNetException.h"
+#include "she_net_exception/she_net_exception.h"
 
-sheNet::message::message(std::unique_ptr<sheNet::socket> socket)
+she_net::message::message(std::unique_ptr<she_net::socket> socket)
     : socket_(socket.release()) {
 };
 
-std::string sheNet::message::get() {
+std::string she_net::message::get() {
   if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::TCP_IPV4 || socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     return this->tcp_get();
   }
@@ -23,7 +23,7 @@ std::string sheNet::message::get() {
   }
 };
 
-void sheNet::message::send(const std::string& message) {
+void she_net::message::send(const std::string& message) {
   if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::TCP_IPV4 || socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::TCP_IPV6) {
     this->tcp_send(message);
   }
@@ -32,7 +32,7 @@ void sheNet::message::send(const std::string& message) {
   }
 };
 
-std::string sheNet::message::tcp_get() {
+std::string she_net::message::tcp_get() {
   std::string buffer;
   buffer.resize(1024); // 预留足够的空间
   bool accepting = true;
@@ -45,7 +45,7 @@ std::string sheNet::message::tcp_get() {
         accepting = false;
       } else {
         // 出现其他错误，需要处理
-        throw sheNetException(6,"tcp recv data error."+std::string(strerror(errno)));
+        throw she_net_exception(6,"tcp recv data error."+std::string(strerror(errno)));
       }
     }
     else {
@@ -56,11 +56,11 @@ std::string sheNet::message::tcp_get() {
   return buffer;
 };
 
-void sheNet::message::tcp_send(const std::string& message) {
+void she_net::message::tcp_send(const std::string& message) {
   // 在发送前可能需要将流数据进行头尾包装
   ssize_t n = ::send(socket_->get_source_id(), message.c_str(), message.size(), 0);
   if (n < 0) {
-    throw sheNetException(7,"tcp send message error."+std::string(strerror(errno)));
+    throw she_net_exception(7,"tcp send message error."+std::string(strerror(errno)));
   }
   else if (n<message.size()) {
     // TODO:移动指针继续发送
@@ -71,7 +71,7 @@ void sheNet::message::tcp_send(const std::string& message) {
 
 };
 
-std::string sheNet::message::udp_get() {
+std::string she_net::message::udp_get() {
   std::string buffer;
   buffer.resize(1024);
   bool accepting = true;
@@ -87,7 +87,7 @@ std::string sheNet::message::udp_get() {
       }
       else {
         // 出现其他错误，需要处理
-        throw sheNetException(8,"upd recv data error."+std::string(strerror(errno)));
+        throw she_net_exception(8,"upd recv data error."+std::string(strerror(errno)));
       }
     }
     else {
@@ -98,7 +98,7 @@ std::string sheNet::message::udp_get() {
   return buffer;
 };
 
-void sheNet::message::udp_send(const std::string& message) {
+void she_net::message::udp_send(const std::string& message) {
   int result = -1;
   if (socket_->get_net_transport()==TRANSPORT_ADDRESS_TYPE::UDP_IPV4) {
     struct sockaddr_in server_address{};
@@ -120,7 +120,7 @@ void sheNet::message::udp_send(const std::string& message) {
   }
 
   if (result < 0) {
-    throw sheNetException(9,"upd send message error."+std::string(strerror(errno)));
+    throw she_net_exception(9,"upd send message error."+std::string(strerror(errno)));
   }
   else if (result<message.size()) {
     // TODO:移动指针继续发送

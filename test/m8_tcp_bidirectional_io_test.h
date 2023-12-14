@@ -22,9 +22,9 @@ namespace m8_tcp_bidirectional_io_test {
 int main() {
   auto server_recv_and_send = [](const std::string& local_port,const std::string& connect_port,int flag) {
     try {
-      sheNet::TRANSPORT_ADDRESS_TYPE tcp = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
-      std::unique_ptr<sheNet::socket> server = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
-      std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(tcp);
+      she_net::TRANSPORT_ADDRESS_TYPE tcp = she_net::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
+      std::unique_ptr<she_net::socket> server = she_net::CPP11::make_unique<she_net::socket>(tcp);
+      std::unique_ptr<she_net::socket> client = she_net::CPP11::make_unique<she_net::socket>(tcp);
       // 由于accept和connect均为阻塞，所以在两个server出现的时候需要有一个先启服务，然后等待另一个进行连接，这样才能顺利的进行下去
       // 这里也是不太想使用异步来处理,因为异步嵌套已经比较深了所以做了一个顺序先后，保证先监听再连接或者先连接再监听
       if (flag==0) {
@@ -39,8 +39,8 @@ int main() {
         server->accept();
       }
 
-      sheNet::message message_control_server(std::move(server));
-      sheNet::message message_control_client(std::move(client));
+      she_net::message message_control_server(std::move(server));
+      she_net::message message_control_client(std::move(client));
 
       auto send_thread = std::async(std::launch::async,[&](){
         while (1) {

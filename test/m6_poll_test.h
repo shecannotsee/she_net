@@ -16,7 +16,7 @@ int main() {
   std::string ip = "192.168.1.47";
   std::string port = "9981";
 
-  sheNet::socket server_socket; /* set */ {
+  she_net::socket server_socket; /* set */ {
     server_socket.bind(port);
     server_socket.listen();
   };
@@ -27,11 +27,11 @@ int main() {
 
   auto client = [&](std::string data) {
     try {
-      sheNet::TRANSPORT_ADDRESS_TYPE tcp = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
-      std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(tcp);/* tcp init */ {
+      she_net::TRANSPORT_ADDRESS_TYPE tcp = she_net::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
+      std::unique_ptr<she_net::socket> client = she_net::CPP11::make_unique<she_net::socket>(tcp);/* tcp init */ {
         client->connect(ip, port);
       };
-      sheNet::message message_control(std::move(client));
+      she_net::message message_control(std::move(client));
       std::cout << "client set done.\n";
       int i = 3;
       while (i--) {

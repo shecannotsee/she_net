@@ -20,7 +20,7 @@ const std::string YELLOW_COLOR  = "\033[33m";
 
 void main() {
   auto client = [](const std::string& id){
-    using BSO = sheNet::basic_socket_operations;
+    using BSO = she_net::basic_socket_operations;
 
     int client_fd = BSO::socket();
     /* connect */
@@ -29,7 +29,7 @@ void main() {
         BSO::connect(client_fd, "192.168.101.138", "9981");
         break;
       }
-      catch (const sheNet::sheNetException& exc) {
+      catch (const she_net::she_net_exception& exc) {
         if (exc.get_error_code() == 21) {// 非接口内部问题的异常
           sleep(1);
           continue;
@@ -42,7 +42,7 @@ void main() {
       }
     };
 
-    using io = sheNet::basic_io_operations::TCP;
+    using io = she_net::basic_io_operations::TCP;
     while (true) {
       try {
         static int message_num = 0;
@@ -52,7 +52,7 @@ void main() {
                   <<"]has been sent.\n" << RESET_COLOR;
         sleep(1);
       }
-      catch (const sheNet::sheNetException& exc) {
+      catch (const she_net::she_net_exception& exc) {
         if (exc.get_error_code() != 7) {// 非接口内部问题的异常
           continue;
         } else {// 接口异常
@@ -73,8 +73,8 @@ void main() {
   std::future<void> c5 = std::async(std::launch::async,client,"5");
 
   std::thread server([](){
-    using BSO = sheNet::basic_socket_operations;
-    sheNet::epoll_wrapper wrapper;
+    using BSO = she_net::basic_socket_operations;
+    she_net::epoll_wrapper wrapper;
     wrapper.set_timeout();
     int server_fd = BSO::socket();/* set */{
     wrapper.add_server_fd(server_fd);
@@ -93,7 +93,7 @@ void main() {
           int client_fd = BSO::accept(server_fd);
           wrapper.add_alive_fd(client_fd);
         }
-        catch (const sheNet::sheNetException &exc) {
+        catch (const she_net::she_net_exception &exc) {
           if (exc.get_error_code() == 22) {
             sleep(1);
             continue;
@@ -109,7 +109,7 @@ void main() {
     });
 
     /* io */
-    using io = sheNet::basic_io_operations::TCP;
+    using io = she_net::basic_io_operations::TCP;
     while (true) {
       try {
         std::unique_lock<std::mutex> lock(mtx);
@@ -121,7 +121,7 @@ void main() {
           }
         }
       }
-      catch (const sheNet::sheNetException& exc) {
+      catch (const she_net::she_net_exception& exc) {
         std::cout << GREEN_COLOR << "recv error" << RESET_COLOR << std::endl;
         sleep(1);
         continue;

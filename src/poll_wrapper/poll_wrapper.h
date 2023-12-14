@@ -8,7 +8,7 @@
 #include <vector>
 #include <sys/poll.h>
 
-namespace sheNet {
+namespace she_net {
 
 class poll_wrapper {
  public:

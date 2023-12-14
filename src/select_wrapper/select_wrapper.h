@@ -8,7 +8,7 @@
 #include <vector>
 #include <sys/socket.h>
 
-namespace sheNet {
+namespace she_net {
 
 class select_wrapper {
  public:

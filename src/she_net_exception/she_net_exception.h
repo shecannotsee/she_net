@@ -8,11 +8,11 @@
 #include <exception>
 #include <string>
 
-namespace sheNet {
+namespace she_net {
 
-class sheNetException : public std::exception {
+class she_net_exception : public std::exception {
  public:
-  sheNetException(int error_code,
+  she_net_exception(int error_code,
                   const std::string &error_message);
 
  private:

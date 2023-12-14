@@ -28,14 +28,14 @@ int main() {
 
   auto client = [&]() {
     try {
-      sheNet::TRANSPORT_ADDRESS_TYPE udp = sheNet::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
-      std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(udp);/* upd client init */ {
-        sheNet::four_tuple quadruple;
+      she_net::TRANSPORT_ADDRESS_TYPE udp = she_net::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
+      std::unique_ptr<she_net::socket> client = she_net::CPP11::make_unique<she_net::socket>(udp);/* upd client init */ {
+        she_net::four_tuple quadruple;
         quadruple.destination_ip = ip;
         quadruple.destination_port = std::atoi(port.c_str());
         client->udp_set(std::move(quadruple));
       };
-      sheNet::message message_control(std::move(client));
+      she_net::message message_control(std::move(client));
       std::cout << "udp client set done,start to send message.\n";
       while (1) {
         message_control.send("hello world");
@@ -50,11 +50,11 @@ int main() {
 
   auto server = [&]() {
     try {
-      sheNet::TRANSPORT_ADDRESS_TYPE udp = sheNet::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
-      std::unique_ptr<sheNet::socket> server = sheNet::CPP11::make_unique<sheNet::socket>(udp);/* upd server init */ {
+      she_net::TRANSPORT_ADDRESS_TYPE udp = she_net::TRANSPORT_ADDRESS_TYPE::UDP_IPV4;
+      std::unique_ptr<she_net::socket> server = she_net::CPP11::make_unique<she_net::socket>(udp);/* upd server init */ {
         server->bind(port);
       };
-      sheNet::message message_control(std::move(server));
+      she_net::message message_control(std::move(server));
       std::cout << "udp server set done.\n";
       while (1) {
         std::cout << "wait to data...\n";

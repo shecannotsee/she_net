@@ -11,9 +11,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include <sheNetException/sheNetException.h>
+#include <she_net_exception/she_net_exception.h>
 
-std::string sheNet::basic_io_operations::TCP::recv(int fd) {
+std::string she_net::basic_io_operations::TCP::recv(int fd) {
   constexpr int buffer_size = 1024;
   char buffer[buffer_size];
 
@@ -23,11 +23,11 @@ std::string sheNet::basic_io_operations::TCP::recv(int fd) {
       // 没有更多可用数据
       return {};
     } else {
-      throw sheNetException(6, "tcp recv data error." + std::string(strerror(errno)));
+      throw she_net_exception(6, "tcp recv data error." + std::string(strerror(errno)));
     }
   } else if (bytes_read == 0) {
     // 客户端关闭
-    throw sheNetException(12, "tcp recv error: The client has been shut down.");
+    throw she_net_exception(12, "tcp recv error: The client has been shut down.");
   } else {
     // 数据成功抵达
     buffer[bytes_read] = '\0'; // Null-terminate the received data
@@ -35,7 +35,7 @@ std::string sheNet::basic_io_operations::TCP::recv(int fd) {
   }
 };
 
-void sheNet::basic_io_operations::TCP::send(int fd, const std::string &binary_stream) {
+void she_net::basic_io_operations::TCP::send(int fd, const std::string &binary_stream) {
   size_t total_sent = 0; // 已发送字节数
   while (total_sent < binary_stream.size()) {
     ssize_t send_bytes = ::send(fd, binary_stream.data() + total_sent, binary_stream.size() - total_sent, NULL);
@@ -47,14 +47,14 @@ void sheNet::basic_io_operations::TCP::send(int fd, const std::string &binary_st
         // TODO:需要处理缓冲区满的情况或者阻塞
         continue;
       } else {
-        throw sheNetException(7, "tcp send message error." + std::string(strerror(errno)));
+        throw she_net_exception(7, "tcp send message error." + std::string(strerror(errno)));
       }
     }
     total_sent += send_bytes;
   }
 };
 
-std::string sheNet::basic_io_operations::UDP::recvfrom(int fd) {
+std::string she_net::basic_io_operations::UDP::recvfrom(int fd) {
   constexpr int buffer_size = 1024;
   char buffer[buffer_size];
   struct sockaddr_in senderAddr;
@@ -69,12 +69,12 @@ std::string sheNet::basic_io_operations::UDP::recvfrom(int fd) {
       return {};
     } else {
       // 出现其他错误，需要处理
-      throw sheNetException(8, "upd recv data error." + std::string(strerror(errno)));
+      throw she_net_exception(8, "upd recv data error." + std::string(strerror(errno)));
     }
   }
   else if (bytes_read == 0) {
     // 如果连接关闭(local fd关闭)则返回空字符串
-    throw sheNetException(13, "udp recvfrom error: The local fd has been shut down.");
+    throw she_net_exception(13, "udp recvfrom error: The local fd has been shut down.");
   }
   else {
     buffer[bytes_read] = '\0'; // Null-terminate the received data
@@ -82,7 +82,7 @@ std::string sheNet::basic_io_operations::UDP::recvfrom(int fd) {
   }
 };
 
-void sheNet::basic_io_operations::UDP::sendto(int fd, std::string ip, std::string port, std::string binary_package, TRANSPORT_ADDRESS_TYPE type) {
+void she_net::basic_io_operations::UDP::sendto(int fd, std::string ip, std::string port, std::string binary_package, TRANSPORT_ADDRESS_TYPE type) {
   int bytes_sent = -1;
   for (bool loop = true; loop == true ; ) {
     /*z*/if (type == TRANSPORT_ADDRESS_TYPE::UDP_IPV4) {
@@ -126,7 +126,7 @@ void sheNet::basic_io_operations::UDP::sendto(int fd, std::string ip, std::strin
         // 发送缓冲区已满，稍后再次尝试发送
         continue;
       } else {
-        throw sheNetException(9, "upd send message error." + std::string(strerror(errno)));
+        throw she_net_exception(9, "upd send message error." + std::string(strerror(errno)));
       }
     }
     else if (bytes_sent == binary_package.size()) {

@@ -6,7 +6,7 @@
 #define SHE_NET_SRC_SHE_NET_H_
 
 #include <make_unique.h>
-#include <sheNetException/sheNetException.h>
+#include <she_net_exception/she_net_exception.h>
 
 #include <transport_address_type.h>
 #include <four_tuple.h>

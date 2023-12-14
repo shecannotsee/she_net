@@ -11,9 +11,9 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#include <sheNetException/sheNetException.h>
+#include <she_net_exception/she_net_exception.h>
 
-int sheNet::basic_socket_operations::socket(const sheNet::TRANSPORT_ADDRESS_TYPE type) {
+int she_net::basic_socket_operations::socket(const she_net::TRANSPORT_ADDRESS_TYPE type) {
   int ret_fd = -1;
   /*zzz*/if (type==TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     ret_fd= ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -28,16 +28,16 @@ int sheNet::basic_socket_operations::socket(const sheNet::TRANSPORT_ADDRESS_TYPE
   }
 
   if (ret_fd == -1) {
-    throw sheNetException(1,"socket create error:"+std::string(strerror(errno)));
+    throw she_net_exception(1,"socket create error:"+std::string(strerror(errno)));
   }
 
   return ret_fd;
 };
 
-void sheNet::basic_socket_operations::bind(int fd,
+void she_net::basic_socket_operations::bind(int fd,
                                            std::string ip,
                                            std::string port,
-                                           sheNet::TRANSPORT_ADDRESS_TYPE type) {
+                                           she_net::TRANSPORT_ADDRESS_TYPE type) {
   // 若传入的是ipv6的"0.0.0.0"也就是所有地址,默认转换成IPV6的全地址
   if (ip == "0.0.0.0" &&
         (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV6||
@@ -82,18 +82,18 @@ void sheNet::basic_socket_operations::bind(int fd,
   }
 
   if (operation_results == -1) {
-    throw sheNetException(2,"bind socket error:"+std::string(strerror(errno)));
+    throw she_net_exception(2,"bind socket error:"+std::string(strerror(errno)));
   }
 };
 
-void sheNet::basic_socket_operations::listen(int fd, int backlog) {
+void she_net::basic_socket_operations::listen(int fd, int backlog) {
   int ret = ::listen(fd, backlog);
   if (ret == -1) {
-    throw sheNetException(3,"listen port error."+std::string(strerror(errno)));
+    throw she_net_exception(3,"listen port error."+std::string(strerror(errno)));
   }
 };
 
-int sheNet::basic_socket_operations::accept(int local_fd, sheNet::TRANSPORT_ADDRESS_TYPE type) {
+int she_net::basic_socket_operations::accept(int local_fd, she_net::TRANSPORT_ADDRESS_TYPE type) {
   int client_fd = -1;
   /*z*/if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     struct sockaddr_in client_address{};
@@ -119,19 +119,19 @@ int sheNet::basic_socket_operations::accept(int local_fd, sheNet::TRANSPORT_ADDR
 
   if (client_fd == -1) {
     if (errno == EAGAIN || errno == EWOULDBLOCK) {
-      throw sheNetException(22, "accepting..." + std::string(strerror(errno)));
+      throw she_net_exception(22, "accepting..." + std::string(strerror(errno)));
     } else {
-      throw sheNetException(5, "accept port error." + std::string(strerror(errno)));
+      throw she_net_exception(5, "accept port error." + std::string(strerror(errno)));
     }
   }
 
   return client_fd;
 };
 
-int sheNet::basic_socket_operations::connect(int local_fd,
+int she_net::basic_socket_operations::connect(int local_fd,
                                               std::string ip,
                                               std::string port,
-                                              sheNet::TRANSPORT_ADDRESS_TYPE type) {
+                                              she_net::TRANSPORT_ADDRESS_TYPE type) {
   int connect_results = -1;
   int local_port = -1;
   /*z*/if (type == TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
@@ -166,30 +166,30 @@ int sheNet::basic_socket_operations::connect(int local_fd,
 
   if (connect_results == -1|| local_port == -1) {
     if (errno == EINPROGRESS || errno == EAGAIN || errno == EWOULDBLOCK) {
-      throw sheNetException(21, "connecting..." + std::string(strerror(errno)));
+      throw she_net_exception(21, "connecting..." + std::string(strerror(errno)));
     } else {
-      throw sheNetException(4, "connect port error." + std::string(strerror(errno)));
+      throw she_net_exception(4, "connect port error." + std::string(strerror(errno)));
     }
   }
 
   return local_port;
 };
 
-void sheNet::basic_socket_operations::shutdown(int fd) {
+void she_net::basic_socket_operations::shutdown(int fd) {
   ::shutdown(fd, SHUT_RDWR);
 };
 
 
-void sheNet::basic_socket_operations::port_reuse(int fd, int operations) {
+void she_net::basic_socket_operations::port_reuse(int fd, int operations) {
   int reuse = operations ? 1 : 0;
   int ret = ::setsockopt(fd, SOL_SOCKET, SO_REUSEPORT,
                            (const void *)&reuse, sizeof(reuse));
   if (ret == -1) {
-    throw sheNetException(10,"set socket opt error."+std::string(strerror(errno)));
+    throw she_net_exception(10,"set socket opt error."+std::string(strerror(errno)));
   }
 };
 
-void sheNet::basic_socket_operations::set_socket_noblock(int fd, bool noblock) {
+void she_net::basic_socket_operations::set_socket_noblock(int fd, bool noblock) {
   int flags = fcntl(fd, F_GETFL, 0);
   if (noblock) {
     flags |= O_NONBLOCK;
@@ -198,7 +198,7 @@ void sheNet::basic_socket_operations::set_socket_noblock(int fd, bool noblock) {
   }
   int ret = fcntl(fd, F_SETFL, flags);
   if (ret == -1) {
-    throw sheNetException(11,"set socket block error."+std::string(strerror(errno)));
+    throw she_net_exception(11,"set socket block error."+std::string(strerror(errno)));
   }
 };
 

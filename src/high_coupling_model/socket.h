@@ -9,7 +9,7 @@
 #include "transport_address_type.h"
 #include "four_tuple.h"
 
-namespace sheNet {
+namespace she_net {
 
 // TODO:需要添加端口复用:
 //   int reuse = on ? 1 : 0;
@@ -33,7 +33,7 @@ class socket {
   socket& operator=(socket&& x) = default;
  private:
   TRANSPORT_ADDRESS_TYPE net_transport_;
-  sheNet::four_tuple four_tuple_;
+  she_net::four_tuple four_tuple_;
 
  public:// Interface
   // server api
@@ -44,9 +44,9 @@ class socket {
   void connect(const std::string &ip, const std::string &port) noexcept;
 
   // udp need to set destination ip and port
-  void            udp_set(sheNet::four_tuple four_tuple);
+  void            udp_set(she_net::four_tuple four_tuple);
   // The client socket needs to be independent of the server socket and then process data
-  void            client_set(sheNet::four_tuple four_tuple);
+  void            client_set(she_net::four_tuple four_tuple);
 
  public:// Interface to update state
   int             get_source_id() const;

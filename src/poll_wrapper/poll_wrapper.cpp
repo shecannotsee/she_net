@@ -9,12 +9,12 @@
 #include <string>
 #include <algorithm>
 
-#include <sheNetException/sheNetException.h>
+#include <she_net_exception/she_net_exception.h>
 
-sheNet::poll_wrapper::poll_wrapper()
+she_net::poll_wrapper::poll_wrapper()
     : timeout_set_(0) {};
 
-void sheNet::poll_wrapper::add_server_fd(int local_fd) {
+void she_net::poll_wrapper::add_server_fd(int local_fd) {
   poll_fds_.push_back({
     local_fd,
     POLLIN,
@@ -22,7 +22,7 @@ void sheNet::poll_wrapper::add_server_fd(int local_fd) {
   });
 };
 
-void sheNet::poll_wrapper::add_alive_fd(int fd) {
+void she_net::poll_wrapper::add_alive_fd(int fd) {
   poll_fds_.push_back({
     fd,
     POLLIN,
@@ -30,20 +30,20 @@ void sheNet::poll_wrapper::add_alive_fd(int fd) {
   });
 };
 
-void sheNet::poll_wrapper::remove_alive_fd(int fd) {
+void she_net::poll_wrapper::remove_alive_fd(int fd) {
   poll_fds_.erase(std::remove_if(poll_fds_.begin(), poll_fds_.end(), [fd](const pollfd& pfd) {
     return pfd.fd == fd;
   }), poll_fds_.end());
 };
 
-void sheNet::poll_wrapper::set_timeout(int seconds) {
+void she_net::poll_wrapper::set_timeout(int seconds) {
   timeout_set_ = seconds;
 };
 
-std::vector<int> sheNet::poll_wrapper::get_alive_fd() {
+std::vector<int> she_net::poll_wrapper::get_alive_fd() {
   int num_events = ::poll(poll_fds_.data(),poll_fds_.size(),timeout_set_);
   if (num_events == -1) {
-    throw sheNetException(16,"poll system interface error:"+std::string(strerror(errno)));
+    throw she_net_exception(16,"poll system interface error:"+std::string(strerror(errno)));
   } else if (num_events == 0 ) {
     return {};
   } else {

@@ -3,7 +3,7 @@
 //
 
 #include "socket.h"
-#include "sheNetException/sheNetException.h"
+#include "she_net_exception/she_net_exception.h"
 #include "make_unique.h"
 #include <errno.h>
 
@@ -13,11 +13,11 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-sheNet::socket::socket()
+she_net::socket::socket()
     : socket(TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
 };
 
-sheNet::socket::socket(sheNet::TRANSPORT_ADDRESS_TYPE type) noexcept
+she_net::socket::socket(she_net::TRANSPORT_ADDRESS_TYPE type) noexcept
     : four_tuple_(),
       net_transport_(type){
   if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
@@ -30,15 +30,15 @@ sheNet::socket::socket(sheNet::TRANSPORT_ADDRESS_TYPE type) noexcept
     four_tuple_.source_fd = ::socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
   }
   if (four_tuple_.source_fd == -1) {
-    throw sheNetException(1,"socket create error:"+std::string(strerror(errno)));
+    throw she_net_exception(1,"socket create error:"+std::string(strerror(errno)));
   }
 };
 
-sheNet::socket::~socket() {
+she_net::socket::~socket() {
   ::shutdown(four_tuple_.source_fd, SHUT_RDWR);
 };
 
-void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
+void she_net::socket::bind(const std::string& port,std::string ip) noexcept {
   if (ip == "0.0.0.0" && (net_transport_ == TRANSPORT_ADDRESS_TYPE::TCP_IPV6||
                           net_transport_ == TRANSPORT_ADDRESS_TYPE::UDP_IPV6  )) {
     ip = "::";
@@ -78,21 +78,21 @@ void sheNet::socket::bind(const std::string& port,std::string ip) noexcept {
   }
 
   if (ret == -1) {
-    throw sheNetException(2,"bind socket error:"+std::string(strerror(errno)));
+    throw she_net_exception(2,"bind socket error:"+std::string(strerror(errno)));
   } else {
     four_tuple_.source_ip = ip;
     four_tuple_.source_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
   }
 };
 
-void sheNet::socket::listen(int backlog) noexcept {
+void she_net::socket::listen(int backlog) noexcept {
   int ret = ::listen(four_tuple_.source_fd, backlog);
   if (ret == -1) {
-    throw sheNetException(3,"listen port error."+std::string(strerror(errno)));
+    throw she_net_exception(3,"listen port error."+std::string(strerror(errno)));
   }
 };
 
-void sheNet::socket::connect(const std::string &ip, const std::string &port) noexcept {
+void she_net::socket::connect(const std::string &ip, const std::string &port) noexcept {
   int connect_results = -1;
   if (net_transport_==TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     struct sockaddr_in server_address{};
@@ -128,14 +128,14 @@ void sheNet::socket::connect(const std::string &ip, const std::string &port) noe
   }
 
   if (connect_results == -1) {
-    throw sheNetException(4,"connect port error."+std::string(strerror(errno)));
+    throw she_net_exception(4,"connect port error."+std::string(strerror(errno)));
   } else {
     four_tuple_.destination_ip = ip;
     four_tuple_.destination_port = htons(static_cast<unsigned short>(std::atoi(port.c_str())));
   }
 };
 
-void sheNet::socket::accept() noexcept {
+void she_net::socket::accept() noexcept {
   int destination_fd = -1;
   if (net_transport_ == TRANSPORT_ADDRESS_TYPE::TCP_IPV4) {
     struct sockaddr_in client_address{};
@@ -155,47 +155,47 @@ void sheNet::socket::accept() noexcept {
   }
 
   if (destination_fd == -1) {
-    throw sheNetException(5,"accept port error."+std::string(strerror(errno)));
+    throw she_net_exception(5,"accept port error."+std::string(strerror(errno)));
   } else {
     four_tuple_.destination_fd = destination_fd;
   }
 
 };
 
-void sheNet::socket::udp_set(sheNet::four_tuple four_tuple) {
+void she_net::socket::udp_set(she_net::four_tuple four_tuple) {
   four_tuple_.destination_ip = four_tuple.destination_ip;
   four_tuple_.destination_port = four_tuple.destination_port;
 };
 
-void sheNet::socket::client_set(sheNet::four_tuple four_tuple) {
+void she_net::socket::client_set(she_net::four_tuple four_tuple) {
   four_tuple_.source_fd =four_tuple.source_fd;
   four_tuple_.destination_fd = four_tuple.destination_fd;
 };
 
-sheNet::TRANSPORT_ADDRESS_TYPE sheNet::socket::get_net_transport() const {
+she_net::TRANSPORT_ADDRESS_TYPE she_net::socket::get_net_transport() const {
   return net_transport_;
 };
 
-int sheNet::socket::get_source_id() const {
+int she_net::socket::get_source_id() const {
   return this->four_tuple_.source_fd;
 };
 
-std::string sheNet::socket::get_source_ip() const {
+std::string she_net::socket::get_source_ip() const {
   return this->four_tuple_.source_ip;
 };
 
-unsigned short sheNet::socket::get_source_port() const {
+unsigned short she_net::socket::get_source_port() const {
   return static_cast<unsigned short >(this->four_tuple_.source_port);
 };
 
-int sheNet::socket::get_destination_id() const {
+int she_net::socket::get_destination_id() const {
   return this->four_tuple_.destination_fd;
 };
 
-std::string sheNet::socket::get_destination_ip() const {
+std::string she_net::socket::get_destination_ip() const {
   return this->four_tuple_.destination_ip;
 };
 
-unsigned short sheNet::socket::get_destination_port() const {
+unsigned short she_net::socket::get_destination_port() const {
   return static_cast<unsigned short >(this->four_tuple_.destination_port);
 };

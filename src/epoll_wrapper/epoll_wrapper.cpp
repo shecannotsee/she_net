@@ -10,40 +10,40 @@
 
 #include <sys/epoll.h>
 
-#include <sheNetException/sheNetException.h>
+#include <she_net_exception/she_net_exception.h>
 
-sheNet::epoll_wrapper::epoll_wrapper()
+she_net::epoll_wrapper::epoll_wrapper()
     : epoll_wrapper(1024) {};
 
-sheNet::epoll_wrapper::epoll_wrapper(int events_num)
+she_net::epoll_wrapper::epoll_wrapper(int events_num)
     : user_events_(events_num),
       timeout_set_(-1),
       server_socket_fd_(-1) {
   epoll_container_id_ = ::epoll_create(1);
 };
 
-void sheNet::epoll_wrapper::add_server_fd(int local_fd) {
+void she_net::epoll_wrapper::add_server_fd(int local_fd) {
   server_socket_fd_ = local_fd;
   epoll_event event_options{};
   event_options.events  = EPOLLIN ;
   event_options.data.fd = server_socket_fd_;
   int control_result = ::epoll_ctl(epoll_container_id_,EPOLL_CTL_ADD,server_socket_fd_,&event_options);
   if (control_result == -1) {
-    throw sheNetException(99,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
+    throw she_net_exception(99,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
   }
 };
 
-void sheNet::epoll_wrapper::add_alive_fd(int fd ,EPOLL_EVENTS trigger_mode) const {
+void she_net::epoll_wrapper::add_alive_fd(int fd ,EPOLL_EVENTS trigger_mode) const {
   epoll_event event_options{};
   event_options.events  = EPOLLIN | trigger_mode;
   event_options.data.fd = fd;
   int control_result = ::epoll_ctl(epoll_container_id_,EPOLL_CTL_ADD,fd,&event_options);
   if (control_result == -1) {
-    throw sheNetException(17,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
+    throw she_net_exception(17,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
   }
 };
 
-void sheNet::epoll_wrapper::remove_alive_fd(int fd) {
+void she_net::epoll_wrapper::remove_alive_fd(int fd) {
   epoll_event event_options{};
   event_options.data.fd = fd;
 
@@ -51,19 +51,19 @@ void sheNet::epoll_wrapper::remove_alive_fd(int fd) {
           ::epoll_ctl(epoll_container_id_, EPOLL_CTL_DEL, server_socket_fd_, &event_options);
   // 调用 epoll_ctl，使用 EPOLL_CTL_DEL 操作将客户端的文件描述符从 epoll 实例中剔除
   if (control_result == -1) {
-    throw sheNetException(18,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
+    throw she_net_exception(18,"epoll_ctl add system interface error:"+std::string(strerror(errno)));
   }
 }
 
-void sheNet::epoll_wrapper::set_timeout(int milliseconds) {
+void she_net::epoll_wrapper::set_timeout(int milliseconds) {
   timeout_set_ = milliseconds;
 };
 
-int sheNet::epoll_wrapper::accept_alive() {
+int she_net::epoll_wrapper::accept_alive() {
   int num_events = ::epoll_wait(epoll_container_id_,user_events_.data(),user_events_.size(),timeout_set_);
   if (num_events == -1) {
     // 不要特殊去处理errno为EINTR的情况,因为在信号中断的情况下可能会出现内核清除已注册的事件的事情发生
-    throw sheNetException(19,"epoll_wait(accept) system interface error:"+std::string(strerror(errno)));
+    throw she_net_exception(19,"epoll_wait(accept) system interface error:"+std::string(strerror(errno)));
   } else if (num_events == 0) {
     return -1;
   } else {
@@ -77,11 +77,11 @@ int sheNet::epoll_wrapper::accept_alive() {
   }
 };
 
-std::vector<int> sheNet::epoll_wrapper::get_alive_fd() {
+std::vector<int> she_net::epoll_wrapper::get_alive_fd() {
   int num_events = ::epoll_wait(epoll_container_id_,user_events_.data(),user_events_.size(),timeout_set_);
   if (num_events == -1) {
     // 不要特殊去处理errno为EINTR的情况,因为在信号中断的情况下可能会出现内核清除已注册的事件的事情发生
-    throw sheNetException(20,"epoll_wait(get alive fd) system interface error:"+std::string(strerror(errno)));
+    throw she_net_exception(20,"epoll_wait(get alive fd) system interface error:"+std::string(strerror(errno)));
   } else if (num_events == 0) {
     return {};
   } else {

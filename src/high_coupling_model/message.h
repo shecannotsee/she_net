@@ -9,12 +9,12 @@
 #include <string>
 #include <memory>
 
-namespace sheNet {
+namespace she_net {
 
 class message {
  public:
   message() = delete;
-  message(std::unique_ptr<sheNet::socket> socket);
+  message(std::unique_ptr<she_net::socket> socket);
   ~message() = default;
   // disable copy
   message(const message& x) = delete;
@@ -23,7 +23,7 @@ class message {
   message(message&&) = default;
   message& operator=(message&& x) = default;
  private:
-  std::unique_ptr<sheNet::socket> socket_;
+  std::unique_ptr<she_net::socket> socket_;
 
  public:// Interface
   std::string   get();

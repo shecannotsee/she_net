@@ -5,7 +5,7 @@
 #ifndef SHE_NET_SRC_TRANSPORT_ADDRESS_TYPE_H_
 #define SHE_NET_SRC_TRANSPORT_ADDRESS_TYPE_H_
 
-namespace sheNet {
+namespace she_net {
 
 enum class TRANSPORT_ADDRESS_TYPE : unsigned char {
   TCP_IPV4,

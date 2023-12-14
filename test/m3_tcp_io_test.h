@@ -25,13 +25,13 @@ int main() {
 
   auto server = [&]() {
     try {
-      sheNet::TRANSPORT_ADDRESS_TYPE tcp = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
-      std::unique_ptr<sheNet::socket> server = sheNet::CPP11::make_unique<sheNet::socket>(tcp);/* tcp init */{
+      she_net::TRANSPORT_ADDRESS_TYPE tcp = she_net::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
+      std::unique_ptr<she_net::socket> server = she_net::CPP11::make_unique<she_net::socket>(tcp);/* tcp init */{
         server->bind(port);
         server->listen();
         server->accept();
       };
-      sheNet::message message_control(std::move(server));
+      she_net::message message_control(std::move(server));
       std::cout << "server set done.\n";
       int on = 1;
       while (on--) {
@@ -47,11 +47,11 @@ int main() {
 
   auto client = [&]() {
     try {
-      sheNet::TRANSPORT_ADDRESS_TYPE tcp = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
-      std::unique_ptr<sheNet::socket> client = sheNet::CPP11::make_unique<sheNet::socket>(tcp);/* tcp init */ {
+      she_net::TRANSPORT_ADDRESS_TYPE tcp = she_net::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
+      std::unique_ptr<she_net::socket> client = she_net::CPP11::make_unique<she_net::socket>(tcp);/* tcp init */ {
         client->connect(ip, port);
       };
-      sheNet::message message_control(std::move(client));
+      she_net::message message_control(std::move(client));
       std::cout << "client set done.\n";
       while (1) {
         message_control.send("hello world");

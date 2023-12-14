@@ -7,7 +7,7 @@
 
 #include <memory>
 
-namespace sheNet {
+namespace she_net {
 
 namespace CPP11 {
 

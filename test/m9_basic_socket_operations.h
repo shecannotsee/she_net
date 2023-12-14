@@ -8,16 +8,16 @@
 #include <thread>
 #include <basic_socket_operations/basic_socket_operations.h>
 #include <four_tuple.h>
-#include "sheNetException/sheNetException.h"
+#include "she_net_exception/she_net_exception.h"
 
 namespace m9_basic_socket_operations {
 
 void main() {
-  using st/* socket tools*/ = sheNet::basic_socket_operations;
+  using st/* socket tools*/ = she_net::basic_socket_operations;
 
   std::thread server([]() {
-    auto type = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
-    sheNet::four_tuple address;/* init */ {
+    auto type = she_net::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
+    she_net::four_tuple address;/* init */ {
       address.source_ip = "0.0.0.0";
       address.source_port = 9981;
     };
@@ -39,7 +39,7 @@ void main() {
           std::cout << "server:accept to client fd is " << client_fd << "\n";
         }
       }
-      catch (const sheNet::sheNetException& exc) {
+      catch (const she_net::she_net_exception& exc) {
         std::cout << exc.what();
         break;
       }
@@ -50,7 +50,7 @@ void main() {
 
   std::thread client([](){
     sleep(1);
-    auto type = sheNet::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
+    auto type = she_net::TRANSPORT_ADDRESS_TYPE::TCP_IPV4;
     int fd = st::socket(type);/* print */{
       std::cout << "client:socket create fd:" << fd << "\n";
     };
@@ -62,7 +62,7 @@ void main() {
           std::cout << "client:connect success,local port is[" + std::to_string(used_port) + "]\n";
         };
       }
-      catch (const sheNet::sheNetException& exc) {
+      catch (const she_net::she_net_exception& exc) {
         std::cout << exc.what();
         break;
       };
