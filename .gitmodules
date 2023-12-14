@@ -1,6 +1,0 @@
-[submodule "third_party/sheLog"]
-	path = third_party/sheLog
-	url = https://github.com/shecannotsee/sheLog.git
-[submodule "third_party/sheIni"]
-	path = third_party/sheIni
-	url = https://github.com/shecannotsee/sheIni.git
