@@ -54,21 +54,22 @@ void she_net::epoll_wrapper::set_timeout(int milliseconds) {
   timeout_set_ = milliseconds;
 };
 
-int she_net::epoll_wrapper::accept_alive() {
+std::vector<int> she_net::epoll_wrapper::accept_alive() {
   int num_events = ::epoll_wait(epoll_container_id_, user_events_.data(), user_events_.size(), timeout_set_);
   if (num_events == -1) {
     // 不要特殊去处理errno为EINTR的情况,因为在信号中断的情况下可能会出现内核清除已注册的事件的事情发生
     throw she_net_exception(19, "epoll_wait(accept) system interface error:" + std::string(strerror(errno)));
   } else if (num_events == 0) {
-    return -1;
+    return {};
   } else {
+    std::vector<int> alive_fds;
     for (int i = 0; i < num_events; ++i) {
       // 可读事件,并且该事件是accept的时候返回
       if (user_events_[i].events == EPOLLIN && (user_events_[i].data.fd == server_socket_fd_)) {
-        return user_events_[i].data.fd;
+        alive_fds.push_back(user_events_[i].data.fd);
       }
     }
-    return -1;
+    return alive_fds;
   }
 };
 
