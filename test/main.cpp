@@ -3,6 +3,8 @@
 //
 #include <iostream>
 
+#include "global_test_set.h"
+#include "test_example.h"
 #include "m1_host_byte_order_test.h"
 #include "m2_base_socket_test.h"
 #include "m3_tcp_io_test.h"
@@ -20,23 +22,37 @@
 #include "m15_stream_data_test.h"
 
 int main() {
-  std::cout<<"test start.\n";
-//  m1_host_byte_order_test::main();
-//  m2_base_socket_test::main();
-//  m3_tcp_io_test::main();
-//  m4_udp_io_test::main();
-//  m5_select_test::main();
-//  m6_poll_test::main();
-//  m7_epoll_test::main();
-//  m8_tcp_bidirectional_io_test::main();
-//  m9_basic_socket_operations::main();
-//  m10_basic_io_operations_tcp_test::main();
-//  m11_basic_io_operations_udp_test::main();
-//  m12_select_wrapper_test::main();
-//  m13_poll_wrapper_test::main();
-  m14_epoll_wrapper_test::main();
-  m15_stream_data_test::method1::main();
-  m15_stream_data_test::method2::main();
-  std::cout<<"Done.\n";
+  std::cout << YELLOW_COLOR << "Start test " << RESET_COLOR << std::endl;
+  constexpr bool easy_test = true;
+  constexpr bool test_suite = true;
+  if (easy_test) {
+    //  m1_host_byte_order_test::main();
+    //  m2_base_socket_test::main();
+    //  m3_tcp_io_test::main();
+    //  m4_udp_io_test::main();
+    //  m5_select_test::main();
+    //  m6_poll_test::main();
+    //  m7_epoll_test::main();
+    //  m8_tcp_bidirectional_io_test::main();
+    //  m9_basic_socket_operations::main();
+    //  m10_basic_io_operations_tcp_test::main();
+    //  m11_basic_io_operations_udp_test::main();
+    //  m12_select_wrapper_test::main();
+    //  m13_poll_wrapper_test::main();
+    // m14_epoll_wrapper_test::main();
+    // m15_stream_data_test::method1::main();
+    // m15_stream_data_test::method2::main();
+  }
+
+  if (test_suite) {
+    testing::InitGoogleTest();
+
+    if (RUN_ALL_TESTS() == 0) {
+      std::cout << GREEN_COLOR << "Pass the test." << RESET_COLOR << std::endl;
+    } else {
+      std::cout << RED_COLOR << "Failed the test." << RESET_COLOR << std::endl;
+    }
+  }
+
   return 0;
 };
