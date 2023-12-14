@@ -9,7 +9,7 @@
 #include "basic_network_interface_testing/t2_select.h"
 #include "basic_network_interface_testing/t3_poll.h"
 #include "basic_network_interface_testing/t4_epoll.h"
-#include "src_testing/t1_basic_io_operations.h"
+#include "src_testing/t1_basic_socket_operations.h"
 
 #include "m1_host_byte_order_test.h"
 #include "m2_base_socket_test.h"
@@ -32,14 +32,24 @@ int main() {
   constexpr bool easy_test = true;
   constexpr bool test_suite = true;
   if (easy_test) {
+    /* basic_network_interface_testing */
+    // t1
     std::cout << GREEN_COLOR << "basic_network_interface_testing::t1_socket_and_io >> main() >> " << YELLOW_COLOR <<
       basic_network_interface_testing::t1_socket_and_io::main() << RESET_COLOR << std::endl;
+    // t2
     std::cout << GREEN_COLOR << "basic_network_interface_testing::t2_select::main() >> " << YELLOW_COLOR <<
       basic_network_interface_testing::t2_select::main() << RESET_COLOR << std::endl;
+    // t3
     std::cout << GREEN_COLOR << "basic_network_interface_testing::t3_poll::main() >> " << YELLOW_COLOR <<
       basic_network_interface_testing::t3_poll::main() << RESET_COLOR << std::endl;
+    // t4
     std::cout << GREEN_COLOR << "basic_network_interface_testing::t4_epoll::main() >> " << YELLOW_COLOR <<
       basic_network_interface_testing::t4_epoll::main() << RESET_COLOR << std::endl;
+
+    /* src_testing */
+    // t1
+    std::cout << GREEN_COLOR << "src_testing::t1_basic_socket_operations::main() >> " << YELLOW_COLOR <<
+      src_testing::t1_basic_socket_operations::main() << RESET_COLOR << std::endl;
 
     //  m1_host_byte_order_test::main();
     //  m2_base_socket_test::main();
