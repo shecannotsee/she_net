@@ -5,11 +5,18 @@
 #ifndef SHE_NET_SRC_BASIC_SOCKET_OPERATIONS_BASIC_SOCKET_OPERATIONS_H_
 #define SHE_NET_SRC_BASIC_SOCKET_OPERATIONS_BASIC_SOCKET_OPERATIONS_H_
 
+#include <error_code.h>
 #include <transport_address_type.h>
 
 #include <string>
 
 namespace she_net {
+
+struct noblock_return {
+ public:
+  int code = -1;
+  ERROR_CODE flag = ERROR_CODE::NO_ERROR;
+};
 
 class basic_socket_operations {
  public:  // interface
@@ -44,6 +51,15 @@ class basic_socket_operations {
   static int accept(int local_fd, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
+   * @brief 非阻塞的accept接口
+   * @param local_fd 本地的服务的文件描述符
+   * @param type 网络传输类型
+   * @return 返回连接上的fd.若接受失败或者在非阻塞模式下会返回-1
+   */
+  static noblock_return accept_with_noblock(int local_fd,
+                                            TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
+
+  /**
    * @brief 阻塞或者非阻塞需要设置socket
    * @param local_fd 本地创建的fd
    * @param ip 需要连接的ip地址
@@ -53,6 +69,17 @@ class basic_socket_operations {
    */
   static int connect(int local_fd, std::string ip, std::string port,
                      TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
+
+  /**
+   * @brief 阻塞或者非阻塞需要设置socket
+   * @param local_fd 本地创建的fd
+   * @param ip 需要连接的ip地址
+   * @param port 需要连接的端口号
+   * @param type 网络传输类型
+   * @return 返回客户端使用的端口号.阻塞情况下连接失败会抛出异常,在非阻塞模式下会频繁的抛出异常
+   */
+  static noblock_return connect_with_noblock(int local_fd, std::string ip, std::string port,
+                                             TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
    * @brief 关闭文件描述符
