@@ -10,6 +10,12 @@
 #include "basic_network_interface_testing/t3_poll.h"
 #include "basic_network_interface_testing/t4_epoll.h"
 #include "src_testing/t1_basic_socket_operations.h"
+#include "src_testing/t2_basic_io_operations_tcp.h"
+#include "src_testing/t3_basic_io_operations_udp.h"
+#include "src_testing/t4_select_wrapper.h"
+#include "src_testing/t5_poll_wrapper.h"
+#include "src_testing/t6_epoll_wrapper.h"
+#include "src_testing/t7_stream_data.h"
 
 #include "m1_host_byte_order_test.h"
 #include "m2_base_socket_test.h"
@@ -19,13 +25,7 @@
 #include "m6_poll_test.h"
 #include "m7_epoll_test.h"
 #include "m8_tcp_bidirectional_io_test.h"
-#include "m9_basic_socket_operations.h"
-#include "m10_basic_io_operations_tcp_test.h"
-#include "m11_basic_io_operations_udp_test.h"
-#include "m12_select_wrapper_test.h"
-#include "m13_poll_wrapper_test.h"
-#include "m14_epoll_wrapper_test.h"
-#include "m15_stream_data_test.h"
+
 
 int main() {
   std::cout << YELLOW_COLOR << "Start test " << RESET_COLOR << std::endl;
@@ -50,6 +50,24 @@ int main() {
     // t1
     std::cout << GREEN_COLOR << "src_testing::t1_basic_socket_operations::main() >> " << YELLOW_COLOR <<
       src_testing::t1_basic_socket_operations::main() << RESET_COLOR << std::endl;
+    // t2
+    std::cout << GREEN_COLOR << "src_testing::t2_basic_io_operations_tcp::main() >> " << YELLOW_COLOR <<
+      src_testing::t2_basic_io_operations_tcp::main() << RESET_COLOR << std::endl;
+    // t3
+    std::cout << GREEN_COLOR << "src_testing::t3_basic_io_operations_udp::main() >> " << YELLOW_COLOR <<
+      src_testing::t3_basic_io_operations_udp::main() << RESET_COLOR << std::endl;
+    // t4
+    std::cout << GREEN_COLOR << "src_testing::t4_select_wrapper::main() >> " << YELLOW_COLOR <<
+      src_testing::t4_select_wrapper::main() << RESET_COLOR << std::endl;
+    // t5
+    std::cout << GREEN_COLOR << "src_testing::t5_poll_wrapper::main() >> " << YELLOW_COLOR <<
+      src_testing::t5_poll_wrapper::main() << RESET_COLOR << std::endl;
+    // t6
+    std::cout << GREEN_COLOR << "src_testing::t6_epoll_wrapper::main() >> " << YELLOW_COLOR <<
+      src_testing::t6_epoll_wrapper::main() << RESET_COLOR << std::endl;
+    // t7
+    std::cout << GREEN_COLOR << "src_testing::t7_stream_data::main() >> " << YELLOW_COLOR <<
+      src_testing::t7_stream_data::main() << RESET_COLOR << std::endl;
 
     //  m1_host_byte_order_test::main();
     //  m2_base_socket_test::main();
@@ -59,14 +77,6 @@ int main() {
     //  m6_poll_test::main();
     //  m7_epoll_test::main();
     //  m8_tcp_bidirectional_io_test::main();
-    //  m9_basic_socket_operations::main();
-    //  m10_basic_io_operations_tcp_test::main();
-    //  m11_basic_io_operations_udp_test::main();
-    //  m12_select_wrapper_test::main();
-    //  m13_poll_wrapper_test::main();
-    // m14_epoll_wrapper_test::main();
-    // m15_stream_data_test::method1::main();
-    // m15_stream_data_test::method2::main();
   }
 
   if (test_suite) {

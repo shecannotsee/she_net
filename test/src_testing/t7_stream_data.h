@@ -1,9 +1,9 @@
 //
-// Created by shecannotsee on 23-5-22.
+// Created by shecannotsee on 23-12-14.
 //
 
-#ifndef SHE_NET_TEST_M15_STREAM_DATA_TEST_H_
-#define SHE_NET_TEST_M15_STREAM_DATA_TEST_H_
+#ifndef T7_STREAM_DATA_H
+#define T7_STREAM_DATA_H
 
 #include <string>
 #include <iostream>
@@ -11,7 +11,7 @@
 #include <stream_data_parsing/packageInStream.h>
 #include <stream_data_parsing/packageInStreamBase64.h>
 
-namespace m15_stream_data_test{
+namespace src_testing::t7_stream_data {
 
 // header with data
 namespace method1 {
@@ -51,6 +51,12 @@ void main() {
 };
 };//namespace method2
 
-};// namespace m15_stream_data_test
+std::string main() {
 
-#endif //SHE_NET_TEST_M15_STREAM_DATA_TEST_H_
+
+  return "need to fill";
+}
+
+}
+
+#endif //T7_STREAM_DATA_H

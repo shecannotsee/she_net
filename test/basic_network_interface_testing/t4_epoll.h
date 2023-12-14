@@ -7,15 +7,11 @@
 
 #include <string>
 
-namespace basic_network_interface_testing {
-
-namespace t4_epoll {
+namespace basic_network_interface_testing::t4_epoll {
 
 std::string main() {
 
-  return {};
-}
-
+  return "need to fill";
 }
 
 }

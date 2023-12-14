@@ -7,15 +7,11 @@
 
 #include <string>
 
-namespace basic_network_interface_testing {
-
-namespace t2_select {
+namespace basic_network_interface_testing::t2_select {
 
 std::string main() {
 
-  return {};
-}
-
+  return "need to fill";
 }
 
 }

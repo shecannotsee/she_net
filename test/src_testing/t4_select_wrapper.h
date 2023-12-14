@@ -1,24 +1,19 @@
 //
-// Created by shecannotsee on 23-5-17.
+// Created by shecannotsee on 23-12-14.
 //
 
-#ifndef SHE_NET_TEST_M13_POLL_WRAPPER_TEST_H_
-#define SHE_NET_TEST_M13_POLL_WRAPPER_TEST_H_
+#ifndef T4_SELECT_WRAPPER_H
+#define T4_SELECT_WRAPPER_H
 
 #include <string>
 #include <future>
 #include <basic_socket_operations/basic_socket_operations.h>
 #include <basic_io_operations/basic_io_operations.h>
-#include <poll_wrapper/poll_wrapper.h>
+#include <select_wrapper/select_wrapper.h>
 
-namespace m13_poll_wrapper_test {
+namespace src_testing::t4_select_wrapper {
 
-const std::string RESET_COLOR   = "\033[0m";
-const std::string RED_COLOR     = "\033[31m";
-const std::string GREEN_COLOR   = "\033[32m";
-const std::string YELLOW_COLOR  = "\033[33m";
-
-void main() {
+std::string main() {
   auto client = [](const std::string& id){
     using BSO = she_net::basic_socket_operations;
 
@@ -26,7 +21,7 @@ void main() {
     /* connect */
     while (true) {
       try {
-        BSO::connect(client_fd, "192.168.101.138", "9981");
+        BSO::connect(client_fd, "192.168.1.47", "9982");
         break;
       }
       catch (const she_net::she_net_exception& exc) {
@@ -43,14 +38,14 @@ void main() {
     };
 
     using io = she_net::basic_io_operations::TCP;
+    int message_num = 0;
     while (true) {
       try {
-        static int message_num = 0;
+        sleep(1);
         io::send(client_fd, "client " + id + ":No." + std::to_string(++message_num) + " message");
         std::cout << YELLOW_COLOR << "["
-                  <<"client " + id + ":No." + std::to_string(++message_num) + " message"
-                  <<"]has been sent.\n" << RESET_COLOR;
-        sleep(1);
+                                  <<"client " + id + ":No." + std::to_string(message_num) + " message"
+                                  <<"]has been sent.\n" << RESET_COLOR;
       }
       catch (const she_net::she_net_exception& exc) {
         if (exc.get_error_code() != 7) {// 非接口内部问题的异常
@@ -74,13 +69,12 @@ void main() {
 
   std::thread server([](){
     using BSO = she_net::basic_socket_operations;
-    she_net::poll_wrapper wrapper;
-    wrapper.set_timeout();
+    she_net::select_wrapper wrapper;
+    wrapper.set_timeout(2,0);
     int server_fd = BSO::socket();/* set */{
-      wrapper.add_server_fd(server_fd);
       BSO::port_reuse(server_fd);
       BSO::set_socket_noblock(server_fd);
-      BSO::bind(server_fd,"0.0.0.0","9981");
+      BSO::bind(server_fd,"0.0.0.0","9982");
       BSO::listen(server_fd);
     };
 
@@ -112,7 +106,7 @@ void main() {
     while (true) {
       try {
         std::unique_lock<std::mutex> lock(mtx);
-        auto alive_list = wrapper.get_alive_fd();
+        auto alive_list = wrapper.get_alive_fd(server_fd);
         for (auto client_fd : alive_list) {
           std::string get_message = io::recv(client_fd);
           if (get_message.size() > 0) {
@@ -139,8 +133,9 @@ void main() {
   c4.wait();
   c5.wait();
 
-};
+  return {};
+}
 
-};// namespace m13_poll_wrapper_test
+}
 
-#endif //SHE_NET_TEST_M13_POLL_WRAPPER_TEST_H_
+#endif //T4_SELECT_WRAPPER_H

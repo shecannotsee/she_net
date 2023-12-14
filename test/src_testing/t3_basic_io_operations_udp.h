@@ -1,22 +1,19 @@
 //
-// Created by shecannotsee on 23-5-16.
+// Created by shecannotsee on 23-12-14.
 //
 
-#ifndef SHE_NET_M11_BASIC_IO_OPERATIONS_UDP_TEST_H
-#define SHE_NET_M11_BASIC_IO_OPERATIONS_UDP_TEST_H
+#ifndef T3_BASIC_IO_OPERATIONS_UDP_H
+#define T3_BASIC_IO_OPERATIONS_UDP_H
 
+#include <string>
+#include <iostream>
 #include <thread>
 #include <basic_socket_operations/basic_socket_operations.h>
 #include <basic_io_operations/basic_io_operations.h>
 
-namespace m11_basic_io_operations_udp_test {
+namespace src_testing::t3_basic_io_operations_udp {
 
-const std::string RESET_COLOR   = "\033[0m";
-const std::string RED_COLOR     = "\033[31m";
-const std::string GREEN_COLOR   = "\033[32m";
-const std::string YELLOW_COLOR  = "\033[33m";
-
-void main() {
+std::string main() {
   std::cout << RED_COLOR << "basic_io_operations udp test start." << RESET_COLOR << std::endl;
 
   auto client = std::thread([](){
@@ -76,8 +73,9 @@ void main() {
   client.join();
   server.join();
 
-};
+  return {};
+}
 
-};// namespace m11_basic_io_operations_udp_test
+}
 
-#endif //SHE_NET_M11_BASIC_IO_OPERATIONS_UDP_TEST_H
+#endif //T3_BASIC_IO_OPERATIONS_UDP_H
