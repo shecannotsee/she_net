@@ -10,6 +10,7 @@
 #include <basic_socket_operations/basic_socket_operations.h>
 #include <basic_io_operations/basic_io_operations.h>
 #include <select_wrapper/select_wrapper.h>
+#include <she_net_exception/she_net_exception.h>
 
 namespace src_testing::t4_select_wrapper {
 

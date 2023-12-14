@@ -10,6 +10,7 @@
 #include <basic_socket_operations/basic_socket_operations.h>
 #include <basic_io_operations/basic_io_operations.h>
 #include <poll_wrapper/poll_wrapper.h>
+#include <she_net_exception/she_net_exception.h>
 
 namespace src_testing::t5_poll_wrapper {
 
