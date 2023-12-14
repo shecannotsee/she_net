@@ -12,9 +12,9 @@ namespace she_net {
 class four_tuple {
  public:
   inline four_tuple()
-      : source_fd(-1),source_ip(),source_port(0),
-        destination_fd(-1),destination_ip(),destination_port(0) {};
-  ~four_tuple()=default;
+      : source_fd(-1), source_ip(), source_port(0), destination_fd(-1), destination_ip(), destination_port(0){};
+  ~four_tuple() = default;
+
  public:
   // local fd
   int source_fd;
@@ -30,8 +30,8 @@ class four_tuple {
   // remote port
   unsigned int destination_port;
 
-};// class four_tuple
+};  // class four_tuple
 
-};// namespace sheNet {
+};  // namespace she_net
 
-#endif //SHE_NET_SRC_FOUR_TUPLE_H_
+#endif  // SHE_NET_SRC_FOUR_TUPLE_H_

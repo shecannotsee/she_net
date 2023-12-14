@@ -5,26 +5,14 @@
 #ifndef SHE_NET_SRC_BASIC_IO_OPERATIONS_BASIC_IO_OPERATIONS_H_
 #define SHE_NET_SRC_BASIC_IO_OPERATIONS_BASIC_IO_OPERATIONS_H_
 
-#include <string>
 #include <transport_address_type.h>
+
+#include <string>
 
 namespace she_net {
 
 class basic_io_operations {
- public:
-  // copy:off
-  basic_io_operations(const basic_io_operations &) = delete;
-  basic_io_operations &operator=(const basic_io_operations &) = delete;
-  // move:off
-  basic_io_operations(basic_io_operations &&) = delete;
-  basic_io_operations &operator=(basic_io_operations &&) = delete;
-  //destructors
-  ~basic_io_operations() = default;
-  //constructors
-  basic_io_operations() = default;
- private:// data
-  // NULL
- public:// interface
+ public:  // interface
   class TCP {
    public:
     /**
@@ -60,11 +48,11 @@ class basic_io_operations {
      * @param port 发送的地址ip对应的端口
      * @param binary_package 发送的数据包
      */
-    static void sendto(int fd,std::string ip, std::string port, std::string binary_package, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::UDP_IPV4);
+    static void sendto(int fd, std::string ip, std::string port, std::string binary_package,
+                       TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::UDP_IPV4);
   };
-
 };
 
-};// namespace sheNet
+};  // namespace she_net
 
-#endif //SHE_NET_SRC_BASIC_IO_OPERATIONS_BASIC_IO_OPERATIONS_H_
+#endif  // SHE_NET_SRC_BASIC_IO_OPERATIONS_BASIC_IO_OPERATIONS_H_

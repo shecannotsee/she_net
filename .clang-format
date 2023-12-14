@@ -1,0 +1,30 @@
+# TODO: 1.该模板无法处理冒号构造函数的格式
+# TODO: 2.无法将枚举值换行处理
+# TODO: 3.switch-case语句中case未被代码块包含
+# HACK: x.空函数也就是空代码块可能不会换行写在一行里并且不会给前括号添加空格-需要避免空代码块的出现
+# HACK: x.无法自动给函数结束添加换行符-可以在编写时候手动去写
+BasedOnStyle: Google
+
+# Allow double brackets such as std::vector<std::vector<int>>.
+Standard : c++11
+
+# 全局设置
+ColumnLimit : 120          # 指定代码行的最大长度
+UseTab : false             # 使用空格而不是Tab来缩进代码
+IndentWidth : 2            # 指定缩进宽度
+
+# 代码块格式设置
+BreakBeforeBraces : Attach                # 设置前括号不换行,该项可改为自定义项
+SpaceBeforeParens : ControlStatements     # 设置自动与之前一个字符空出来一个空格。
+AllowShortFunctionsOnASingleLine : None   # 设置简单函数将不会省略为一行
+AlwaysBreakAfterReturnType : None         # 函数返回值是否换行定义
+
+
+# 代码书写细节
+AccessModifierOffset : -1           # 设置 public 和 private 只缩进一个空格
+AlignConsecutiveAssignments : true  # 对齐连续变量和注释
+PointerAlignment : Left             # 指定指针和引用的对齐方式
+
+
+
+

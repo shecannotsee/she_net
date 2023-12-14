@@ -5,8 +5,9 @@
 #ifndef SHE_NET_SRC_POLL_WRAPPER_POLL_WRAPPER_H_
 #define SHE_NET_SRC_POLL_WRAPPER_POLL_WRAPPER_H_
 
-#include <vector>
 #include <sys/poll.h>
+
+#include <vector>
 
 namespace she_net {
 
@@ -24,8 +25,8 @@ class poll_wrapper {
   poll_wrapper();
 
  private:
-  std::vector<pollfd> poll_fds_;///< poll_wrapper维护的文件描述符列表
-  int timeout_set_;///< 用于设置poll的的超时时间，单位是毫秒
+  std::vector<pollfd> poll_fds_;  ///< poll_wrapper维护的文件描述符列表
+  int timeout_set_;               ///< 用于设置poll的的超时时间，单位是毫秒
 
  public:
   /**
@@ -59,9 +60,8 @@ class poll_wrapper {
    * @return 返回所有可用的文件描述符
    */
   std::vector<int> get_alive_fd();
-
 };
 
-};// namespace sheNet
+};  // namespace she_net
 
-#endif //SHE_NET_SRC_POLL_WRAPPER_POLL_WRAPPER_H_
+#endif  // SHE_NET_SRC_POLL_WRAPPER_POLL_WRAPPER_H_

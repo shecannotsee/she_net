@@ -7,13 +7,8 @@
 
 namespace she_net {
 
-enum class TRANSPORT_ADDRESS_TYPE : unsigned char {
-  TCP_IPV4,
-  TCP_IPV6,
-  UDP_IPV4,
-  UDP_IPV6
-};
+enum class TRANSPORT_ADDRESS_TYPE : unsigned char { TCP_IPV4, TCP_IPV6, UDP_IPV4, UDP_IPV6 };
 
-};// namespace sheNet
+};  // namespace she_net
 
-#endif //SHE_NET_SRC_TRANSPORT_ADDRESS_TYPE_H_
+#endif  // SHE_NET_SRC_TRANSPORT_ADDRESS_TYPE_H_

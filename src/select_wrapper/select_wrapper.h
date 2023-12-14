@@ -5,8 +5,9 @@
 #ifndef SHE_NET_SRC_SELECT_SELECT_WRAPPER_H_
 #define SHE_NET_SRC_SELECT_SELECT_WRAPPER_H_
 
-#include <vector>
 #include <sys/socket.h>
+
+#include <vector>
 
 namespace she_net {
 
@@ -23,13 +24,13 @@ class select_wrapper {
   // constructors
   select_wrapper();
 
- private:// data
+ private:  // data
   fd_set read_fds_;
   fd_set write_fds_;
   fd_set except_fds_;
 
-  std::vector<int> fd_list_;///< 用于管理连接上的文件描述符
-  timeval timeout_set_;///< 用于设置select的超时
+  std::vector<int> fd_list_;  ///< 用于管理连接上的文件描述符
+  timeval timeout_set_;       ///< 用于设置select的超时
 
  private:
   /**
@@ -38,7 +39,7 @@ class select_wrapper {
    */
   static int get_system_max_listen_fd();
 
- public:// interface
+ public:  // interface
   /**
    * @brief 向select_wrapper所维护的fd列表中添加通过basic_socket_operations::accept获取的fd列表.
    * 含义其实就是将已经连接上的fd放在一个列表中维护,后续通过该列表进行io处理
@@ -65,11 +66,8 @@ class select_wrapper {
    * @return 可用的文件描述符
    */
   std::vector<int> get_alive_fd(int local_fd);
-
 };
 
+};  // namespace she_net
 
-
-};// namespace sheNet
-
-#endif //SHE_NET_SRC_SELECT_SELECT_WRAPPER_H_
+#endif  // SHE_NET_SRC_SELECT_SELECT_WRAPPER_H_

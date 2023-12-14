@@ -12,8 +12,7 @@ namespace she_net {
 
 class she_net_exception : public std::exception {
  public:
-  she_net_exception(int error_code,
-                  const std::string &error_message);
+  she_net_exception(int error_code, const std::string &error_message);
 
  private:
   int error_code_;
@@ -24,8 +23,8 @@ class she_net_exception : public std::exception {
 
   int get_error_code() const;
 
-};// class sheNetException
+};  // class sheNetException
 
-};// namespace sheNet
+};  // namespace she_net
 
-#endif //SHE_NET_SRC_SHENETEXCEPTION_SHENETEXCEPTION_H_
+#endif  // SHE_NET_SRC_SHENETEXCEPTION_SHENETEXCEPTION_H_

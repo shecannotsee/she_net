@@ -5,8 +5,9 @@
 #ifndef SHE_NET_SRC_EPOLL_WRAPPER_EPOLL_WRAPPER_H_
 #define SHE_NET_SRC_EPOLL_WRAPPER_EPOLL_WRAPPER_H_
 
-#include <vector>
 #include <sys/epoll.h>
+
+#include <vector>
 
 namespace she_net {
 
@@ -25,10 +26,10 @@ class epoll_wrapper {
   explicit epoll_wrapper(int events_num);
 
  private:
-  int epoll_container_id_;///< epoll容器
-  std::vector<epoll_event> user_events_;///< epoll event的集合
-  int timeout_set_;///< 用于设置epoll的超时时间,单位是毫秒,默认为-1表示永久阻塞
-  int server_socket_fd_;///< local fd
+  int epoll_container_id_;                ///< epoll容器
+  std::vector<epoll_event> user_events_;  ///< epoll event的集合
+  int timeout_set_;       ///< 用于设置epoll的超时时间,单位是毫秒,默认为-1表示永久阻塞
+  int server_socket_fd_;  ///< local fd
 
  public:
   /**
@@ -69,11 +70,8 @@ class epoll_wrapper {
    * @return 返回所有活跃的文件描述符,但是不包括local_fd
    */
   std::vector<int> get_alive_fd();
-
-
-
 };
 
-};// namespace sheNet
+};  // namespace she_net
 
-#endif //SHE_NET_SRC_EPOLL_WRAPPER_EPOLL_WRAPPER_H_
+#endif  // SHE_NET_SRC_EPOLL_WRAPPER_EPOLL_WRAPPER_H_

@@ -5,26 +5,14 @@
 #ifndef SHE_NET_SRC_BASIC_SOCKET_OPERATIONS_BASIC_SOCKET_OPERATIONS_H_
 #define SHE_NET_SRC_BASIC_SOCKET_OPERATIONS_BASIC_SOCKET_OPERATIONS_H_
 
-#include <string>
 #include <transport_address_type.h>
+
+#include <string>
 
 namespace she_net {
 
 class basic_socket_operations {
- public:
-  // copy:off
-  basic_socket_operations(const basic_socket_operations&) = delete;
-  basic_socket_operations& operator=(const basic_socket_operations&) = delete;
-  // move:off
-  basic_socket_operations(basic_socket_operations&&) = delete;
-  basic_socket_operations& operator=(basic_socket_operations&&) = delete;
-  //destructors
-  ~basic_socket_operations() = default;
-  //constructors
-  basic_socket_operations() = default;
- private:// data
-  // NULL
- public:// interface
+ public:  // interface
   /**
    * @param type 网络传输类型: TCP/UDP + IPV4/IPV6
    * @return socket fd,若创建失败则会抛出异常
@@ -38,7 +26,8 @@ class basic_socket_operations {
    * @param type 网络传输类型
    * @return 若端口绑定失败则会抛出异常
    */
-  static void bind(int fd,std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type  = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
+  static void bind(int fd, std::string ip, std::string port,
+                   TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
    * @param fd 需要监听的文教描述符
@@ -52,7 +41,7 @@ class basic_socket_operations {
    * @param type 网络传输类型
    * @return 返回连接上的fd.若接受失败或者在非阻塞模式下会频繁的抛出异常,请酌情处理
    */
-  static int accept(int local_fd, TRANSPORT_ADDRESS_TYPE type  = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
+  static int accept(int local_fd, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
    * @brief 阻塞或者非阻塞需要设置socket
@@ -62,7 +51,8 @@ class basic_socket_operations {
    * @param type 网络传输类型
    * @return 返回客户端使用的端口号.阻塞情况下连接失败会抛出异常,在非阻塞模式下会频繁的抛出异常
    */
-  static int connect(int local_fd, std::string ip, std::string port, TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
+  static int connect(int local_fd, std::string ip, std::string port,
+                     TRANSPORT_ADDRESS_TYPE type = TRANSPORT_ADDRESS_TYPE::TCP_IPV4);
 
   /**
    * @brief 关闭文件描述符
@@ -86,11 +76,8 @@ class basic_socket_operations {
    * @return 若设置失败则会抛出异常
    */
   static void set_socket_noblock(int fd, bool noblock = true);
-
-
 };
 
+}  // namespace she_net
 
-} // sheNet
-
-#endif //SHE_NET_SRC_BASIC_SOCKET_OPERATIONS_BASIC_SOCKET_OPERATIONS_H_
+#endif  // SHE_NET_SRC_BASIC_SOCKET_OPERATIONS_BASIC_SOCKET_OPERATIONS_H_
