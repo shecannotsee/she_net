@@ -30,7 +30,7 @@ std::string she_net::basic_io_operations::TCP::recv(int fd) {
   } else {
     // 数据成功抵达
     buffer[bytes_read] = '\0';  // Null-terminate the received data
-    return std::string(buffer);
+    return std::string(buffer,bytes_read + 1);
   }
 }
 
