@@ -93,9 +93,9 @@ using udp    = integral_constant<socket_param::protocol, socket_param::protocol:
 template <typename p1, typename p2, typename p3>
 struct group_check {
   constexpr group_check() {
-    static_assert((p2::value == socket_param::type::stream && p3::value == socket_param::protocol::TCP) ||
-                      (p2::value == socket_param::type::datagrams && p3::value == socket_param::protocol::UDP),
-                  "Unsupported socket API parameter combinations");
+    constexpr bool check = (p2::value == socket_param::type::stream && p3::value == socket_param::protocol::TCP) ||
+                           (p2::value == socket_param::type::datagrams && p3::value == socket_param::protocol::UDP);
+    static_assert(check, "Unsupported socket API parameter combinations");
   }
 };
 
