@@ -83,33 +83,19 @@ struct integral_constant {
   using type               = T;
 };
 
-using tcp    = integral_constant<socket_param::protocol, socket_param::protocol::TCP>;
-using udp    = integral_constant<socket_param::protocol, socket_param::protocol::UDP>;
-using stream = integral_constant<socket_param::type, socket_param::type::stream>;
-using packet = integral_constant<socket_param::type, socket_param::type::datagrams>;
 using ipv4   = integral_constant<socket_param::domain, socket_param::domain::IPv4>;
 using ipv6   = integral_constant<socket_param::domain, socket_param::domain::IPv6>;
+using stream = integral_constant<socket_param::type, socket_param::type::stream>;
+using packet = integral_constant<socket_param::type, socket_param::type::datagrams>;
+using tcp    = integral_constant<socket_param::protocol, socket_param::protocol::TCP>;
+using udp    = integral_constant<socket_param::protocol, socket_param::protocol::UDP>;
 
 template <typename p1, typename p2, typename p3>
 struct group_check {
   constexpr group_check() {
-    if (false) {
-      // just format
-    } else if (p1::value == socket_param::domain::IPv4 &&
-               p2::value == socket_param::type::stream &&
-               (p3::value == socket_param::protocol::TCP || p3::value == socket_param::protocol::AUTO_SELECTION)) {
-    } else if (p1::value == socket_param::domain::IPv4 &&
-               p2::value == socket_param::type::datagrams &&
-               (p3::value == socket_param::protocol::UDP || p3::value == socket_param::protocol::AUTO_SELECTION)) {
-    } else if (p1::value == socket_param::domain::IPv6 &&
-               p2::value == socket_param::type::stream &&
-               (p3::value == socket_param::protocol::TCP || p3::value == socket_param::protocol::AUTO_SELECTION)) {
-    } else if (p1::value == socket_param::domain::IPv6 &&
-               p2::value == socket_param::type::datagrams &&
-               (p3::value == socket_param::protocol::UDP || p3::value == socket_param::protocol::AUTO_SELECTION)) {
-    } else {
-      static_assert(true, "Unsupported socket API parameter combinations");
-    }
+    static_assert((p2::value == socket_param::type::stream && p3::value == socket_param::protocol::TCP) ||
+                      (p2::value == socket_param::type::datagrams && p3::value == socket_param::protocol::UDP),
+                  "Unsupported socket API parameter combinations");
   }
 };
 
