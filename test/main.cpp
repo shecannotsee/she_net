@@ -26,8 +26,14 @@
 #include "m7_epoll_test.h"
 #include "m8_tcp_bidirectional_io_test.h"
 
+#include "t1_socket.h"
+
 
 int main() {
+  t1_socket::run();
+
+  return 0;
+
   std::cout << YELLOW_COLOR << "Start test " << RESET_COLOR << std::endl;
   constexpr bool easy_test = true;
   constexpr bool test_suite = true;
