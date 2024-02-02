@@ -5,4 +5,6 @@
 #include "accept.h"
 
 namespace she_net {
-} // she_net
+void accept_t::handle_error(int status) {
+}
+}  // namespace she_net

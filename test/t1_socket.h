@@ -23,6 +23,7 @@ void run() {
   // listen
   listen_t::exec<socket_param::stream>(fd);
   // accept
+  std::cout << "start accept" << std::endl;
   accept_t::exec<socket_param::ipv4>(fd);
 
   std::cout << "success" << std::endl;
