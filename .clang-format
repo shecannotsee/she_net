@@ -10,7 +10,7 @@ Standard : c++11
 
 # 全局设置
 ColumnLimit : 120          # 指定代码行的最大长度
-UseTab : false             # 使用空格而不是Tab来缩进代码
+UseTab : Never             # 使用空格而不是Tab来缩进代码
 IndentWidth : 2            # 指定缩进宽度
 
 # 代码块格式设置
@@ -18,13 +18,9 @@ BreakBeforeBraces : Attach                # 设置前括号不换行,该项可�
 SpaceBeforeParens : ControlStatements     # 设置自动与之前一个字符空出来一个空格。
 AllowShortFunctionsOnASingleLine : None   # 设置简单函数将不会省略为一行
 AlwaysBreakAfterReturnType : None         # 函数返回值是否换行定义
-
+BinPackParameters : false                 # 多个参数的情况下每个参数都占一行
 
 # 代码书写细节
 AccessModifierOffset : -1           # 设置 public 和 private 只缩进一个空格
 AlignConsecutiveAssignments : true  # 对齐连续变量和注释
 PointerAlignment : Left             # 指定指针和引用的对齐方式
-
-
-
-
