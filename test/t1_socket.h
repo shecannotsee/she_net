@@ -5,6 +5,7 @@
 #ifndef T1_SOCKET_H
 #define T1_SOCKET_H
 
+#include <basic_socket_operations/bind.h>
 #include <basic_socket_operations/socket.h>
 
 #include <type_traits>
@@ -12,8 +13,12 @@
 namespace t1_socket {
 void run() {
   using namespace she_net;
-  auto r = socket_t::create<ipv4, stream, tcp>();
-  std::cout << static_cast<int>(r) << std::endl;
+  // socket
+  auto fd = socket_t::create<socket_param::ipv4, socket_param::stream, socket_param::tcp>();
+  // bind
+  bind_t::exec<local_l, socket_param::ipv4, port, 19918>(fd);
+  // listen
+  std::cout << "success" << std::endl;
 }
 
 }  // namespace t1_socket

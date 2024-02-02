@@ -89,12 +89,6 @@ const std::unordered_map<error_info, std::string> error_info_map = {
     {error_info::protocol_not_supported, "protocol_not_supported"},
 };
 
-template <typename T, T V>
-struct T_V_t {
-  static constexpr T value = V;
-  using type               = T;
-};
-
 using ipv4          = T_V_t<domain, domain::IPv4>;
 using ipv6          = T_V_t<domain, domain::IPv6>;
 using stream        = T_V_t<type, type::stream>;
