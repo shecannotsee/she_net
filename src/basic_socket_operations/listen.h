@@ -32,8 +32,9 @@ const std::unordered_map<error_info, std::string> error_info_map = {
 template <typename type>
 struct listen_param_check {
   constexpr listen_param_check() {
-    constexpr bool error = (type::value == socket_param::type::stream || type::value == socket_param::type::datagrams);
-    static_assert(error, "listen just support SOCK_STREAM and SOCK_SEQPACKET");
+    constexpr bool right_cond =
+        (type::value == socket_param::type::stream || type::value == socket_param::type::datagrams);
+    static_assert(right_cond, "listen just support SOCK_STREAM and SOCK_SEQPACKET");
   }
 };
 

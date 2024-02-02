@@ -101,7 +101,7 @@ using auto_protocol = T_V_t<protocol, protocol::AUTO_SELECTION>;
 template <typename protofamily, typename type, typename protocol>
 struct socket_param_check {
   constexpr socket_param_check() {
-    constexpr bool error =
+    constexpr bool right_cond =
         ((protofamily::value == socket_param::domain::IPv4 || protofamily::value == socket_param::domain::IPv6) &&
          type::value == socket_param::type::stream &&
          (protocol::value == socket_param::protocol::TCP ||
@@ -109,7 +109,7 @@ struct socket_param_check {
         ((protofamily::value == socket_param::domain::IPv4 || protofamily::value == socket_param::domain::IPv6) &&
          type::value == socket_param::type::datagrams &&
          (protocol::value == socket_param::protocol::UDP || protocol::value == socket_param::protocol::AUTO_SELECTION));
-    static_assert(error, "Unsupported socket API parameter combinations");
+    static_assert(right_cond, "Unsupported socket API parameter combinations");
   }
 };
 
