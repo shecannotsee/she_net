@@ -10,6 +10,7 @@
 
 #include <type_traits>
 
+#include "basic_socket_operations/accept.h"
 #include "basic_socket_operations/listen.h"
 
 namespace t1_socket {
@@ -21,6 +22,8 @@ void run() {
   bind_t::exec<local_l, socket_param::ipv4, port, 19918>(fd);
   // listen
   listen_t::exec<socket_param::stream>(fd);
+  // accept
+  accept_t::exec<socket_param::ipv4>(fd);
 
   std::cout << "success" << std::endl;
 }
