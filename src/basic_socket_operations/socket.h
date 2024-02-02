@@ -12,6 +12,8 @@
 #include <stdexcept>
 #include <unordered_map>
 
+#include "socket_define.h"
+
 namespace she_net {
 namespace socket_param {
 enum class domain : int {
@@ -117,23 +119,11 @@ struct socket_param_check {
   }
 };
 
-using socket_fd = int;
-
 class socket_t {
- public:
-  template <typename domain, typename type, typename protocol = socket_param::auto_protocol>
-  static socket_fd create() noexcept {
-    // compile-time checks
-    socket_param_check<domain, type, protocol>();
-    // call sys/socket api
-    const auto status =
-        ::socket(static_cast<int>(domain::value), static_cast<int>(type::value), static_cast<int>(protocol::value));
-    // check the results
+  static socket_fd handle_error(const int status) {
     if (status > 0) {
       // success
       return status;
-    } else if (status == 0) {
-      throw std::runtime_error("Error: socket returned 0");
     } else if (status == -1) {
       const auto error_info = static_cast<socket_param::error_info>(errno);
       if (const auto it = socket_param::error_info_map.find(error_info); it != socket_param::error_info_map.end()) {
@@ -147,6 +137,18 @@ class socket_t {
     } else {
       throw std::runtime_error("Error: socket returned " + std::to_string(status));
     }
+  }
+
+ public:
+  template <typename domain, typename type, typename protocol = socket_param::auto_protocol>
+  static socket_fd create() noexcept {
+    // compile-time checks
+    socket_param_check<domain, type, protocol>();
+    // call sys/socket api
+    const auto status =
+        ::socket(static_cast<int>(domain::value), static_cast<int>(type::value), static_cast<int>(protocol::value));
+    // check the results
+    return handle_error(status);
   }
 };
 
