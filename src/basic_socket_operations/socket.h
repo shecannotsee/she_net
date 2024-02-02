@@ -10,6 +10,7 @@
 
 #include <cerrno>
 #include <stdexcept>
+#include <unordered_map>
 
 namespace she_net {
 namespace socket_param {
@@ -52,21 +53,22 @@ enum class type : int {
   // Provides a reliable datagram layer that does not guarantee ordering.
   reliable_datagram_layer = SOCK_RDM,
   // obsolete
-  _1 = SOCK_PACKET,
+  _ = SOCK_PACKET,
   // Set fd to non-blocking
   NONBLOCK = SOCK_NONBLOCK,
   // When exec is called to create a new process, the fd is automatically closed
   close_when_exec = SOCK_CLOEXEC,
 };
 enum class protocol : int {
+  // Usually, this is used
   AUTO_SELECTION = 0,
   // TODO:It needs to be supplemented
-  IP  = IPPROTO_IP,
-  TCP = IPPROTO_TCP,
-  UDP = IPPROTO_UDP,
+  IP   = IPPROTO_IP,
+  TCP  = IPPROTO_TCP,
+  UDP  = IPPROTO_UDP,
+  SCTP = IPPROTO_SCTP,
 };
-enum class status : int {
-  success                                  = 0,
+enum class error_info : int {
   permission_denied                        = EACCES,
   address_family_not_supported_by_protocol = EAFNOSUPPORT,
   invalid_argument                         = EINVAL,
@@ -75,43 +77,75 @@ enum class status : int {
   out_of_memory                            = ENOMEM,
   protocol_not_supported                   = EPROTONOSUPPORT,
 };
-}  // namespace socket_param
+const std::unordered_map<error_info, std::string> error_info_map = {
+    {error_info::permission_denied, "permission_denied"},
+    {error_info::address_family_not_supported_by_protocol, "address_family_not_supported_by_protocol"},
+    {error_info::invalid_argument, "invalid_argument"},
+    {error_info::too_many_open_files, "too_many_open_files"},
+    {error_info::no_buffer_space_available, "no_buffer_space_available"},
+    {error_info::out_of_memory, "out_of_memory"},
+    {error_info::protocol_not_supported, "protocol_not_supported"},
+};
 
 template <typename T, T V>
-struct integral_constant {
+struct T_V_t {
   static constexpr T value = V;
   using type               = T;
 };
 
-using ipv4   = integral_constant<socket_param::domain, socket_param::domain::IPv4>;
-using ipv6   = integral_constant<socket_param::domain, socket_param::domain::IPv6>;
-using stream = integral_constant<socket_param::type, socket_param::type::stream>;
-using packet = integral_constant<socket_param::type, socket_param::type::datagrams>;
-using tcp    = integral_constant<socket_param::protocol, socket_param::protocol::TCP>;
-using udp    = integral_constant<socket_param::protocol, socket_param::protocol::UDP>;
+using ipv4          = T_V_t<domain, domain::IPv4>;
+using ipv6          = T_V_t<domain, domain::IPv6>;
+using stream        = T_V_t<type, type::stream>;
+using packet        = T_V_t<type, type::datagrams>;
+using tcp           = T_V_t<protocol, protocol::TCP>;
+using udp           = T_V_t<protocol, protocol::UDP>;
+using auto_protocol = T_V_t<protocol, protocol::AUTO_SELECTION>;
+}  // namespace socket_param
 
-template <typename p1, typename p2, typename p3>
-struct group_check {
-  constexpr group_check() {
-    constexpr bool check = (p2::value == socket_param::type::stream && p3::value == socket_param::protocol::TCP) ||
-                           (p2::value == socket_param::type::datagrams && p3::value == socket_param::protocol::UDP);
-    static_assert(check, "Unsupported socket API parameter combinations");
+template <typename protofamily, typename type, typename protocol>
+struct socket_param_check {
+  constexpr socket_param_check() {
+    constexpr bool error =
+        ((protofamily::value == socket_param::domain::IPv4 || protofamily::value == socket_param::domain::IPv6) &&
+         type::value == socket_param::type::stream &&
+         (protocol::value == socket_param::protocol::TCP ||
+          protocol::value == socket_param::protocol::AUTO_SELECTION)) ||
+        ((protofamily::value == socket_param::domain::IPv4 || protofamily::value == socket_param::domain::IPv6) &&
+         type::value == socket_param::type::datagrams &&
+         (protocol::value == socket_param::protocol::UDP || protocol::value == socket_param::protocol::AUTO_SELECTION));
+    static_assert(error, "Unsupported socket API parameter combinations");
   }
 };
 
+using socket_fd = int;
+
 class socket_t {
  public:
-  template <typename p1, typename p2, typename p3>
-  static socket_param::status create() noexcept {
-    group_check<p1, p2, p3>();
-    const auto status = ::socket(static_cast<int>(p1::value), static_cast<int>(p2::value), static_cast<int>(p3::value));
+  template <typename domain, typename type, typename protocol = socket_param::auto_protocol>
+  static socket_fd create() noexcept {
+    // compile-time checks
+    socket_param_check<domain, type, protocol>();
+    // call sys/socket api
+    const auto status =
+        ::socket(static_cast<int>(domain::value), static_cast<int>(type::value), static_cast<int>(protocol::value));
+    // check the results
     if (status > 0) {
-      throw int(status);
-      return socket_param::status::success;
+      // success
+      return status;
     } else if (status == 0) {
-      throw std::runtime_error("socket return 0,unknown error");
+      throw std::runtime_error("Error: socket returned 0");
     } else if (status == -1) {
-      return static_cast<socket_param::status>(errno);
+      const auto error_info = static_cast<socket_param::error_info>(errno);
+      if (const auto it = socket_param::error_info_map.find(error_info); it != socket_param::error_info_map.end()) {
+        const auto error_message = it->second;
+        // error handling
+        throw std::runtime_error("Socket creation failed: " + error_message);
+      } else {
+        // Handle the case where error_info is not found in the map
+        throw std::runtime_error("Socket creation failed with unknown error");
+      }
+    } else {
+      throw std::runtime_error("Error: socket returned " + std::to_string(status));
     }
   }
 };
